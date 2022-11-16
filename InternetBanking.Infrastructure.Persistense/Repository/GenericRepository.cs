@@ -1,4 +1,5 @@
-﻿using InternetBanking.Infrastructure.Persistense.Context;
+﻿using InternetBanking.Core.Application.Interfaces.Repositories;
+using InternetBanking.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InternetBanking.Infrastructure.Persistense.Repository
+namespace InternetBanking.Infrastructure.Persistence.Repository
 {
-    public class GenericRepository<Entity> where Entity : class
+    public class GenericRepository<Entity> : IGenericRepository<Entity> where Entity : class
     {
         private readonly ApplicationContext _applicationContext;
 
@@ -67,6 +68,11 @@ namespace InternetBanking.Infrastructure.Persistense.Repository
             _applicationContext.Set<Entity>().Remove(entity);
             await _applicationContext.SaveChangesAsync();
 
+        }
+
+        public Task<List<Entity>> GetAllWithIncludeAsync(List<string> properties)
+        {
+            throw new NotImplementedException();
         }
     }
 }

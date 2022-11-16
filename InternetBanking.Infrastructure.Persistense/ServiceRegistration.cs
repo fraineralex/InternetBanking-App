@@ -1,16 +1,16 @@
-﻿using StockApp.Infrastructure.Persistence.Repository;
+﻿using InternetBanking.Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StockApp.Core.Application.Interfaces.Repositories;
-using StockApp.Infrastructure.Persistence.Contexts;
+//using InternetBanking.Core.Application.Interfaces.Repositories;
+using InternetBanking.Infrastructure.Persistence.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockApp.Infrastructure.Persistence
+namespace InternetBanking.Infrastructure.Persistence
 {
 
     //Extension Method - Decorator

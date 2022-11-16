@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InternetBanking.Infrastructure.Persistense.Context
+namespace InternetBanking.Infrastructure.Persistence.Context
 {
     public class ApplicationContext:DbContext
     {

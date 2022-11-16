@@ -1,11 +1,11 @@
-using InternetBanking.Infrastructure.Identity;
 using InternetBanking.Infrastructure.Shared;
 using Microsoft.AspNetCore.Identity;
 using InternetBanking.Core.Application;
 using InternetBanking.Infrastructure.Identity.Entities;
 using InternetBanking.Infrastructure.Identity.Seeds;
 using WebApp.InternetBanking.Presentation.WebApp.MVC.Middlewares;
-using StockApp.Infrastructure.Persistence;
+using InternetBanking.Infrastructure.Persistence;
+using InternetBanking.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 

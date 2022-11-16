@@ -2,11 +2,11 @@
 using InternetBanking.Infrastructure.Identity.Entities;
 using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Core.Application.Interfaces.Services;
-using InternetBanking.Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using InternetBanking.Infrastructure.Identity.Seeds;
 
 namespace InternetBanking.Infrastructure.Identity
 {
