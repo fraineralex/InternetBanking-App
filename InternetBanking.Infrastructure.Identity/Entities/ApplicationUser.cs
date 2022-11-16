@@ -11,8 +11,7 @@ namespace InternetBanking.Infrastructure.Identity.Entities
         public string? ProfileImage { get; set; }
         public string? IDCard { get; set; }
         public bool? IsActive { get; set; }
-        public string? Role { get; set; }
-
+        //public string? Role { get; set; }
 
         //Navigation property
         public ICollection<CashAdvances>? CashAdvances { get; set; }

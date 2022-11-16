@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InternetBanking.Core.Application\InternetBanking.Core.Application.csproj" />
+    <ProjectReference Include="..\InternetBanking.Core.Domain\InternetBanking.Core.Domain.csproj" />
+    <ProjectReference Include="..\InternetBanking.Infrastructure.Identity\InternetBanking.Infrastructure.Identity.csproj" />
+    <ProjectReference Include="..\InternetBanking.Infrastructure.Persistense\InternetBanking.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\InternetBanking.Infrastructure.Shared\InternetBanking.Infrastructure.Shared.csproj" />
   </ItemGroup>
 

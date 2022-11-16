@@ -17,6 +17,8 @@ namespace InternetBanking.Core.Application.Dtos.Account
         public string? Password { get; set; }
         public string? ConfirmPassword { get; set; }
         public string? UserType { get; set; }
+        public string? ProfileImage { get; set; }
+        public string? IDCard { get; set; }
 
         // Initial Amount if the user type is a CLIENT  
         public double? InitialAmount { get; set; }

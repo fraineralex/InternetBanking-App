@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Core.Applic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Core.Domain", "InternetBanking.Core.Domain\InternetBanking.Core.Domain.csproj", "{3BFF9371-BB97-4480-82AF-659597099E26}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Infrastructure.Persistense", "InternetBanking.Infrastructure.Persistense\InternetBanking.Infrastructure.Persistense.csproj", "{17C8F2DE-69D4-449F-9019-5B1F1F875177}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Infrastructure.Persistence", "InternetBanking.Infrastructure.Persistense\InternetBanking.Infrastructure.Persistence.csproj", "{17C8F2DE-69D4-449F-9019-5B1F1F875177}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Infrastructure.Shared", "InternetBanking.Infrastructure.Shared\InternetBanking.Infrastructure.Shared.csproj", "{04ABA4BC-2622-478D-97EE-09306B596477}"
 EndProject
@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Presentation.WebApp.MVC", "InternetBanking.Presentation.WebApp.MVC\InternetBanking.Presentation.WebApp.MVC.csproj", "{1EBC042F-F2BB-4EF2-AD0A-AD1BD22B0B50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetBanking.Infrastructure.Identity", "InternetBanking.Infrastructure.Identity\InternetBanking.Infrastructure.Identity.csproj", "{BED40DDF-D5BE-4C39-B988-1A73FCDAED4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Infrastructure.Identity", "InternetBanking.Infrastructure.Identity\InternetBanking.Infrastructure.Identity.csproj", "{BED40DDF-D5BE-4C39-B988-1A73FCDAED4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

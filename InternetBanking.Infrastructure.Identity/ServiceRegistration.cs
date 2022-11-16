@@ -1,5 +1,8 @@
 ﻿using InternetBanking.Infrastructure.Identity.Context;
 using InternetBanking.Infrastructure.Identity.Entities;
+using InternetBanking.Core.Application.Interfaces.Repositories;
+using InternetBanking.Core.Application.Interfaces.Services;
+using InternetBanking.Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,9 +24,9 @@ namespace InternetBanking.Infrastructure.Identity
             {
                 services.AddDbContext<IdentityContext>(options =>
                 {
-                    //options.EnableSensitiveDataLogging();
-                    //options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"),
-                    //m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName));
+                    options.EnableSensitiveDataLogging();
+                    options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"),
+                    m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName));
                 });
             }
             #endregion
@@ -41,9 +44,9 @@ namespace InternetBanking.Infrastructure.Identity
             services.AddAuthentication();
             #endregion
 
-            //#region Services
-            //services.AddTransient<IAccountService, AccountService>();
-            //#endregion
+            #region Services
+            services.AddTransient<IAccountService, AccountService>();
+            #endregion
         }
     }
 }
