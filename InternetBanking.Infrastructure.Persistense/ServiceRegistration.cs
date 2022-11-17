@@ -1,14 +1,9 @@
-﻿using InternetBanking.Infrastructure.Persistence.Repository;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-//using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Infrastructure.Persistence.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using InternetBanking.Core.Application.Interfaces.Repositories;
+using InternetBanking.Infrastructure.Persistence.Repositories;
 
 namespace InternetBanking.Infrastructure.Persistence
 {
@@ -32,9 +27,14 @@ namespace InternetBanking.Infrastructure.Persistence
             #endregion
 
             #region Repositories
-            //services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            //services.AddTransient<IProductRepository, ProductRepository>();
-            //services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddTransient<ILoansRepository, LoansRepository>();
+            services.AddTransient<IPaymentsRepository, PaymentsRepository>();
+            services.AddTransient<IBeneficiariesRepository, BeneficiariesRepository>();
+            services.AddTransient<ISavingsAccountsRepository, SavingsAccountsRepository>();
+            services.AddTransient<ICreditCardsRepository, CreditCardsRepository>();
+            services.AddTransient<IPersonalTransfersRepository, PersonalTransfersRepository>();
+            services.AddTransient<ICashAdvancesRepository, CashAdvancesRepository>();
             #endregion
         }
     }
