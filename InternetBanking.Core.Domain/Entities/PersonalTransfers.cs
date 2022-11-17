@@ -8,11 +8,13 @@ namespace InternetBanking.Core.Domain.Entities
         public float? Amount { get; set; }
 
         //Foreign Key
-        public int OriginAccount { get; set; }
-        public int TargetAccount { get; set; }
+        public int OriginAccountId { get; set; }
+        public int CreditCardId { get; set; }
+        public int TargetAccountNumber { get; set; }
         public int CustomerId { get; set; }
 
         //Navigation property
-        public Users? Customer { get; set; }
+        public SavingsAccounts? SavingsAccount { get; set; }
+        public CreditCards? CreditCard { get; set; }
     }
 }

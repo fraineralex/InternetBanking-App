@@ -14,14 +14,13 @@ namespace InternetBanking.Infrastructure.Persistence.Context
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 
-        public DbSet<Users> users { get; set; }
-        public DbSet<Beneficiaries> beneficiaries { get; set; }
-        public DbSet<CashAdvances>  cashAdvances{ get; set; }
-        public DbSet<CreditCards> creditCards { get; set; }
-        public DbSet<Loans> loans { get; set; }
-        public DbSet<Payments> payments { get; set; }
-        public DbSet<PersonalTransfers> personalTransfers { get; set; }
-        public DbSet<SavingsAccounts> savingsAccounts { get; set; }
+        public DbSet<Beneficiaries> Beneficiaries { get; set; }
+        public DbSet<CashAdvances> CashAdvances { get; set; }
+        public DbSet<CreditCards> CreditCards { get; set; }
+        public DbSet<Loans> Loans { get; set; }
+        public DbSet<Payments> Payments { get; set; }
+        public DbSet<PersonalTransfers> PersonalTransfers { get; set; }
+        public DbSet<SavingsAccounts> SavingsAccounts { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -31,10 +30,12 @@ namespace InternetBanking.Infrastructure.Persistence.Context
                 {
                     case EntityState.Added:
                         entry.Entity.CreatedAt = DateTime.Now;
+                        entry.Entity.CreateBy = "InternetBankingApp";
                         break;
 
                     case EntityState.Modified:
                         entry.Entity.LastModifiedAt = DateTime.Now;
+                        entry.Entity.LastModifiedBy = "InternetBankingApp";
                         break;
 
                 }
@@ -47,131 +48,111 @@ namespace InternetBanking.Infrastructure.Persistence.Context
         {
             //FLUENT API
 
-            #region tables
+            #region Tables
 
-            modelBuilder.Entity<Users>().ToTable("Users");
             modelBuilder.Entity<SavingsAccounts>().ToTable("SavingAccounts");
             modelBuilder.Entity<CreditCards>().ToTable("CreditCards");
             modelBuilder.Entity<Loans>().ToTable("Loans");
             modelBuilder.Entity<Payments>().ToTable("Payments");
             modelBuilder.Entity<PersonalTransfers>().ToTable("PersonalTransfers");
             modelBuilder.Entity<CashAdvances>().ToTable("CashAdvances");
+            modelBuilder.Entity<Beneficiaries>().ToTable("Beneficiaries");
 
-            
+
             #endregion
 
 
-            #region "primary keys"
-            modelBuilder.Entity<Users>().HasKey(user => user.Id);
+            #region "Primary keys"
             modelBuilder.Entity<SavingsAccounts>().HasKey(savingAccount => savingAccount.Id);
             modelBuilder.Entity<CreditCards>().HasKey(creditCard => creditCard.Id);
             modelBuilder.Entity<Loans>().HasKey(loan => loan.Id);
             modelBuilder.Entity<Payments>().HasKey(payment => payment.Id);
             modelBuilder.Entity<PersonalTransfers>().HasKey(personalTransfer => personalTransfer.Id);
             modelBuilder.Entity<CashAdvances>().HasKey(cashAdvance => cashAdvance.Id);
+            modelBuilder.Entity<Beneficiaries>().HasKey(beneficiary => beneficiary.Id);
 
 
             #endregion
 
 
-            #region relationship
+            #region Relationships
 
-            //RELATION USER WITH SAVING ACCOUNTS
-            modelBuilder.Entity<Users>()
-                .HasMany(user => user.SavingsAccounts)
-                .WithOne(savingAccount => savingAccount.Customer)
-                .HasForeignKey(savingAccount => savingAccount.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SavingsAccounts>()  
-                .HasOne(savingAccount => savingAccount.Customer)
-                .WithMany(user => user.SavingsAccounts)
-                .HasForeignKey(savingAccount => savingAccount.CustomerId)
+            //RELATIONSHIP OF SAVINGSACCOUNTS WITH CREDIT CARDS
+            modelBuilder.Entity<SavingsAccounts>()
+                .HasMany(savingsAccount => savingsAccount.CreditCards)
+                .WithOne(creditCard => creditCard.SavingsAccount)
+                .HasForeignKey(creditCard => creditCard.UserMainAccountId)
                 .OnDelete(DeleteBehavior.Cascade);
 
 
-
-            //RELATION USER WITH CREDIT CARDS
-            modelBuilder.Entity<Users>()
-                .HasMany(user => user.CreditCards)
-                .WithOne(creditCard => creditCard.Customer)
-                .HasForeignKey(creditCard => creditCard.CustomerId)
+            //RELATIONSHIP OF SAVINGSACCOUNTS WITH LOANS
+            modelBuilder.Entity<SavingsAccounts>()
+                .HasMany(savingsAccount => savingsAccount.Loans)
+                .WithOne(loan => loan.SavingsAccount)
+                .HasForeignKey(loan => loan.TargetAccountNumber)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
+            //RELATIONSHIP OF SAVINGSACCOUNTS WITH PAYMENTS
+            modelBuilder.Entity<SavingsAccounts>()
+                .HasMany(savingsAccount => savingsAccount.Payments)
+                .WithOne(payment => payment.SavingsAccount)
+                .HasForeignKey(payment => payment.OriginAccountId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            //RELATIONSHIP OF SAVINGSACCOUNTS PERSONAL TRANSFERS
+            modelBuilder.Entity<SavingsAccounts>()
+                .HasMany(savingsAccount => savingsAccount.PersonalTransfers)
+                .WithOne(personalTransfer => personalTransfer.SavingsAccount)
+                .HasForeignKey(personalTransfer => personalTransfer.OriginAccountId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            //RELATIONSHIP OF SAVINGSACCOUNTS WITH CASH ADVANCES
+            modelBuilder.Entity<SavingsAccounts>()
+                .HasMany(savingsAccount => savingsAccount.CashAdvances)
+                .WithOne(cashAdvance => cashAdvance.SavingsAccount)
+                .HasForeignKey(cashAdvance => cashAdvance.TargetAccountNumber)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //RELATIONSHIP OF SAVINGSACCOUNTS WITH BENEFICIARIES
+            modelBuilder.Entity<SavingsAccounts>()
+                .HasMany(savingsAccount => savingsAccount.Beneficiaries)
+                .WithOne(beneficiary => beneficiary.BeneficiaryAccount)
+                .HasForeignKey(beneficiary => beneficiary.AccountNumberId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //RELATIONSHIP OF CREDIT CARDS WITH PAYMENTS
             modelBuilder.Entity<CreditCards>()
-                .HasOne(creditCard => creditCard.Customer)
-                .WithMany(user => user.CreditCards)
-                .HasForeignKey(creditCard => creditCard.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(creditCard => creditCard.Payments)
+                .WithOne(payment => payment.CreditCard)
+                .HasForeignKey(payment => payment.CreditCardId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-
-
-
-            //RELATION USER WITH LOANS
-            modelBuilder.Entity<Users>()
-                .HasMany(user => user.Loans)
-                .WithOne(loan => loan.Customer)
-                .HasForeignKey(loan => loan.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Loans>()
-                .HasOne(loan => loan.Customer)
-                .WithMany(user => user.Loans)
-                .HasForeignKey(loan => loan.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-
-
-            //RELATION USER WITH PAYMENTS
-            modelBuilder.Entity<Users>()
-                .HasMany(user => user.Payments)
-                .WithOne(payment => payment.Customer)
-                .HasForeignKey(payment => payment.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Payments>()
-                .HasOne(payment => payment.Customer)
-                .WithMany(user => user.Payments)
-                .HasForeignKey(payment => payment.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-            //RELATION USER WITH PERSONAL TRANSFERS
-            modelBuilder.Entity<Users>()
-                .HasMany(user => user.PersonalTransfers)
-                .WithOne(personalTransfer => personalTransfer.Customer)
-                .HasForeignKey(personalTransfer => personalTransfer.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<PersonalTransfers>()
-                .HasOne(personalTransfers => personalTransfers.Customer)
-                .WithMany(user => user.PersonalTransfers)
-                .HasForeignKey(personalTransfers => personalTransfers.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-
-            //RELATION USER WITH CASH ADVANCES
-            modelBuilder.Entity<Users>()
-                .HasMany(user => user.CashAdvances)
-                .WithOne(cashAdvance => cashAdvance.Customer)
-                .HasForeignKey(cashAdvance => cashAdvance.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<CashAdvances>()
-                .HasOne(cashAdvances => cashAdvances.Customer)
-                .WithMany(user => user.CashAdvances)
-                .HasForeignKey(cashAdvance => cashAdvance.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
+            //RELATIONSHIP OF CREDIT CARDS WITH PERSONAL TRANSFER
+            modelBuilder.Entity<CreditCards>()
+                .HasMany(creditCard => creditCard.PersonalTransfers)
+                .WithOne(personalTrasfer => personalTrasfer.CreditCard)
+                .HasForeignKey(personalTrasfer => personalTrasfer.CreditCardId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             #endregion
 
 
-            #region "property configurations"
+            #region "Properties configurations"
 
 
-            #region savingAccounts
+            #region "Saving Accounts"
+
+            modelBuilder.Entity<SavingsAccounts>()
+                .HasIndex(savingAccount => savingAccount.AccountNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<SavingsAccounts>()
+                .Property(savingAccount => savingAccount.AccountNumber)
+                .IsRequired();
 
             modelBuilder.Entity<SavingsAccounts>()
                 .Property(savingAccount => savingAccount.TotalBalance)
@@ -190,9 +171,13 @@ namespace InternetBanking.Infrastructure.Persistence.Context
 
             #endregion
 
-            #region creditCards
+            #region "Credit Cards"
             modelBuilder.Entity<CreditCards>()
-                .Property(creditCard => creditCard.CreditCardType)
+                .HasIndex(creditCard => creditCard.CreditCardNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<CreditCards>()
+                .Property(creditCard => creditCard.CreditCardNumber)
                 .IsRequired();
 
             modelBuilder.Entity<CreditCards>()
@@ -229,7 +214,113 @@ namespace InternetBanking.Infrastructure.Persistence.Context
 
             #endregion
 
+            #region Loans
 
+            modelBuilder.Entity<Loans>()
+                .Property(loan => loan.Type)
+                .IsRequired();
+
+            modelBuilder.Entity<Loans>()
+                .Property(loan => loan.Amount)
+                .IsRequired();
+
+            modelBuilder.Entity<Loans>()
+                .Property(loan => loan.TotalDebt)
+                .IsRequired();
+
+            modelBuilder.Entity<Loans>()
+                .Property(loan => loan.AmountPaid)
+                .IsRequired();
+
+            modelBuilder.Entity<Loans>()
+                .Property(loan => loan.Status)
+                .IsRequired();
+
+            #endregion
+
+            #region Payments
+
+            modelBuilder.Entity<Payments>()
+                .Property(payments => payments.Type)
+                .IsRequired();
+
+            modelBuilder.Entity<Payments>()
+                .Property(payments => payments.Amount)
+                .IsRequired();
+
+            modelBuilder.Entity<Payments>()
+                .Property(payments => payments.OriginAccountId)
+                .IsRequired();
+
+            modelBuilder.Entity<Payments>()
+                .Property(payments => payments.CreditCardId)
+                .IsRequired();
+
+            modelBuilder.Entity<Payments>()
+                .Property(payments => payments.TargetAccountNumber)
+                .IsRequired();
+
+            modelBuilder.Entity<Payments>()
+                .Property(payments => payments.CustomerId)
+                .IsRequired();
+            #endregion
+
+            #region "Personal Transfer"
+
+            modelBuilder.Entity<PersonalTransfers>()
+                .Property(personalTransfer => personalTransfer.Amount)
+                .IsRequired();
+
+            modelBuilder.Entity<PersonalTransfers>()
+                .Property(personalTransfer => personalTransfer.OriginAccountId)
+                .IsRequired();
+
+            modelBuilder.Entity<PersonalTransfers>()
+                .Property(personalTransfer => personalTransfer.CreditCardId)
+                .IsRequired();
+
+            modelBuilder.Entity<PersonalTransfers>()
+                .Property(personalTransfer => personalTransfer.TargetAccountNumber)
+                .IsRequired();
+
+            modelBuilder.Entity<PersonalTransfers>()
+                .Property(personalTransfer => personalTransfer.CustomerId)
+                .IsRequired();
+            #endregion
+
+            #region "Cash Advances"
+
+            modelBuilder.Entity<CashAdvances>()
+                .Property(cashAdvance => cashAdvance.Amount)
+                .IsRequired();
+
+            modelBuilder.Entity<CashAdvances>()
+                .Property(cashAdvance => cashAdvance.OriginCreditCardId)
+                .IsRequired();
+
+            modelBuilder.Entity<CashAdvances>()
+                .Property(cashAdvance => cashAdvance.TargetAccountNumber)
+                .IsRequired();
+
+            modelBuilder.Entity<CashAdvances>()
+                .Property(cashAdvance => cashAdvance.CustomerId)
+                .IsRequired();
+            #endregion
+
+            #region Beneficiaries
+
+            modelBuilder.Entity<Beneficiaries>()
+                .Property(beneficiary => beneficiary.Alias)
+                .IsRequired();
+
+            modelBuilder.Entity<Beneficiaries>()
+                .Property(beneficiary => beneficiary.AccountNumberId)
+                .IsRequired();
+
+            modelBuilder.Entity<Beneficiaries>()
+                .Property(beneficiary => beneficiary.CustomerId)
+                .IsRequired();
+            #endregion
 
 
             #endregion

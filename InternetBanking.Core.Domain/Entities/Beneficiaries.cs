@@ -8,11 +8,10 @@ namespace InternetBanking.Core.Domain.Entities
         public string? Alias { get; set; }
 
         //Foreign Key
-        public int AccountNumber { get; set; }
+        public int AccountNumberId { get; set; }
         public int CustomerId { get; set; }
 
         //Navigation property
-        public Users? Customer { get; set; }
         public SavingsAccounts? BeneficiaryAccount { get; set; }
     }
 }

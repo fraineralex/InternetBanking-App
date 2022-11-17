@@ -39,7 +39,7 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-
+        Console.WriteLine(ex);
     }
 }
 
