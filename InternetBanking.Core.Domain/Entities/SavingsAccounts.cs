@@ -5,7 +5,7 @@ namespace InternetBanking.Core.Domain.Entities
     public class SavingsAccounts : AuditableBaseEntity
     {
         public float? TotalBalance { get; set; }
-        public string? AccountPriority { get; set; }
+        public bool? IsMainAccount { get; set; }
         public string? Status { get; set; }
 
         //Foreign Key
