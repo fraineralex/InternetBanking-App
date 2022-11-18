@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Core.Application.Interfaces.Services;
+using InternetBanking.Core.Application.ViewModels.Admin.Auth;
+using InternetBanking.Core.Application.ViewModels.Client;
 using InternetBanking.Core.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace InternetBanking.Core.Application.Services
 {
-    public class LoansService : GenericService<SaveLoansViewModel, LoansViewModel, Loans>, ILoansService
+    public class LoansService : GenericService<LoansSaveViewModel, LoansViewModel, Loans>, ILoansService
     {
         private readonly ILoansRepository _loansRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
