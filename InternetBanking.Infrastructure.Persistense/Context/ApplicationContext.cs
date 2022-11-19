@@ -163,7 +163,8 @@ namespace InternetBanking.Infrastructure.Persistence.Context
                 .IsRequired();
 
             modelBuilder.Entity<SavingsAccounts>()
-                .Property(savingAccount => savingAccount.Status);
+                .Property(savingAccount => savingAccount.Status)
+                .HasDefaultValue(true);
 
             modelBuilder.Entity<SavingsAccounts>()
                 .Property(savingAccount => savingAccount.CustomerId)
@@ -206,6 +207,7 @@ namespace InternetBanking.Infrastructure.Persistence.Context
 
             modelBuilder.Entity<CreditCards>()
                .Property(creditCard => creditCard.Status)
+               .HasDefaultValue(true)
                .IsRequired();
 
             modelBuilder.Entity<CreditCards>()
@@ -234,6 +236,7 @@ namespace InternetBanking.Infrastructure.Persistence.Context
 
             modelBuilder.Entity<Loans>()
                 .Property(loan => loan.Status)
+                .HasDefaultValue(true)
                 .IsRequired();
 
             #endregion

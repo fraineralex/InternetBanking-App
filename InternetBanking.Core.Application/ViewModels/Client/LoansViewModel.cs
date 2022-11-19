@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InternetBanking.Core.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,18 +9,19 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 {
     public class LoansViewModel
     {
-        public int CreditCardNumber { get; set; }
-        public float TotalBalance { get; set; }
-        public float? CreditAvailable { get; set; }
-        public string? ExpirationDate { get; set; }
-
-        //public int CardVerificationValue { get; set; }
-        //public int Password { get; set; }
-        public string? Company { get; set; }
+        public int Id { get; set; }
+        public string? Type { get; set; }
+        public float? Amount { get; set; }
+        public float? TotalDebt { get; set; }
+        public float? AmountPaid { get; set; }
         public string? Status { get; set; }
 
-        //public int UserMainAccountId { get; set; }
-        //public int CustomerId { get; set; }
+        //Foreign Key
+        public int TargetAccountNumber { get; set; }
+        public int CustomerId { get; set; }
+
+        //Navigation property
+        public SavingsAccountsViewModel? SavingsAccount { get; set; }
 
 
 

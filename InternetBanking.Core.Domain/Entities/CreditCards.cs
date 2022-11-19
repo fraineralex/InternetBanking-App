@@ -7,7 +7,7 @@ namespace InternetBanking.Core.Domain.Entities
         public int CreditCardNumber { get; set; }
         public float TotalBalance { get; set; }
         public float? CreditAvailable { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public string? ExpirationDate { get; set; }
         public int CardVerificationValue { get; set; }
         public int Password { get; set; }
         public string? Company { get; set; }

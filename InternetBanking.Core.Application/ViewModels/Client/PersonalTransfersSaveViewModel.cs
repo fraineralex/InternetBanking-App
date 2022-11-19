@@ -9,6 +9,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 {
     public class PersonalTransfersSaveViewModel
     {
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "You must enter the Amount of the transfer ")]
         public float? Amount { get; set; }

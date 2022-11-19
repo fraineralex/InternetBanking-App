@@ -9,18 +9,16 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 {
     public class CashAdvancesSaveViewModel
     {
-
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "You must enter the Amount of the Cash Advance")]
         public float? Amount { get; set; }
 
-
+        [Required(ErrorMessage = "You must enter the Origin Credit Card of the Cash Advance")]
         public int OriginCreditCardId { get; set; }
-        public List<CreditCardsViewModel>?CreditCards { get; set; }
+        [Required(ErrorMessage = "You must enter the Target Account Number of the Cash Advance")]
         public int TargetAccountNumber { get; set; }
-
         public int CustomerId { get; set; }
-
 
     }
 }

@@ -9,6 +9,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 {
     public class BeneficiariesSaveViewModel
     {
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "You must type the Alias of the Beneficiary")]
         public string? Alias { get; set; }
@@ -18,7 +19,6 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 
         [Required(ErrorMessage = "You must type the number of the Beneficiary")]
         public string? AccountNumber { get; set; }
-
 
         public int CustomerId { get; set; }
 

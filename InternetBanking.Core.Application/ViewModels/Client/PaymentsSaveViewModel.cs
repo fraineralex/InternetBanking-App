@@ -9,7 +9,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 {
     public class PaymentsSaveViewModel
     {
-        //public string? Type { get; set; }
+        public string? Type { get; set; }
 
         [Required(ErrorMessage = "You must enter the Amount that you want to pay")]
         public float? Amount { get; set; }
@@ -23,7 +23,6 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 
         public int CreditCardId { get; set; }
         public int CustomerId { get; set; }
-
 
     }
 }
