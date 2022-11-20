@@ -112,19 +112,23 @@
     </div>
 
     <section class="home-section">
-        <div class="home-content">
-            
-            <main role="main" class="pb-3 mx-auto">
-                @RenderBody()
-            </main>
+        <div class="home-content" role="main">
+            <div class="container">
+                <main class="pb-3 mx-auto mb-5">
+
+                    @RenderBody()
+
+                </main>
+            </div>   
         </div>
     </section>
 
-    <footer class="border-top footer text-light" style="background: #11101d;">
+    <!--<footer class="border-top footer text-light mt-5" style="background: #11101d;">
         <div class="container text-center">
             &copy; 2022 Internet Banking - Designed with 💙 by ITLA students
         </div>
-    </footer>
+    </footer>-->
+
     <script src="script.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
