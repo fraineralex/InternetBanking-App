@@ -23,7 +23,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
         [Required(ErrorMessage = "You must specify the status of the loan")]
         public string? Status { get; set; }
         public int TargetAccountNumber { get; set; }
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
     }
 }

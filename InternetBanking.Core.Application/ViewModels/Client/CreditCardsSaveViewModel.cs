@@ -33,7 +33,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
         public int UserMainAccountId { get; set; }
 
         [Required(ErrorMessage = "You must select the User who you are creating the Credit Card")]
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
     }
 }

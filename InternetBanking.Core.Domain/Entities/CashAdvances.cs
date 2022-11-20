@@ -11,7 +11,7 @@ namespace InternetBanking.Core.Domain.Entities
         //Foreign Key
         public int OriginCreditCardId { get; set; }
         public int TargetAccountNumber { get; set; }
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
         //Navigation property
         public SavingsAccounts? SavingsAccount { get; set; }

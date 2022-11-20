@@ -20,7 +20,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
         [Required(ErrorMessage = "You must type the number of the Beneficiary")]
         public string? AccountNumber { get; set; }
 
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
 
     }

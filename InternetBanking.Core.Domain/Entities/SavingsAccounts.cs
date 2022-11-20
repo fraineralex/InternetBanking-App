@@ -10,7 +10,7 @@ namespace InternetBanking.Core.Domain.Entities
         public string? Status { get; set; }
 
         //Foreign Key
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
         //Navigation property
         public ICollection<CashAdvances>? CashAdvances { get; set; }

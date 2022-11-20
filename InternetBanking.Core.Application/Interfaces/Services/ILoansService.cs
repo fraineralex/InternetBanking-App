@@ -7,7 +7,7 @@ namespace InternetBanking.Core.Application.Interfaces.Services
 {
     public interface ILoansService : IGenericService<LoansSaveViewModel, LoansViewModel, Loans>
     {
-
+        Task<List<LoansViewModel>> GetAllLoansViewModels(string customerId);
     }    
 
     

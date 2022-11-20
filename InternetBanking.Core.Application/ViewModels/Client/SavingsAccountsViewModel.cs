@@ -16,7 +16,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
         public string? Status { get; set; }
 
         //Foreign Key
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
         //Navigation property
         public ICollection<CashAdvancesViewModel>? CashAdvances { get; set; }

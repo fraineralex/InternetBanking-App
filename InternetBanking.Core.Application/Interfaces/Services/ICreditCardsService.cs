@@ -7,7 +7,7 @@ namespace InternetBanking.Core.Application.Interfaces.Services
 {
     public interface ICreditCardsService : IGenericService<CreditCardsSaveViewModel, CreditCardsViewModel, CreditCards>
     {
-
+        Task<List<CreditCardsViewModel>> GetAllCreditCardsViewModels(string customerId);
     }    
 
     

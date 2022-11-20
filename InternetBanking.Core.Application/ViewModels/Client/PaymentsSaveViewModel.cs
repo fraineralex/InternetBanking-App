@@ -22,7 +22,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 
 
         public int CreditCardId { get; set; }
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
     }
 }

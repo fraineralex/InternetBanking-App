@@ -17,7 +17,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
         public int OriginAccountId { get; set; }
         public int CreditCardId { get; set; }
         public int TargetAccountNumber { get; set; }
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
         //Navigation property
         public SavingsAccountsViewModel? SavingsAccount { get; set; }

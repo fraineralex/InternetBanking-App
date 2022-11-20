@@ -7,7 +7,7 @@ namespace InternetBanking.Core.Application.Interfaces.Services
 {
     public interface ISavingsAccountsService : IGenericService<SavingsAccountsSaveViewModel, SavingsAccountsViewModel, SavingsAccounts>
     {
-
+        Task<List<SavingsAccountsViewModel>> GetAllSavingsAccountsViewModels(string customerId);
     }    
 
     

@@ -14,7 +14,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
 
         //Foreign Key
         public int AccountNumberId { get; set; }
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
         //Navigation property
         public SavingsAccountsViewModel? BeneficiaryAccount { get; set; }

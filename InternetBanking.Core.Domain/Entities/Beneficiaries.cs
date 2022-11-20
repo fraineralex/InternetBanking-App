@@ -9,7 +9,7 @@ namespace InternetBanking.Core.Domain.Entities
 
         //Foreign Key
         public int AccountNumberId { get; set; }
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
         //Navigation property
         public SavingsAccounts? BeneficiaryAccount { get; set; }

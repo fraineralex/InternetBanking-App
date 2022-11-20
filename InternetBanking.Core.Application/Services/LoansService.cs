@@ -23,5 +23,12 @@ namespace InternetBanking.Core.Application.Services
             userViewModel = _httpContextAccessor.HttpContext.Session.Get<UserViewModel>("user");
             _mapper = mapper;
         }
+
+        public async Task<List<LoansViewModel>> GetAllLoansViewModels(string customerId)
+        {
+            var loansList = await _loansRepository.GetAllAsync();
+
+            return _mapper.Map<List<LoansViewModel>>(loansList).Where(loan => loan.CustomerId == customerId).ToList();
+        }
     }
 }

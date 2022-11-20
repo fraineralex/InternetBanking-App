@@ -18,7 +18,7 @@ namespace InternetBanking.Core.Application.ViewModels.Client
         public int OriginCreditCardId { get; set; }
         [Required(ErrorMessage = "You must enter the Target Account Number of the Cash Advance")]
         public int TargetAccountNumber { get; set; }
-        public int CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
     }
 }
