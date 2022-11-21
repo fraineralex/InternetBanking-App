@@ -244,8 +244,7 @@ namespace InternetBanking.Infrastructure.Persistence.Context
             #region Payments
 
             modelBuilder.Entity<Payments>()
-                .Property(payments => payments.Type)
-                .IsRequired();
+                .Property(payments => payments.Type);
 
             modelBuilder.Entity<Payments>()
                 .Property(payments => payments.Amount)
@@ -256,16 +255,21 @@ namespace InternetBanking.Infrastructure.Persistence.Context
                 .IsRequired();
 
             modelBuilder.Entity<Payments>()
-                .Property(payments => payments.CreditCardId)
-                .IsRequired();
+                .Property(payments => payments.CreditCardId);
 
             modelBuilder.Entity<Payments>()
-                .Property(payments => payments.TargetAccountNumber)
-                .IsRequired();
+                .Property(payments => payments.TargetAccountNumber);
 
             modelBuilder.Entity<Payments>()
                 .Property(payments => payments.CustomerId)
                 .IsRequired();
+
+            modelBuilder.Entity<Payments>()
+                .Property(payments => payments.LoanId);
+
+            modelBuilder.Entity<Payments>()
+                .Property(payments => payments.BeneficiaryId);
+
             #endregion
 
             #region "Personal Transfer"

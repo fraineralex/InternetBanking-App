@@ -121,6 +121,8 @@ namespace InternetBanking.Core.Application.Mappings
                 .ForMember(x => x.LastModifiedAt, opt => opt.Ignore());
 
             CreateMap<Payments, PaymentsSaveViewModel>()
+                .ForMember(x => x.UserAccountsNumbers, opt => opt.Ignore())
+                .ForMember(x => x.UserCreditCards, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(x => x.CreateBy, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())

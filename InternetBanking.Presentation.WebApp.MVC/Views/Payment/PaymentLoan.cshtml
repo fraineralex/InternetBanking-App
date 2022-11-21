@@ -1,0 +1,66 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Client;
+@model PaymentsSaveViewModel
+@{
+    ViewData["Title"] = "Loan Payment";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-6 offset-3">
+
+            <div class="card">
+
+                <div class="card-header bg-dark text-light">
+                    <h4>Pay Loan</h4>
+                </div>
+
+                <div class="card-body">
+
+
+
+                    <form method="post" asp-controller="Payment" asp-action="PaymentLoan">
+
+                        <<div class="mb-3">
+                            <label asp-for="LoanId" class="form-label">Loans:</label>
+                            <select asp-for="LoanId" asp-items="@(new SelectList(Model.UserLoans, "Id", "Amount"))" class="form-select">
+                                <option value="0" selected>Select one Credit Card</option>
+                            </select>
+                            <span asp-validation-for="CreditCardId" class="text-danger"></span>
+                        </div>
+
+
+                        <<div class="mb-3">
+                            <label asp-for="OriginAccountId" class="form-label">Saving Accounts:</label>
+                            <select asp-for="OriginAccountId" asp-items="@(new SelectList(Model.UserAccountsNumbers, "Id", "AccountNumber"))" class="form-select">
+                                <option value="0" selected>Select one Account</option>
+                            </select>
+                            <span asp-validation-for="OriginAccountId" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label asp-for="Amount" class="form-label">Amount:</label>
+                            <input asp-for="Amount" class="form-control" type="number" min="1" step="any" />
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
+
+
+                        <a asp-controller="Payment" asp-action="Index" class="btn btn-warning">Cancel</a>
+
+                        <button type="submit" class="btn btn-primary">Pay Loan</button>
+
+                    </form>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

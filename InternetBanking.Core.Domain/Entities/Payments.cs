@@ -13,9 +13,15 @@ namespace InternetBanking.Core.Domain.Entities
         public int CreditCardId { get; set; }
         public int TargetAccountNumber { get; set; }
         public string? CustomerId { get; set; }
+        public int LoanId { get; set; }
+        public int BeneficiaryId { get; set; }
+
 
         //Navigation property
         public SavingsAccounts? SavingsAccount { get; set; }
         public CreditCards? CreditCard { get; set; }
+        
+        public Loans? Loan { get; set; }
+        public Beneficiaries? Beneficiary { get; set; }   
     }
 }
