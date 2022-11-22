@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using InternetBanking.Core.Application.Dtos.Account;
 using InternetBanking.Core.Application.Interfaces.Services;
-using InternetBanking.Core.Application.ViewModels.Admin.Auth;
+using InternetBanking.Core.Application.ViewModels.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace InternetBanking.Core.Application.Services
             await _accountService.SignOutAsync();
         }
 
-        public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin)
+        public async Task<RegisterResponse> RegisterAsync(UserSaveViewModel vm, string origin)
         {
             RegisterRequest registerRequest = _mapper.Map<RegisterRequest>(vm);
             return await _accountService.RegisterUserAsync(registerRequest, origin);

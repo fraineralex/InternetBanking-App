@@ -1,5 +1,5 @@
 ﻿using InternetBanking.Core.Application.Dtos.Account;
-using InternetBanking.Core.Application.ViewModels.Admin.Auth;
+using InternetBanking.Core.Application.ViewModels.User;
 
 namespace InternetBanking.Core.Application.Interfaces.Services
 {
@@ -7,7 +7,8 @@ namespace InternetBanking.Core.Application.Interfaces.Services
     {
         Task<AuthenticationResponse> LoginAsync(LoginViewModel vm);
         Task SignOutAsync();
-        Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin);
+        Task<string> ConfirmEmailAsync(string userId, string token);
+        Task<RegisterResponse> RegisterAsync(UserSaveViewModel vm, string origin);
         Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordViewModel vm, string origin);
         Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordViewModel vm);
     }

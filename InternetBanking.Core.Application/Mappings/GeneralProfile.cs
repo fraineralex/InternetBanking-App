@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using InternetBanking.Core.Application.Dtos.Account;
-using InternetBanking.Core.Application.ViewModels.Admin.Auth;
+//using InternetBanking.Core.Application.ViewModels.Admin.Auth;
 using InternetBanking.Core.Application.ViewModels.Client;
+using InternetBanking.Core.Application.ViewModels.User;
 using InternetBanking.Core.Domain.Entities;
 
 namespace InternetBanking.Core.Application.Mappings
@@ -16,8 +17,7 @@ namespace InternetBanking.Core.Application.Mappings
                 .ForMember(x => x.Error, opt => opt.Ignore())
                 .ReverseMap();
 
-            CreateMap<RegisterRequest, SaveUserViewModel>()
-                .ForMember(x => x.UserType, opt => opt.Ignore())
+            CreateMap<RegisterRequest, UserSaveViewModel>()
                 .ForMember(x => x.HasError, opt => opt.Ignore())
                 .ForMember(x => x.Error, opt => opt.Ignore())
                 .ReverseMap();

@@ -1,5 +1,6 @@
 ﻿@using InternetBanking.Core.Application.ViewModels.Client
-@using InternetBanking.Core.Application.ViewModels.Auth
+@*@using InternetBanking.Core.Application.ViewModels.Auth*@
+@using InternetBanking.Core.Application.ViewModels.User
 @using InternetBanking.Core.Application.Helpers
 @inject IHttpContextAccessor httpContext;
 @{
@@ -30,7 +31,7 @@
                 <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
                     <div class="card-body">
 
-                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bxs-wallet'></i> Savings Account <i class="text-primary">*@savingAccount.AccountNumber[^ 4 .. ^ 0]</i></h4>
+                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bxs-wallet'></i> Savings Account <i class="text-primary">@savingAccount.AccountNumber</i></h4>
                         <p class="fs-5">@savingAccount.TotalBalance $ <i class="text-white-50 fs-5 float-end">Available balance</i></p>
 
                     </div>
@@ -64,7 +65,7 @@
                 <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
                     <div class="card-body">
 
-                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bxs-credit-card-alt'></i>@creditCard.Company <i class="text-primary">*@creditCard.CreditCardNumber[^ 4 .. ^ 0]</i></h4>
+                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bxs-credit-card-alt'></i>@creditCard.Company <i class="text-primary">@creditCard.CreditCardNumber</i></h4>
                         <p class="fs-5">@creditCard.CreditAvailable $ <i class="text-white-50 fs-5 float-end">Available credit</i></p>
                         <p class="fs-5">@creditCard.TotalBalance $ <i class="text-white-50 fs-5 float-end">Pending balance</i></p>
 
