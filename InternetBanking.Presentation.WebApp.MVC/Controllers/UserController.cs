@@ -34,7 +34,7 @@ namespace InternetBanking.Presentation.WebApp.MVC.Controllers
                 //HttpContext.Session.Set<AuthenticationResponse>("user", user);
                 if (user.Roles.Any(rol => rol == "Admin"))
                 {
-                    return RedirectToRoute(new { controller = "Admin", action = "Index" });
+                    return RedirectToRoute(new { controller = "Home", action = "Index" });
                 }
                 return RedirectToRoute(new { controller = "Client", action = "Index" });
 
@@ -63,13 +63,13 @@ namespace InternetBanking.Presentation.WebApp.MVC.Controllers
             return View("ConfirmEmail", response);
         }
 
-        [ServiceFilter(typeof(LoginAuthorize))]
+        //[ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult ForgotPassword()
         {
             return View(new ForgotPasswordViewModel());
         }
 
-        [ServiceFilter(typeof(LoginAuthorize))]
+        //[ServiceFilter(typeof(LoginAuthorize))]
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPassword)
         {

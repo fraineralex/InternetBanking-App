@@ -24,8 +24,8 @@
         <div class="col-6 offset-3">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-                    @if (Model.HasError)
+                  @*  @Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+                    @if (Model.HasError.Value)
                     {
                         <div class="alert alert-danger alert-dismissible fade show " role="alert">
                             <p>@Model.Error</p>
@@ -34,8 +34,8 @@
                     }
                     <form method="post" asp-controller="User" asp-action="Index">
                         <div class="mb-3">
-                            <label asp-for="UserName" class="form-label">Nombre de usuario</label>
-                            <input class="form-control" asp-for="UserName" />
+                            <label asp-for="Email" class="form-label">Nombre de usuario</label>
+                            <input class="form-control" asp-for="Email" />
                         </div>
 
                         <div class="mb-3">

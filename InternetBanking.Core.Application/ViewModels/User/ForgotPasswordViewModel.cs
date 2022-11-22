@@ -11,7 +11,7 @@ namespace InternetBanking.Core.Application.ViewModels.User
     {
         [Required(ErrorMessage = "Debe ingresar el correo del usuario")]
         public string Email { get; set; }
-        public bool HasError { get; set; }
-        public string Error { get; set; }
+        public bool? HasError { get; set; }
+        public string? Error { get; set; }
     }
 }
