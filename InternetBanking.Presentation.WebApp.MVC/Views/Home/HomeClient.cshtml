@@ -1,10 +1,10 @@
 ﻿@using InternetBanking.Core.Application.ViewModels.Client
-@*@using InternetBanking.Core.Application.ViewModels.Auth*@
-@using InternetBanking.Core.Application.ViewModels.User
+@using InternetBanking.Core.Application.Dtos.Account;
 @using InternetBanking.Core.Application.Helpers
+
 @inject IHttpContextAccessor httpContext;
 @{
-    UserViewModel User = httpContext.HttpContext.Session.Get<UserViewModel>("user");
+    var currentlyUser = httpContext.HttpContext.Session.Get<AuthenticationResponse>("user");
 }
 @{
     ViewData["Title"] = "Home";
@@ -48,7 +48,7 @@
         <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
             <div class="card-body">
 
-                <h4 class="fw-bold mb-3 text-uppercase mt-2"><i class='bx bxs-wallet'></i> Savings Account <i class="text-primary">*2374</i></h4>
+                <h4 class="fw-bold mb-3 text-uppercase mt-2"><i class='bx bxs-wallet'></i> Savings Account <small class="text-primary">*2374</small></h4>
                 <p class="fs-5">5,000.00 $ <i class="text-white-50 fs-5 float-end">Available balance</i></p>
 
             </div>
@@ -82,7 +82,7 @@
         <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
             <div class="card-body">
 
-                <h4 class="fw-bold mb-3 text-uppercase mt-2"><i class='bx bxs-credit-card-alt'></i> Visa<i class="text-primary">*2189</i></h4>
+                <h4 class="fw-bold mb-3 text-uppercase mt-2"><i class='bx bxs-credit-card-alt'></i> Visa<small class="text-primary">*2189</small></h4>
                 <p class="fs-5">8,756.91 $ <i class="text-white-50 fs-5 float-end">Available credit</i></p>
                 <p class="fs-5">80,956.91 $ <i class="text-white-50 fs-5 float-end">Pending balance</i></p>
 
@@ -100,7 +100,7 @@
                 <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
                     <div class="card-body">
 
-                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bx-wallet-alt'></i>@loan.Type <i class="text-primary">*2759</i></h4>
+                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bx-wallet-alt'></i>@loan.Type <small class="text-primary">*2759</small></h4>
                         <p class="fs-5">@loan.TotalDebt $ <i class="text-white-50 fs-5 float-end">Pending balance</i></p>
 
                     </div>
@@ -116,7 +116,7 @@
         <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
             <div class="card-body">
 
-                <h4 class="fw-bold mb-3 text-uppercase mt-2"><i class='bx bx-wallet-alt'></i> Personal <i class="text-primary">*2654</i></h4>
+                <h4 class="fw-bold mb-3 text-uppercase mt-2"><i class='bx bx-wallet-alt'></i> Personal <small class="text-primary">*2654</small></h4>
                 <p class="fs-5">80,956.91 $ <i class="text-white-50 fs-5 float-end">Pending balance</i></p>
 
             </div>

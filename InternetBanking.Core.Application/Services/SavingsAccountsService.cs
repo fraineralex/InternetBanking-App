@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InternetBanking.Core.Application.Dtos.Account;
 using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Core.Application.Interfaces.Services;
@@ -13,14 +14,14 @@ namespace InternetBanking.Core.Application.Services
     {
         private readonly ISavingsAccountsRepository _savingsAccountsRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UserViewModel userViewModel;
+        private readonly AuthenticationResponse currentlyUser;
         private readonly IMapper _mapper;
 
         public SavingsAccountsService(ISavingsAccountsRepository savingsAccountsRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper) : base(savingsAccountsRepository, mapper)
         {
             _savingsAccountsRepository = savingsAccountsRepository;
             _httpContextAccessor = httpContextAccessor;
-            userViewModel = _httpContextAccessor.HttpContext.Session.Get<UserViewModel>("user");
+            currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _mapper = mapper;
         }
 

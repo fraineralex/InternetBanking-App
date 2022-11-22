@@ -2,9 +2,11 @@
 using InternetBanking.Core.Application.Enums;
 using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Services;
+using InternetBanking.Core.Application.ViewModels.Admin.Auth;
 using InternetBanking.Presentation.WebApp.MVC.Middlewares;
 using InternetBanking.Presentation.WebApp.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -34,12 +36,15 @@ namespace InternetBanking.Presentation.WebApp.MVC.Controllers
 
         public IActionResult Index()
         {
+
             var currentlyUser = HttpContext.Session.Get<AuthenticationResponse>("user");
             var isAdmin = currentlyUser.Roles.Contains(Roles.Admin.ToString());
+
             if (isAdmin)
             {
                 return RedirectToAction("HomeAdmin");
             }
+
             return RedirectToAction("HomeClient");
         }
 

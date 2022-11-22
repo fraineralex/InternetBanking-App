@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
 using InternetBanking.Core.Application.Dtos.Account;
 using InternetBanking.Core.Application.Interfaces.Services;
-using InternetBanking.Core.Application.ViewModels.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using InternetBanking.Core.Application.ViewModels.Admin.Auth;
 
 namespace InternetBanking.Core.Application.Services
 {

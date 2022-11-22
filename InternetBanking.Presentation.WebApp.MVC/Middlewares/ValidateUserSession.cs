@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using InternetBanking.Core.Application.Dtos.Account;
-//using InternetBanking.Core.Application.Helpers;
-//using InternetBanking.Core.Application.ViewModels.User;
+using InternetBanking.Core.Application.Helpers;
 
 namespace WebApp.InternetBanking.Presentation.WebApp.MVC.Middlewares
 {
@@ -16,12 +15,12 @@ namespace WebApp.InternetBanking.Presentation.WebApp.MVC.Middlewares
 
         public bool HasUser()
         {
-            //AuthenticationResponse userViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            AuthenticationResponse userViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
 
-            //if (userViewModel == null)
-            //{
-            //    return false;
-            //}
+            if (userViewModel == null)
+            {
+                return false;
+            }
             return true;
         }
     }
