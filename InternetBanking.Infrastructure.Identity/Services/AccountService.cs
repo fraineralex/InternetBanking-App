@@ -147,7 +147,9 @@ namespace InternetBanking.Infrastructure.Identity.Seeds
                 HasError = false
             };
 
+
             var user = await _userManager.FindByEmailAsync(request.Email);
+
 
             if (user == null)
             {

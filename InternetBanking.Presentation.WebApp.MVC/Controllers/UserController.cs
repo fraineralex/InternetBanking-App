@@ -89,13 +89,13 @@ namespace InternetBanking.Presentation.WebApp.MVC.Controllers
             return RedirectToRoute(new { controller = "User", action = "Index" });
         }
 
-        [ServiceFilter(typeof(LoginAuthorize))]
+      
         public IActionResult ResetPassword(string token)
         {
             return View(new ResetPasswordViewModel { Token = token });
         }
 
-        [ServiceFilter(typeof(LoginAuthorize))]
+       
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPassword)
         {
