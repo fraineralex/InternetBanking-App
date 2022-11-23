@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using Dapper;
 using InternetBanking.Core.Application.Dtos.Account;
 using InternetBanking.Core.Application.Enums;
 using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Products;
+using InternetBanking.Core.Application.ViewModels.Querys;
 using InternetBanking.Core.Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,6 +128,49 @@ namespace InternetBanking.Core.Application.Services
 
             return products;
         }
+        public async Task<IEnumerable<StatusClientQuery>> GetClientStatus()
+        {
+            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(cs);
+            con.Open();
+
+            var query = @"SELECT COUNT(*) ClientsActives,
+                          (SELECT COUNT(*)
+                          FROM [InternetBankingApp2].[Identity].[Users]
+                          WHERE IsVerified = 0) ClientsInatives
+                          FROM [InternetBankingApp2].[Identity].[Users] 
+                          WHERE IsVerified = 1";
+
+            var clientStatus = await con.QueryAsync<StatusClientQuery>(query);
+            return clientStatus;
+        }
+        public async Task<IEnumerable<ProductsQuery>> GetClientProducts()
+        {
+            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(cs);
+            con.Open();
+
+            var query = @"SELECT COUNT(*) TotalClientProducts
+                          FROM [InternetBankingApp2].[dbo].[Products]";
+
+            var clientProducts = await con.QueryAsync<ProductsQuery>(query);
+            return clientProducts;
+        }
+        public async Task<IEnumerable<PaymentsQuery>> GetPaymentQuantities()
+        {
+            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(cs);
+            con.Open();
+
+            var query = @"SELECT COUNT(*) TotalPaymets,
+                          (SELECT COUNT(*) FROM [Payments] WHERE 
+                          Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
+                          FROM Payments";
+
+            var payments = await con.QueryAsync<PaymentsQuery>(query);
+            return payments;
+        }
+
         public async Task<ProductViewModel> GetProductByNumberAccountForPayment(string numberAccount, double amountToPay = -1.0)
         {
             ProductViewModel response = new();

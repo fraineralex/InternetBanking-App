@@ -43,8 +43,11 @@ namespace InternetBanking.Controllers
         }
 
         [ServiceFilter(typeof(AdminAuthorize))]
-        public IActionResult DashboardAdmin()
+        public async Task<IActionResult> DashboardAdmin()
         {
+            var payment = await _productSvc.GetPaymentQuantities();
+            var clientStatus = await _productSvc.GetClientStatus();
+            var clientProduct = await _productSvc.GetClientProducts();
             return View();
         }
 
