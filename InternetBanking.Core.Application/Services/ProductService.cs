@@ -120,7 +120,7 @@ namespace InternetBanking.Core.Application.Services
         }
         public async Task<List<Product>> GetAllProductByUser(string idUser, int typeAccountId)
         {
-            var products = await _repo.GetAllAsync();
+            List<Product> products = await _repo.GetAllAsync();
             products = products.Where(p => p.ClientId == idUser && p.TypeAccountId == typeAccountId).ToList();
 
             return products;
