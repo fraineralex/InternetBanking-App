@@ -58,6 +58,7 @@ namespace WebApp.InternetBanking.Controllers
                 ViewBag.Types = await _typeAccountService.GetAllVm();
                 return View(vm);
             }
+
             if (vm.TypeAccountId == (int)AccountTypes.SavingAccount)
             {
                 await _productService.AddSavingAccountAsync(vm.ClientId, vm.Charge);

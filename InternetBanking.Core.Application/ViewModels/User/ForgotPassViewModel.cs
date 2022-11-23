@@ -11,9 +11,9 @@ namespace InternetBanking.Core.Application.ViewModels.User
     {
         [Required(ErrorMessage = "Email is required")]
         [DataType(DataType.Text)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public bool HasError { get; set; }
-        public string Error { get; set; }
+        public string? Error { get; set; }
 
     }
 }

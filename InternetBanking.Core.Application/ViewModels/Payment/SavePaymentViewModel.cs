@@ -13,14 +13,14 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
 
         [Required(ErrorMessage = "Field is required")]
         [DataType(DataType.Text)]
-        public string PaymentAccount { get; set; }
+        public string? PaymentAccount { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
         [DataType(DataType.Text)]
-        public string PaymentDestinationAccount { get; set; }
+        public string? PaymentDestinationAccount { get; set; }
 
-        public string Owner { get; set; }
-        public bool HasError { get; set; }
-        public string Error { get; set; }
+        public string? Owner { get; set; }
+        public bool HasError { get; set; } = false;
+        public string? Error { get; set; }
     }
 }
