@@ -35,7 +35,7 @@
                                     <select class="form-select" asp-for="PaymentAccount" required>
                                         @foreach (var account in ViewBag.SavingsAccounts)
                                         {
-                                            <option value="@account.AccountNumber">@account.AccountNumber</option>
+                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Charge)</option>
                                         }
                                     </select>
                                     <label asp-for="PaymentAccount" class="form-label">Numero de Cuenta origen</label>
@@ -46,7 +46,7 @@
                                     <select class="form-select" asp-for="PaymentDestinationAccount" required>
                                         @foreach (var card in ViewBag.CreditCards)
                                         {
-                                            <option value="@card.AccountNumber">@card.AccountNumber</option>
+                                            <option value="@card.AccountNumber">@card.AccountNumber  (US$ @card.Charge)</option>
                                         }
                                     </select>
                                     <label asp-for="PaymentDestinationAccount" class="form-label">Numero de Cuenta destino</label>
@@ -54,7 +54,7 @@
                                 </div>
 
                                 <div class="form-floating mb-3">
-                                    <input asp-for="AmountToPay" type="number" class="form-control" placeholder="Monto a pagar" />
+                                    <input asp-for="AmountToPay" type="number" min="1" class="form-control" placeholder="Monto a pagar" />
                                     <label asp-for="AmountToPay" class="form-label">Monto a pagar</label>
                                     <span asp-validation-for="AmountToPay" class="text-danger"></span>
                                 </div>

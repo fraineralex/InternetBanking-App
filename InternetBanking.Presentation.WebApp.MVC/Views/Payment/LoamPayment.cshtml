@@ -11,48 +11,65 @@
                 Pago Prestamo
             </h3>
         </section>
-        <div class="col-6 mx-auto">
-            <div class="card shadow">
-                <div class="card-body">
-                    @if (Model.HasError)
-                    {
-                        <div class="alert alert-danger alert-dimissible fade show" role="alert">
-                            <p>@Model.Error</p>
-                            <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
-                        </div>
-                    }
-                    <form asp-controller="Payment" asp-action="LoamPayment" method="post" class="row gap-3 my-3">
-                        <div class="">
-                            <h3 class="text-muted text-center">
-                                Realizando Pago Prestamo
-                            </h3>
-                        </div>
-                        <section class="col-5 mx-auto">
-                            <div class="form-floating mb-3">
-                                <input asp-for="PaymentAccount" class="form-control" placeholder="Numero de Cuenta pago" />
-                                <label asp-for="PaymentAccount"> Numero de Cuenta pago </label>
-                                <span asp-validation-for="PaymentAccount" class="text-danger"></span>
+        @if (ViewBag.Loans.Count != 0 && ViewBag.SavingsAccounts.Count != 0)
+        {
+            <div class="col-6 mx-auto">
+                <div class="card shadow">
+                    <div class="card-body">
+                        @if (Model.HasError)
+                        {
+                            <div class="alert alert-danger alert-dimissible fade show" role="alert">
+                                <p>@Model.Error</p>
+                                <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
                             </div>
+                        }
+                        <form asp-controller="Payment" asp-action="LoamPayment" method="post" class="row gap-3 my-3">
+                            <div class="">
+                                <h3 class="text-muted text-center">
+                                    Realizando Pago Prestamo
+                                </h3>
+                            </div>
+                            <section class="col-5 mx-auto">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" asp-for="PaymentAccount" required>
+                                        @foreach (var account in ViewBag.SavingsAccounts)
+                                        {
+                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Charge)</option>
+                                        }
+                                    </select>
+                                    <label asp-for="PaymentAccount" class="form-label">Numero de Cuenta origen</label>
+                                    <span asp-validation-for="PaymentAccount" class="text-danger"></span>
+                                </div>
 
-                            <div class="form-floating mb-3">
-                                <input asp-for="PaymentDestinationAccount" class="form-control" placeholder="Numero de Cuenta destino" />
-                                <label asp-for="PaymentDestinationAccount"> Numero de Cuenta destino </label>
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" asp-for="PaymentDestinationAccount" required>
+                                        @foreach (var loan in ViewBag.Loans)
+                                        {
+                                            <option value="@loan.AccountNumber">@loan.AccountNumber  (US$ @loan.Charge)</option>
+                                        }
+                                    </select>
+                                <label asp-for="PaymentDestinationAccount" class="form-label">Numero del prestamo a pagar</label>
                                 <span asp-validation-for="PaymentDestinationAccount" class="text-danger"></span>
-                            </div>
+                                </div>
 
-                            <div class="form-floating mb-3">
-                                <input asp-for="AmountToPay" class="form-control" placeholder="Monto a pagar" />
-                                <label asp-for="AmountToPay" class="form-label">Monto a pagar</label>
-                                <span asp-validation-for="AmountToPay" class="text-danger"></span>
-                            </div>
-                            <div class="col-11 mx-auto">
-                                <button type="submit" class="btn btn-primary btn-lg w-100 mt-2">Pagar</button>
-                                <a asp-controller="Home" asp-action="Index" class="btn btn-light w-100 mt-2">Volver atrás</a>
-                            </div>
-                        </section>
-                    </form>
+                                <div class="form-floating mb-3">
+                                    <input asp-for="AmountToPay" type="number" min="1" class="form-control" placeholder="Monto a pagar" />
+                                    <label asp-for="AmountToPay" class="form-label">Monto a pagar</label>
+                                    <span asp-validation-for="AmountToPay" class="text-danger"></span>
+                                </div>
+                                <div class="col-11 mx-auto">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 mt-2">Pagar</button>
+                                    <a asp-controller="Home" asp-action="Index" class="btn btn-light w-100 mt-2">Volver atrás</a>
+                                </div>
+                            </section>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <h1>Debes tener al menos una cuenta de ahorro y un pretamo para realizar este pago.</h1>
+        }
     </div>
 </div>

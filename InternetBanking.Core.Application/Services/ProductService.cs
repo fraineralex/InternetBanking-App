@@ -178,13 +178,13 @@ namespace InternetBanking.Core.Application.Services
 
             List<Product> products = await _repo.GetAllAsync();
             var product = products.Where(ac => ac.AccountNumber == numberAccount)
-                    .SingleOrDefault();
+                    .FirstOrDefault();
 
             if (product != null)
             {
                 response = _mapper.Map<ProductViewModel>(product);
                 
-                if (response.Charge > amountToPay)
+                if (response.Charge >= amountToPay)
                 {
                     return response;
                 }
