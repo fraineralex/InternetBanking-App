@@ -64,8 +64,10 @@ namespace WebApp.InternetBanking.Controllers
             return RedirectToAction("ConfirmPayment", vm);
         }
 
-        public ActionResult CreditPayment()
+        public async Task<ActionResult> CreditPayment()
         {
+            ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(userSesion.Id, (int)AccountTypes.SavingAccount);
+            ViewBag.CreditCards = await _productService.GetAllProductByUser(userSesion.Id, (int)AccountTypes.CreditAccount);
             return View(new SavePaymentViewModel());
         }
 
