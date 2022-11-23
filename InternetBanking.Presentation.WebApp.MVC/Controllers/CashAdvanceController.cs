@@ -1,0 +1,69 @@
+﻿using InternetBanking.Core.Application.Dtos.Account;
+using InternetBanking.Core.Application.Enums;
+using InternetBanking.Core.Application.Helpers;
+using InternetBanking.Core.Application.Interfaces.Services;
+using InternetBanking.Core.Application.ViewModels.Payment;
+using InternetBanking.Core.Application.ViewModels.Products;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace WebApp.InternetBanking.Controllers
+{
+    public class CashAdvanceController : Controller
+    {
+        private readonly IPaymentService _paymentSvc;
+        private readonly IProductService _productService;
+        private readonly IUserService _userService;
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        AuthenticationResponse currentlyUser;
+
+        public CashAdvanceController(IHttpContextAccessor httPContextAccesor , IPaymentService paymentService, IProductService productService, IUserService userService)
+        {
+            _httpContextAccessor = httPContextAccesor;
+            currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            _paymentSvc = paymentService;
+            _productService = productService;
+            _userService = userService;
+        }
+        
+        public async Task<ActionResult> Index()
+        {
+            ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
+            ViewBag.CreditCards = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.CreditAccount);
+            return View(new SavePaymentViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(SavePaymentViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
+                ViewBag.CreditCards = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.CreditAccount);
+                return View(vm);
+            }
+
+            ProductViewModel creditCardOrigin = await
+                _productService.GetProductByNumberAccountForPayment
+                (vm.PaymentAccount, vm.AmountToPay);
+
+            if (creditCardOrigin.HasError)
+            {
+                vm.HasError = true;
+                vm.Error = "Debe retirar una cantidad que no supere el monto del límite de crédito de la tarjeta";
+                ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
+                ViewBag.CreditCards = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.CreditAccount);
+                return View(vm);
+            }
+
+            var owner = await _userService.GetUserById(creditCardOrigin.ClientId);
+            vm.Owner = $"{owner.FirstName} {owner.LastName}";
+
+            await _paymentSvc.CashAdvance(vm);
+            return RedirectToRoute(new { controller = "Home", action = "Index" });
+        }
+    }
+}

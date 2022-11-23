@@ -126,14 +126,14 @@ namespace WebApp.InternetBanking.Controllers
                 _productService.GetProductByNumberAccountForPayment
                 (vm.PaymentDestinationAccount);
 
-            if(vm.AmountToPay > destinationAccount.Charge)
+            if(vm.AmountToPay > destinationAccount.Discharge)
             {
-                vm.AmountToPay = destinationAccount.Charge;
+                vm.AmountToPay = destinationAccount.Discharge;
             }
 
             var owner = await _userService.GetUserById(accountToPay.ClientId);
             vm.Owner = $"{owner.FirstName} {owner.LastName}";
-            return RedirectToAction("ConfirmPayment", vm);
+            return RedirectToAction("ConfirmCreditCardPayment", vm);
         }
 
         public async Task<ActionResult> LoamPayment()
@@ -211,6 +211,7 @@ namespace WebApp.InternetBanking.Controllers
                 vm.Error = accountToPay.Error;
                 return View(vm);
             }
+
             var owner = await _userService.GetUserById(accountToPay.ClientId);
             vm.Owner = $"{owner.FirstName} {owner.LastName}";
             return RedirectToAction("ConfirmPayment", vm);
@@ -226,6 +227,18 @@ namespace WebApp.InternetBanking.Controllers
         {
             await _paymentSvc.Payment(vm);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
-        }   
+        }
+
+        public ActionResult ConfirmCreditCardPayment(SavePaymentViewModel vm)
+        {
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmCreditCardPaymentPost(SavePaymentViewModel vm)
+        {
+            await _paymentSvc.CreditCardPayment(vm);
+            return RedirectToRoute(new { controller = "Home", action = "Index" });
+        }
     }
 }

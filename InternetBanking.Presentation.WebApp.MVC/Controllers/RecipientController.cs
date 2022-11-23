@@ -21,12 +21,12 @@ namespace WebApp.InternetBanking.Controllers
         private readonly IUserService _userService;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        AuthenticationResponse response;
+        AuthenticationResponse currentlyUser;
 
         public RecipientController(IHttpContextAccessor httPContextAccesor , IRecipientService recipientService, IProductService productSvc, IUserService userService)
         {
             _httpContextAccessor = httPContextAccesor;
-            response = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _recipientSvc = recipientService;
             _productSvc = productSvc;
             _userService = userService;
@@ -34,7 +34,7 @@ namespace WebApp.InternetBanking.Controllers
         public async Task<IActionResult> Index()
         {
             var recipients = await _recipientSvc.GetAllVm();
-            recipients = recipients.Where(r => r.UserId == response.Id).ToList();
+            recipients = recipients.Where(r => r.UserId == currentlyUser.Id).ToList();
 
             ViewBag.Recipients = recipients;
             return View();
@@ -55,14 +55,13 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(RecipientSaveViewModel vm)
         {
-            vm.UserId = response.Id;
+            vm.UserId = currentlyUser.Id;
             
             var recipient = await _recipientSvc.GetAllVm();
             var products = await _productSvc.GetAllVm();
 
-            var savingAccount = products.Where(e => e.AccountNumber == vm.RecipientCode).SingleOrDefault();
-
-            recipient = recipient.Where(e => e.UserId == response.Id).ToList();
+            var savingAccount = products.Where(e => e.AccountNumber == vm.RecipientCode).FirstOrDefault();
+            recipient = recipient.Where(e => e.UserId == currentlyUser.Id).ToList();
             ViewBag.Recipients = recipient;
 
 
@@ -77,9 +76,15 @@ namespace WebApp.InternetBanking.Controllers
                 return View("Index", vm);
             }
 
-            if (savingAccount.TypeAccountId == (int)AccountTypes.CreditAccount || savingAccount.TypeAccountId == (int)AccountTypes.LoanAccount)
+            if (savingAccount.TypeAccountId != (int)AccountTypes.SavingAccount)
             {
                 ModelState.AddModelError("AccountValidation", "El numero de cuenta ingresado no es de una cuenta de ahorro.");
+                return View("Index", vm);
+            }
+
+            if (savingAccount.ClientId == currentlyUser.Id)
+            {
+                ModelState.AddModelError("AccountValidation", "No puedes agregarte a ti mismo como beneficiario");
                 return View("Index", vm);
             }
 

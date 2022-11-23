@@ -40,7 +40,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link btn-primary fs-5">
+                <a asp-controller="CashAdvance" asp-action="Index" class="nav-link btn-primary fs-5">
                     Avance de Efectivo
                 </a>
             </li>
@@ -105,7 +105,8 @@
                         {
                             <li class="list-group-item d-flex justify-content-between align-items-center fs-6 fw-bold">
                                 @item.AccountNumber
-                                <h6 class="text-muted p-2">US$@(string.Format(indianCulture, "{0:N}", @item.Charge))</h6>
+                                <h6 class="text-muted p-2">Credito disponible: US$@(string.Format(indianCulture, "{0:N}", @item.Charge))</h6>
+                                <h6 class="text-muted p-2">Deuda pendiente: US$@(string.Format(indianCulture, "{0:N}", @item.Discharge))</h6>
                             </li>
                         }
                     }
