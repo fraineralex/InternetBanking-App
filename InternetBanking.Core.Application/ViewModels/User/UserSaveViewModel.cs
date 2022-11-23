@@ -9,34 +9,42 @@ namespace InternetBanking.Core.Application.ViewModels.User
 {
     public class UserSaveViewModel
     {
-        public string Id { get; set; }
-        [Required(ErrorMessage = "Debe ingresar el nombre del usuario")]
+        public string? Id { get; set; }
+        [Required(ErrorMessage = "Field is required")]
         [DataType(DataType.Text)]
-        public string Name { get; set; }
-
-        [Required(ErrorMessage = "Debe ingresar el apellido del usuario")]
+        public string? IdCard { get; set; }
+        [Required(ErrorMessage = "Field is required")]
         [DataType(DataType.Text)]
-        public string LastName { get; set; }
-
-        [Required(ErrorMessage = "Debe ingresar la cedula del usuario")]
+        public string? FirstName { get; set; }
+        [Required(ErrorMessage = "Field is required")]
         [DataType(DataType.Text)]
-        public string Identification { get; set; }
+        public string? LastName { get; set; }
 
-        [Required(ErrorMessage = "Debe ingresar el correo del usuario")]
+        [Required(ErrorMessage = "Username is required")]
         [DataType(DataType.Text)]
-        public string Email { get; set; }
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
-        [Required(ErrorMessage = "Debe ingresar la contraseñas del usuario")]
+        [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
-        [Compare(nameof(Password), ErrorMessage = "Las contraseñas deben ser iguales")]
-        [Required(ErrorMessage = "Debe ingresar una contraseña para el usuario")]
+        [Compare(nameof(Password), ErrorMessage = "Passwords does not match")]
+        [Required(ErrorMessage = "Confirm password")]
         [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; }
-        public string SavingsAccount { get; set; }
+        public string? ConfirmPassword { get; set; }
+
+
+        [DataType(DataType.Text)]
+        [Required(ErrorMessage = "Email is required")]
+        public string? Email { get; set; }
+
+        [DataType(DataType.Text)]
+        [Required(ErrorMessage = "Phone is required")]
+        public string? PhoneNumber { get; set; }
+        public int TypeUser { get; set; }
         public bool HasError { get; set; }
-        public string Error { get; set; }
+        public string? Error { get; set; }
+        public bool IsVerified { get; set; } = false;
+        public double Amount { get; set; } = 0;
     }
 }

@@ -1,5 +1,5 @@
-﻿using InternetBanking.Core.Application.Dtos.Email;
-using InternetBanking.Core.Domain.Settings;
+﻿using InternetBanking.Core.Application.Dtos;
+using InternetBanking.Core.Application.Dtos.Email;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,6 @@ namespace InternetBanking.Core.Application.Interfaces.Services
 {
     public interface IEmailService
     {
-        public MailSettings _mailSettings { get; }
-        Task SendEmailAsync(EmailRequest request);
+        Task SendAsync(EmailRequest req);
     }
 }

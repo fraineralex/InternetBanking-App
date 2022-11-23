@@ -9,59 +9,50 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application.Services
 {
-    public class GenericService<SaveViewModel, ViewModel, Model> : IGenericService<SaveViewModel, ViewModel, Model>
-           where SaveViewModel : class
-           where ViewModel : class
-           where Model : class
+    public class GenericService<SaveViewModel, ViewModel, Entity> : IGenericService<SaveViewModel, ViewModel, Entity>
+        where SaveViewModel : class
+        where ViewModel : class
+        where Entity : class
     {
-        private readonly IGenericRepository<Model> _genericRepository;
+        private readonly IGenericRepository<Entity> _repo;
         private readonly IMapper _mapper;
-
-
-        public GenericService(IGenericRepository<Model> genericRepository, IMapper mapper)
+        public GenericService(IGenericRepository<Entity> repo, IMapper mapper)
         {
-            _genericRepository = genericRepository;
+            _repo = repo;
             _mapper = mapper;
-        }
-
-        public virtual async Task<List<ViewModel>> GetAllViewModel()
-        {
-            var entityList = await _genericRepository.GetAllAsync();
-
-            return _mapper.Map<List<ViewModel>>(entityList);
         }
 
         public virtual async Task<SaveViewModel> Add(SaveViewModel vm)
         {
-            Model entity = _mapper.Map<Model>(vm);
-
-            entity = await _genericRepository.AddAsync(entity);
-
-            SaveViewModel entityVm = _mapper.Map<SaveViewModel>(entity);
-
-            return entityVm;
-        }
-
-        public virtual async Task Update(SaveViewModel vm, int id)
-        {
-            Model entity = _mapper.Map<Model>(vm);
-
-            await _genericRepository.UpdateAsync(entity, id);
+            Entity entity = _mapper.Map<Entity>(vm);
+            entity = await _repo.AddAsync(entity);
+            SaveViewModel viewModel = _mapper.Map<SaveViewModel>(entity);
+            return viewModel;
         }
 
         public virtual async Task Delete(int id)
         {
-            var entity = await _genericRepository.GetByIdAsync(id);
-            await _genericRepository.DeleteAsync(entity);
+            Entity entity = await _repo.GetByIdAsync(id);
+            await _repo.DeleteAsync(entity);
         }
 
-        public virtual async Task<SaveViewModel> GetSaveViewModelById(int id)
+        public virtual async Task<List<ViewModel>> GetAllVm()
         {
-            var entity = await _genericRepository.GetByIdAsync(id);
+            var entityList = await _repo.GetAllAsync();
+            return _mapper.Map<List<ViewModel>>(entityList);
+        }
 
+        public virtual async Task<SaveViewModel> GetbyIdVM(int id)
+        {
+            Entity entity = await _repo.GetByIdAsync(id);
             SaveViewModel vm = _mapper.Map<SaveViewModel>(entity);
-
             return vm;
+        }
+
+        public virtual async Task Update(SaveViewModel vm, int id)
+        {
+            Entity entity = _mapper.Map<Entity>(vm);
+            await _repo.UpdateAsync(entity, id);
         }
     }
 }

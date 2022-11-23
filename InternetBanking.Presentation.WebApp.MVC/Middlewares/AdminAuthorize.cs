@@ -1,10 +1,10 @@
-﻿using InternetBanking.Core.Application.Dtos.Account;
+﻿using InternetBanking.Controllers;
+using InternetBanking.Core.Application.Dtos.Account;
 using InternetBanking.Core.Application.Enums;
 using InternetBanking.Core.Application.Helpers;
-using InternetBanking.Presentation.WebApp.MVC.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace InternetBanking.Presentation.WebApp.MVC.Middlewares
+namespace WebApp.InternetBanking.Middlewares
 {
     public class AdminAuthorize : IAsyncActionFilter
     {
@@ -17,10 +17,11 @@ namespace InternetBanking.Presentation.WebApp.MVC.Middlewares
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var currentlyUser = _httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            if (currentlyUser != null)
+            var user = _httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            if (user != null)
             {
-                var isAdmin = currentlyUser.Roles.Contains(Roles.Admin.ToString());
+                var isAdmin = user.Roles.Contains(Roles.Admin.ToString());
+
                 if (!isAdmin)
                 {
                     var controller = (HomeController)context.Controller;

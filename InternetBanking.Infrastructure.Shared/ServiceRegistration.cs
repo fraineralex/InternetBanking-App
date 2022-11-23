@@ -11,15 +11,15 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Infrastructure.Shared
 {
-    //Extension Method - Decorator
-
+    //Extension Methods - application of this design pattern Decorator
     public static class ServiceRegistration
     {
-
-        public static void AddSharedInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static void AddSharedInfrastructure(this IServiceCollection service, IConfiguration config)
         {
-            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
-            services.AddTransient<IEmailService, EmailService>();
+            service.Configure<MailSettings>(config.GetSection("MailSettings"));
+            service.AddTransient<IEmailService, EmailService>();
+            //service.AddTransient<IUploadFileService, UploadFileService>();
         }
     }
 }
+

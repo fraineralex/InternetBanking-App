@@ -1,138 +1,64 @@
-﻿<!DOCTYPE html>
-<html lang="en" dir="ltr">
+﻿@using InternetBanking.Core.Application.Enums
+@using Microsoft.AspNetCore.Http
+@using InternetBanking.Core.Application.Dtos.Account
+@using InternetBanking.Core.Application.Helpers
+@using InternetBanking.Core.Application.ViewModels.User
+@inject IHttpContextAccessor httpContextAccesor
+@{
+    var user = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    bool isAdmin = false;
+    if (user != null)
+    {
+        isAdmin = user.Roles.Contains(Roles.Admin.ToString());
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - InternetBanking.Presentation.WebApp.MVC</title>
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/InternetBanking.Presentation.WebApp.MVC.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - BDM</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
 </head>
 <body>
-    <div class="sidebar close">
-        <div class="logo-details">
-            <i class='bx bxs-bank'></i>
-            <span class="logo_name">Internet Banking</span>
-        </div>
-        <ul class="nav-links">
-            <li>
-                <a href="#">
-                    <i class='bx bx-grid-alt'></i>
-                    <span class="link_name">Products</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Products</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="iocn-link">
-                    <a href="#">
-                        <i class='bx bxs-report'></i>
-                        <span class="link_name">Payments</span>
-                    </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Payments</a></li>
-                    <li><a href="#">💸 Express</a></li>
-                    <li><a href="#">🪪 Credit card</a></li>
-                    <li><a href="#">🏦 Loan</a></li>
-                    <li><a href="#">🚀 Beneficiaries</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bxs-contact'></i>
-                    <span class="link_name">Beneficiary</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Beneficiary</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-money'></i>
-                    <span class="link_name">Cash advance</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Cash advance</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-transfer-alt'></i>
-                    <span class="link_name">Transfers</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Transfers</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-history'></i>
-                    <span class="link_name">History</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">History</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
-                    <span class="link_name">Setting</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Setting</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-log-out'></i>
-                    <span class="link_name">Sign out</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Sign out</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="profile-details">
-                    <div class="profile-content">
-                        <img src="/images/profile.jpeg" alt="profileImg">
+    <header>
+        @if (isAdmin)
+        {        
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-primary bg-primary  border-bottom box-shadow">
+                <div class="container">
+                    <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">Banco BDM</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="text-white nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            @if (user != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="text-white nav-link text-dark" asp-area="" asp-controller="User" asp-action="LogOut">Cerrar Sesion</a>
+                                </li>
+                            }
+
+                        </ul>
                     </div>
-                    <div class="name-job">
-                        <div class="profile_name">Fulano Sanchez</div>
-                        <div class="job">👨🏻‍🚀 fulano.dev</div>
-                    </div>
-                    <i class='bx bx-signal-1'></i>
                 </div>
-            </li>
-        </ul>
+            </nav>
+        }
+    </header>
+    <div class="w-100 h-100">
+        <main role="main" class="">
+            @RenderBody()
+        </main>
     </div>
-
-    <section class="home-section">
-        <div class="home-content" role="main">
-            <div class="container">
-                <main class="pb-3 mx-auto mb-5">
-
-                    @RenderBody()
-
-                </main>
-            </div>   
-        </div>
-    </section>
-
-    <!--<footer class="border-top footer text-light mt-5" style="background: #11101d;">
-        <div class="container text-center">
-            &copy; 2022 Internet Banking - Designed with 💙 by ITLA students
-        </div>
-    </footer>-->
-
-    <script src="script.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

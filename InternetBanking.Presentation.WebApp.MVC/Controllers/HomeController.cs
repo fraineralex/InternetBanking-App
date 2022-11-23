@@ -2,73 +2,133 @@
 using InternetBanking.Core.Application.Enums;
 using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Services;
-using InternetBanking.Core.Application.ViewModels.Admin.Auth;
-using InternetBanking.Presentation.WebApp.MVC.Middlewares;
-using InternetBanking.Presentation.WebApp.MVC.Models;
+using InternetBanking.Core.Application.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using WebApp.InternetBanking.Middlewares;
 
-namespace InternetBanking.Presentation.WebApp.MVC.Controllers
+namespace InternetBanking.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly IUserService _userService;
-        private readonly ISavingsAccountsService _savingsAccountsService;
-        private readonly ICreditCardsService _cardsService;
-        private readonly ILoansService _loansService;
+        private readonly IUserService _svc;
+        private readonly IProductService _productSvc;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-        public HomeController(IUserService userService, RoleManager<IdentityRole> roleManager, ISavingsAccountsService savingsAccountsService, ICreditCardsService cardsService, ILoansService loansService, IHttpContextAccessor httpContextAccessor)
+        public HomeController(IUserService svc, RoleManager<IdentityRole> roleManager, IProductService productSvc, IHttpContextAccessor http)
         {
-            _userService = userService;
+            _svc = svc;
             _roleManager = roleManager;
-            _savingsAccountsService = savingsAccountsService;
-            _loansService = loansService;
-            _cardsService = cardsService;
-            _httpContextAccessor = httpContextAccessor;
+            _productSvc = productSvc;
+            _httpContextAccessor = http;
         }
 
         public IActionResult Index()
         {
-
-            var currentlyUser = HttpContext.Session.Get<AuthenticationResponse>("user");
-            var isAdmin = currentlyUser.Roles.Contains(Roles.Admin.ToString());
-
+            var user = HttpContext.Session.Get<AuthenticationResponse>("user");
+            var isAdmin = user.Roles.Contains(Roles.Admin.ToString());
             if (isAdmin)
             {
-                return RedirectToAction("HomeAdmin");
+                return RedirectToAction("DashboardAdmin");
             }
-
-            return RedirectToAction("HomeClient");
+            return RedirectToAction("DashboardClient");
         }
 
         [ServiceFilter(typeof(AdminAuthorize))]
-        public IActionResult HomeAdmin()
+        public IActionResult DashboardAdmin()
         {
             return View();
         }
 
         [ServiceFilter(typeof(ClientAuthorize))]
-        public async Task<IActionResult> HomeClient()
+        public async Task<IActionResult> DashboardClient()
         {
-            var currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            var user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
 
-            ViewBag.SavingAccounts = await _savingsAccountsService.GetAllSavingsAccountsViewModels(currentlyUser.Id);
-            ViewBag.CreditCards = await _cardsService.GetAllCreditCardsViewModels(currentlyUser.Id);
-            ViewBag.Loans = await _loansService.GetAllLoansViewModels(currentlyUser.Id);
+            ViewBag.SavingAccount = null;//await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.SavingAccount);
+            ViewBag.CreditCard = null;// await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.CreditAccount);
+            ViewBag.Loan = null;// await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.LoanAccount);
 
             return View();
         }
 
-        public IActionResult Error()
+        public async Task<IActionResult> UserManagement()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ViewBag.Users = await _svc.GetAllUsers();
+            return View();
+        }
+
+        [ServiceFilter(typeof(AdminAuthorize))]
+        public  async Task<IActionResult> Register()
+        {
+            ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+
+            return View(new UserSaveViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(UserSaveViewModel vm)
+        {
+            
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+                return View(vm);
+            }
+
+            var origin = Request.Headers["origin"];
+            RegisterResponse response = await _svc.RegisterAsync(vm, origin);
+            if (response.HasError)
+            {
+                vm.HasError = response.HasError;
+                vm.Error = response.Error;
+                ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+                return View(vm);
+            }
+
+            return RedirectToRoute(new { controller = "Home", action = "UserManagement" });
+        }
+
+        public async Task<IActionResult> UpdateUser(string id)
+        {
+            var user = HttpContext.Session.Get<AuthenticationResponse>("user");
+
+            if (id == user.Id)
+            {
+                return RedirectToRoute(new {controller ="Home", action = "UserManagement" });
+            }
+            UserSaveViewModel vm = await _svc.GetUserById(id);
+            return View("Register", vm);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(UserSaveViewModel vm)
+        {
+            ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+            if (!ModelState.IsValid)
+            {
+                return View("Register", vm);
+            }
+            await _svc.UpdateUserAsync(vm, vm.Id);
+            return RedirectToRoute(new { controller = "Home", action = "UserManagement" });
+        }
+
+        public async Task<IActionResult> ActiveUser(string id)
+        {
+            return View("ActiveUser", await _svc.GetUserById(id));
+        }
+        [HttpPost]
+        public async Task<IActionResult> ActiveUser(UserSaveViewModel vm)
+        {
+            await _svc.ActivedUserAsync(vm.Id);
+            return RedirectToRoute(new { controller = "Home", action = "UserManagement" });
         }
     }
 }

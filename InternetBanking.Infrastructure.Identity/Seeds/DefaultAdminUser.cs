@@ -14,16 +14,15 @@ namespace InternetBanking.Infrastructure.Identity.Seeds
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             ApplicationUser defaultUser = new();
-            defaultUser.UserName = "adminuser";
-            defaultUser.Email = "adminuser@email.com";
-            defaultUser.FirstName = "Developer";
-            defaultUser.LastName = "López";
+            defaultUser.UserName = "DefaultAdminUser";
+            defaultUser.Email = "DefaultAdminUser@gmail.com";
+            defaultUser.FirstName = "Chocolechi";
+            defaultUser.LastName = "Negrito";
+            defaultUser.IdCard = "012-2296632-2";
+            defaultUser.IsVerified = true;
             defaultUser.EmailConfirmed = true;
             defaultUser.PhoneNumberConfirmed = true;
-            defaultUser.ProfileImage = "/wwwroot/images/profile.jpeg";
-            defaultUser.IDCard = "012-2296632-2";
-            defaultUser.IsActive = true;
-            //defaultUser.Role = "";
+            defaultUser.TypeUser = 1;
 
             if (userManager.Users.All(u => u.Id != defaultUser.Id))
             {
@@ -31,9 +30,8 @@ namespace InternetBanking.Infrastructure.Identity.Seeds
                 if (user == null)
                 {
                     await userManager.CreateAsync(defaultUser, "123Pa$$word!");
-                    await userManager.AddToRoleAsync(defaultUser, Roles.Client.ToString());
                     await userManager.AddToRoleAsync(defaultUser, Roles.Admin.ToString());
-                    await userManager.AddToRoleAsync(defaultUser, Roles.SuperAdmin.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
                 }
             }
         }

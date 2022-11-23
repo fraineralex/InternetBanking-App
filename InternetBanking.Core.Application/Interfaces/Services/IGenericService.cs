@@ -1,18 +1,20 @@
-﻿using InternetBanking.Core.Application.Dtos.Account;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application.Interfaces.Services
 {
-    public interface IGenericService<SaveViewModel, ViewModel, Model>
+    public interface IGenericService<SaveViewModel, ViewModel, Entity>
         where SaveViewModel : class
         where ViewModel : class
-        where Model : class
+        where Entity : class
     {
-        Task<List<ViewModel>> GetAllViewModel();
-        Task<SaveViewModel> Add(SaveViewModel vm);
+        Task<SaveViewModel> Add(SaveViewModel viewModel);
         Task Update(SaveViewModel vm, int id);
         Task Delete(int id);
-        Task<SaveViewModel> GetSaveViewModelById(int id);
-
-
+        Task<SaveViewModel> GetbyIdVM(int id);
+        Task<List<ViewModel>> GetAllVm();
     }
 }

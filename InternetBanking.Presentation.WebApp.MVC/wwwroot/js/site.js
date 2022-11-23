@@ -1,14 +1,20 @@
-﻿let arrow = document.querySelectorAll(".arrow");
-for (var i = 0; i < arrow.length; i++) {
-    arrow[i].addEventListener("click", (e) => {
-        let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
-        arrowParent.classList.toggle("showMenu");
-    });
-}
+﻿const montoInput = document.querySelector("#monto");
+const montoLabel = document.querySelector("#montoLabel");
+const rolSelect = document.querySelector("#rol-select");
 
-let sidebar = document.querySelector(".sidebar");
-let sidebarBtn = document.querySelector(".bxs-bank");
-console.log(sidebarBtn);
-sidebarBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("close");
+document.addEventListener('DOMContentLoaded', () => {
+    // To hide after loading the view
+    montoLabel.classList.add("d-none");
+    montoInput.setAttribute("type", "hidden");
+
+    rolSelect.onchange = (e) => {
+
+        if (e.target.value === "1") {
+            montoLabel.classList.add("d-none");
+            montoInput.setAttribute("type", "hidden");
+        } else {
+            montoLabel.classList.remove("d-none");
+            montoInput.setAttribute("type", "text");
+        }
+    }
 });

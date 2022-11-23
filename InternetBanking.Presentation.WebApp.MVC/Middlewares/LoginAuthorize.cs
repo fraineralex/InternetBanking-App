@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
-using InternetBanking.Presentation.WebApp.MVC.Controllers;
+using WebApp.InternetBanking.Controllers;
 
-namespace WebApp.InternetBanking.Presentation.WebApp.MVC.Middlewares
+namespace WebApp.InternetBanking.Middlewares
 {
     public class LoginAuthorize : IAsyncActionFilter
     {
@@ -13,13 +13,12 @@ namespace WebApp.InternetBanking.Presentation.WebApp.MVC.Middlewares
             _userSession = userSession;
         }
 
-        public async Task OnActionExecutionAsync(ActionExecutingContext context,ActionExecutionDelegate next)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if (_userSession.HasUser())
             {
-                //here must be "UserController"
-                var controller = (HomeController)context.Controller;
-                context.Result = controller.RedirectToAction("index", "home");
+                var controller = (UserController)context.Controller;
+                context.Result = controller.RedirectToAction("Index", "Home");
             }
             else
             {

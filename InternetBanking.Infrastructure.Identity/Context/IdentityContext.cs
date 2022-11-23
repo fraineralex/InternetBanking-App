@@ -2,38 +2,41 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace InternetBanking.Infrastructure.Identity.Context
 {
     public class IdentityContext : IdentityDbContext<ApplicationUser>
     {
-        public IdentityContext(DbContextOptions<IdentityContext> options) : base(options) { }
+        public IdentityContext(DbContextOptions<IdentityContext> options): base(options){}
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder mb)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.HasDefaultSchema("Identity");
+            //FLUENT API
 
-            modelBuilder.Entity<ApplicationUser>(entity =>
+            base.OnModelCreating(mb);
+            mb.HasDefaultSchema("Identity");
+
+            #region tables
+            mb.Entity<ApplicationUser>(entity =>
             {
-                entity.ToTable("Users");
+                entity.ToTable(name: "Users");
             });
 
-            modelBuilder.Entity<IdentityRole>(entity =>
+            mb.Entity<IdentityRole>(entity =>
             {
                 entity.ToTable(name: "Roles");
             });
 
-            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            mb.Entity<IdentityUserRole<string>>(entity =>
             {
                 entity.ToTable(name: "UserRoles");
             });
 
-            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+            mb.Entity<IdentityUserLogin<string>>(entity =>
             {
                 entity.ToTable(name: "UserLogins");
             });
+            #endregion
 
         }
     }

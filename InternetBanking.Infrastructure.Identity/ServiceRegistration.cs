@@ -1,51 +1,49 @@
-﻿using InternetBanking.Infrastructure.Identity.Context;
+﻿using InternetBanking.Core.Application.Interfaces.Services;
+using InternetBanking.Infrastructure.Identity.Context;
 using InternetBanking.Infrastructure.Identity.Entities;
-using InternetBanking.Core.Application.Interfaces.Repositories;
-using InternetBanking.Core.Application.Interfaces.Services;
+using InternetBanking.Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using InternetBanking.Infrastructure.Identity.Seeds;
+
 
 namespace InternetBanking.Infrastructure.Identity
 {
-    //Extension Method - Decorator
+    //Main reason for creating this class is to follow the Single responsability
     public static class ServiceRegistration
     {
-        public static void AddIdentityInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        // Extension methods | "Decorator"
+        // This allows us to extend and create new functionallity following "Open-Closed Principle"
+        public static void AddIdentityInfrastructure(this IServiceCollection service, IConfiguration config)
         {
-            #region Contexts
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            if (config.GetValue<bool>("UseInMemoryDatabase"))
             {
-                services.AddDbContext<IdentityContext>(options => options.UseInMemoryDatabase("IdentityDb"));
+                service.AddDbContext<IdentityContext>(options => options.UseInMemoryDatabase("IdentityDb"));
             }
             else
             {
-                services.AddDbContext<IdentityContext>(options =>
-                {
-                    options.EnableSensitiveDataLogging();
-                    options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"),
-                    m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName));
-                });
+                service.AddDbContext<IdentityContext>(options =>
+                    options.UseSqlServer(config.GetConnectionString("IdentityConnection"),
+                    m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName)));
             }
-            #endregion
+            
+            #region 'Identity'
+            service.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityContext>()
+                .AddDefaultTokenProviders();
 
-            #region Identity
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
-
-            services.ConfigureApplicationCookie(options =>
+            service.ConfigureApplicationCookie(opts => 
             {
-                options.LoginPath = "/User";
-                options.AccessDeniedPath = "/User/AccessDenied";
+                opts.LoginPath = "/User";
+                opts.AccessDeniedPath = "/User/AccessDenied";
             });
 
-            services.AddAuthentication();
+            service.AddAuthentication();
             #endregion
 
-            #region Services
-            services.AddTransient<IAccountService, AccountService>();
+            #region 'Services'
+            service.AddTransient<IAccountService, AccountService>();
             #endregion
         }
     }

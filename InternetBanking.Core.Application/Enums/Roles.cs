@@ -8,8 +8,7 @@ namespace InternetBanking.Core.Application.Enums
 {
     public enum Roles
     {
-        SuperAdmin,
-        Admin,
-        Client
+        Admin = 1,
+        Basic
     }
 }

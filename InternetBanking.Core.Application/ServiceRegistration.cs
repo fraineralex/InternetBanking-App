@@ -1,27 +1,26 @@
 ﻿using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application
 {
-    //Extension Method - Decorator
+    //Extension Methods - application of this design pattern Decorator
     public static class ServiceRegistration
     {
-        public static void AddApplicationLayer(this IServiceCollection services)
+        public static void AddApplicationLayer(this IServiceCollection service)
         {
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            //#region Services
-            //services.AddTransient(typeof(IGenericService<,,>), typeof(GenericService<,,>));
-            //services.AddTransient<IProductService, ProductService>();
-            //services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IUserService, UserService>();
-            //#endregion
+            service.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            #region Services
+
+            service.AddTransient<IUserService, UserService>();
+            service.AddTransient<IProductService, ProductService>();
+            service.AddTransient<ITypeAccountService, TypeAccountService>();
+            service.AddTransient<IRecipientService, RecipientService>();
+            service.AddTransient<IPaymentService, PaymentService>();
+
+            #endregion
         }
     }
 }

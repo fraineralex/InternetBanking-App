@@ -1,40 +1,38 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InternetBanking.Core.Application.Interfaces.Repositories;
+using InternetBanking.Infrastructure.Persistence.Context;
+using InternetBanking.Infrastructure.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using InternetBanking.Infrastructure.Persistence.Context;
-using InternetBanking.Core.Application.Interfaces.Repositories;
-using InternetBanking.Infrastructure.Persistence.Repositories;
 
 namespace InternetBanking.Infrastructure.Persistence
 {
-
-    //Extension Method - Decorator
+    //Main reason for creating this class is to follow the Single responsability
     public static class ServiceRegistration
     {
-        public static void AddPersistenceInfrastructure(this IServiceCollection services,IConfiguration configuration)
+        // Extension methods | "Decorator"
+        // This allows us to extend and create new functionallity following "Open-Closed Principle"
+        public static void AddPersistanceInfrastructure(this IServiceCollection service, IConfiguration config)
         {
-            #region Contexts
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            if (config.GetValue<bool>("UseInMemoryDatabase"))
             {
-                services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("ApplicationDb"));
+                service.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("ApplicationDb"));
             }
             else
             {
-                services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                m => m.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
+                service.AddDbContext<AppDbContext>(options =>
+                    options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+                    m => m.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
             }
-            #endregion
 
-            #region Repositories
-            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddTransient<ILoansRepository, LoansRepository>();
-            services.AddTransient<IPaymentsRepository, PaymentsRepository>();
-            services.AddTransient<IBeneficiariesRepository, BeneficiariesRepository>();
-            services.AddTransient<ISavingsAccountsRepository, SavingsAccountsRepository>();
-            services.AddTransient<ICreditCardsRepository, CreditCardsRepository>();
-            services.AddTransient<IPersonalTransfersRepository, PersonalTransfersRepository>();
-            services.AddTransient<ICashAdvancesRepository, CashAdvancesRepository>();
+            #region 'repositories'
+
+            service.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            service.AddTransient<IProductRepository, ProductRepository>();
+            service.AddTransient<ITypeAccountRepository, TypeAccountRepository>();
+            service.AddTransient<IRecipientRepository, RecipientRepository>();
+            service.AddTransient<IPaymentRepository, PaymentRepository>();
+
             #endregion
         }
     }

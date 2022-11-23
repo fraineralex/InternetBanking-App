@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infreastructure", "Infreast
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{F3AA0278-B381-433A-A798-33E697A30D89}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Presentation.WebApp.MVC", "InternetBanking.Presentation.WebApp.MVC\InternetBanking.Presentation.WebApp.MVC.csproj", "{1EBC042F-F2BB-4EF2-AD0A-AD1BD22B0B50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.InternetBanking", "InternetBanking.Presentation.WebApp.MVC\WebApp.InternetBanking.csproj", "{1EBC042F-F2BB-4EF2-AD0A-AD1BD22B0B50}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternetBanking.Infrastructure.Identity", "InternetBanking.Infrastructure.Identity\InternetBanking.Infrastructure.Identity.csproj", "{BED40DDF-D5BE-4C39-B988-1A73FCDAED4F}"
 EndProject

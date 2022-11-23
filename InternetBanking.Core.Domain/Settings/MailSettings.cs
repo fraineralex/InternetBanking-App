@@ -14,6 +14,5 @@ namespace InternetBanking.Core.Domain.Settings
         public string SmtpUser { get; set; }
         public string SmtpPass { get; set; }
         public string DisplayName { get; set; }
-
     }
 }

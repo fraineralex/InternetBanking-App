@@ -1,73 +1,62 @@
 ﻿using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace InternetBanking.Infrastructure.Persistence.Repositories
 {
     public class GenericRepository<Entity> : IGenericRepository<Entity> where Entity : class
     {
-        private readonly ApplicationContext _applicationContext;
-
-        public GenericRepository(ApplicationContext applicationContext)
+        private readonly AppDbContext _db;
+        public GenericRepository(AppDbContext db)
         {
-            _applicationContext = applicationContext;
+            _db = db;
         }
-
         public virtual async Task<Entity> AddAsync(Entity entity)
         {
-
-            await _applicationContext.AddAsync(entity);
-            await _applicationContext.SaveChangesAsync();
-
+            await _db.Set<Entity>().AddAsync(entity);
+            await _db.SaveChangesAsync();
             return entity;
+        }
+
+        public virtual async Task DeleteAsync(Entity entity)
+        {
+            _db.Set<Entity>().Remove(entity);
+            await _db.SaveChangesAsync();
+
         }
 
         public virtual async Task<List<Entity>> GetAllAsync()
         {
-            return await _applicationContext.Set<Entity>().ToListAsync();
+            return await _db.Set<Entity>().ToListAsync();
         }
 
-        public virtual async Task<Entity> GetByIdAsync(int id)
+        public virtual async Task<List<Entity>> GetAllWithIncludeAsync(List<string> props)
         {
+            var query = _db.Set<Entity>().AsQueryable();
 
-            return await _applicationContext.Set<Entity>().FindAsync(id);
-        }
-
-        public virtual async Task<List<Entity>> GetWithIncludeAsync(List<string> properties)
-        {
-
-            var query = _applicationContext.Set<Entity>().AsQueryable();
-
-            foreach (string property in properties)
+            foreach (string prop in props)
             {
-                query.Include(property);
+                query = query.Include(prop);
             }
 
             return await query.ToListAsync();
         }
 
+        public virtual async Task<Entity> GetByIdAsync(int id)
+        {
+            return await _db.Set<Entity>().FindAsync(id);
+        }
+
         public virtual async Task UpdateAsync(Entity entity, int id)
         {
-
-            var response = await _applicationContext.Set<Entity>().FindAsync(id);
-
-            _applicationContext.Entry(response).CurrentValues.SetValues(entity);
-
-            await _applicationContext.SaveChangesAsync();
-
-        }
-
-        public virtual async Task DeleteAsync(Entity entity)
-        {
-
-            _applicationContext.Set<Entity>().Remove(entity);
-            await _applicationContext.SaveChangesAsync();
-
-        }
-
-        public Task<List<Entity>> GetAllWithIncludeAsync(List<string> properties)
-        {
-            throw new NotImplementedException();
+            Entity entry = await _db.Set<Entity>().FindAsync(id);
+            _db.Entry(entry).CurrentValues.SetValues(entity);
+            await _db.SaveChangesAsync();
         }
     }
 }
