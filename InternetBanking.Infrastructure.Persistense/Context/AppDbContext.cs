@@ -104,9 +104,10 @@ namespace InternetBanking.Infrastructure.Persistence.Context
             #region property configurations
 
             #region Products
-            //mb.Entity<Product>()
-            //    .Property(p => p.Id)
-            //    .IsRequired();
+            mb.Entity<Product>()
+                .Property(p => p.Discharge)
+                .HasDefaultValue(0.00)
+                .IsRequired();
             #endregion
 
             #region Typeaccount
