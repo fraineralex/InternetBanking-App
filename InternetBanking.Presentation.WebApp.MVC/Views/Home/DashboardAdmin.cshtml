@@ -24,7 +24,6 @@
                     <section class="d-flex flex-column align-items-center gap-2">
                         <h6 class="text-uppercase text-muted fw-bold">Hoy</h6>
                         <span class="badge bg-light rounded-pill fs-6 px-3">30
-                        
                         </span>
                     </section>
                     <section class="d-flex flex-column align-items-center gap-2">
@@ -42,11 +41,11 @@
                 <div class="d-flex justify-content-around align-items-center">
                     <section class="d-flex flex-column align-items-center gap-2">
                         <h6 class="text-uppercase text-muted fw-bold">Hoy</h6>
-                        <span class="badge bg-light rounded-pill fs-6 px-3">30</span>
+                        <span class="badge bg-light rounded-pill fs-6 px-3">@ViewBag.clientpayment.PaymentsToday</span>
                     </section>
                     <section class="d-flex flex-column align-items-center gap-2">
                         <h6 class="text-uppercase fw-bold">Total</h6>
-                        <span class="badge bg-primary rounded-pill fs-6 px-3">540</span>
+                        <span class="badge bg-primary rounded-pill fs-6 px-3">@ViewBag.clientpayment.TotalPaymets</span>
                     </section>
                 </div>
             </div>
@@ -59,11 +58,11 @@
                 <div class="d-flex justify-content-around align-items-center">
                     <section class="d-flex flex-column align-items-center gap-2">
                         <h6 class="text-uppercase text-muted fw-bold">Activos</h6>
-                        <span class="badge bg-success rounded-pill fs-6 px-3">30</span>
+                        <span class="badge bg-success rounded-pill fs-6 px-3">@ViewBag.clientStatus.ClientsActives</span>
                     </section>
                     <section class="d-flex flex-column align-items-center gap-2">
                         <h6 class="text-uppercase fw-bold">Inactivos</h6>
-                        <span class="badge bg-danger rounded-pill fs-6 px-3">540</span>
+                        <span class="badge bg-danger rounded-pill fs-6 px-3">@ViewBag.clientStatus.ClientsInatives</span>
                     </section>
                 </div>
             </div>
@@ -76,7 +75,7 @@
                 <div class="d-flex align-items-center gap-5 p-2">
                     <section class="d-flex justify-content-center align-items-center gap-4">
                         <h6 class="text-uppercase fw-bold m-0">Total</h6>
-                        <span class="badge bg-primary rounded-pill fs-6 px-5">53</span>
+                        <span class="badge bg-primary rounded-pill fs-6 px-5">@ViewBag.clientProduct.TotalClientProducts</span>
                     </section>
                 </div>
             </div>

@@ -45,9 +45,10 @@ namespace InternetBanking.Controllers
         [ServiceFilter(typeof(AdminAuthorize))]
         public async Task<IActionResult> DashboardAdmin()
         {
-            var payment = await _productSvc.GetPaymentQuantities();
-            var clientStatus = await _productSvc.GetClientStatus();
-            var clientProduct = await _productSvc.GetClientProducts();
+             ViewBag.clientStatus = await _productSvc.GetClientStatus();
+             ViewBag.clientProduct = await _productSvc.GetClientProducts();
+             ViewBag.clientpayment = await _productSvc.GetPaymentQuantities();
+
             return View();
         }
 

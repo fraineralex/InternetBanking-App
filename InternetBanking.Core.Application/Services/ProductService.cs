@@ -128,7 +128,7 @@ namespace InternetBanking.Core.Application.Services
 
             return products;
         }
-        public async Task<IEnumerable<StatusClientQuery>> GetClientStatus()
+        public async Task<StatusClientQuery> GetClientStatus()
         {
             var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
             using var con = new SqlConnection(cs);
@@ -141,10 +141,10 @@ namespace InternetBanking.Core.Application.Services
                           FROM [InternetBankingApp2].[Identity].[Users] 
                           WHERE IsVerified = 1";
 
-            var clientStatus = await con.QueryAsync<StatusClientQuery>(query);
+            var clientStatus = await con.QueryFirstAsync<StatusClientQuery>(query);
             return clientStatus;
         }
-        public async Task<IEnumerable<ProductsQuery>> GetClientProducts()
+        public async Task<ProductsQuery> GetClientProducts()
         {
             var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
             using var con = new SqlConnection(cs);
@@ -153,10 +153,10 @@ namespace InternetBanking.Core.Application.Services
             var query = @"SELECT COUNT(*) TotalClientProducts
                           FROM [InternetBankingApp2].[dbo].[Products]";
 
-            var clientProducts = await con.QueryAsync<ProductsQuery>(query);
+            var clientProducts = await con.QueryFirstAsync<ProductsQuery>(query);
             return clientProducts;
         }
-        public async Task<IEnumerable<PaymentsQuery>> GetPaymentQuantities()
+        public async Task<PaymentsQuery> GetPaymentQuantities()
         {
             var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
             using var con = new SqlConnection(cs);
@@ -167,7 +167,7 @@ namespace InternetBanking.Core.Application.Services
                           Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
                           FROM Payments";
 
-            var payments = await con.QueryAsync<PaymentsQuery>(query);
+            var payments = await con.QueryFirstAsync<PaymentsQuery>(query);
             return payments;
         }
 
