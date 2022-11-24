@@ -38,6 +38,11 @@ namespace WebApp.InternetBanking.Controllers
 
         public async Task<ActionResult> ExpressPayment()
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
             return View(new SavePaymentViewModel());
         }
@@ -45,6 +50,11 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> ExpressPayment(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             vm.TypeOfPayment = 0;
             if (!ModelState.IsValid)
             {
@@ -95,6 +105,11 @@ namespace WebApp.InternetBanking.Controllers
 
         public async Task<ActionResult> CreditPayment()
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
             ViewBag.CreditCards = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.CreditAccount);
             return View(new SavePaymentViewModel());
@@ -103,6 +118,11 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> CreditPayment(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             vm.TypeOfPayment = 0;
             if (!ModelState.IsValid)
             {
@@ -140,6 +160,11 @@ namespace WebApp.InternetBanking.Controllers
 
         public async Task<ActionResult> LoamPayment()
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
             ViewBag.Loans = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.LoanAccount);
             return View(new SavePaymentViewModel());
@@ -148,6 +173,12 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> LoamPayment(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
+
             vm.TypeOfPayment = 1;
             if (!ModelState.IsValid)
             {
@@ -184,6 +215,12 @@ namespace WebApp.InternetBanking.Controllers
 
         public async Task<ActionResult> BeneficiaryPayment()
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
+
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
             var payments = await _recipientService.GetAllVm();
             ViewBag.Beneficiaries = payments.Where(b => b.UserId == currentlyUser.Id).ToList();
@@ -194,6 +231,12 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> BeneficiaryPayment(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
+
             vm.TypeOfPayment = 0;
             if (!ModelState.IsValid)
             {
@@ -224,24 +267,44 @@ namespace WebApp.InternetBanking.Controllers
 
         public ActionResult ConfirmPayment(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             return View(vm);
         }
 
         [HttpPost]
         public async Task<IActionResult> ConfirmPaymentPost(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+
+            }
             await _paymentSvc.Payment(vm);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }
 
         public ActionResult ConfirmCreditCardPayment(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             return View(vm);
         }
 
         [HttpPost]
         public async Task<IActionResult> ConfirmCreditCardPaymentPost(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             await _paymentSvc.CreditCardPayment(vm);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }

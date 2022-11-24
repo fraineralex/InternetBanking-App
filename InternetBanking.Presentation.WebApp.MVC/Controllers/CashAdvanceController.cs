@@ -4,13 +4,16 @@ using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Payment;
 using InternetBanking.Core.Application.ViewModels.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebApp.InternetBanking.Controllers
 {
+    [Authorize(Roles = "Basic")]
     public class CashAdvanceController : Controller
     {
         private readonly IPaymentService _paymentSvc;
@@ -31,6 +34,11 @@ namespace WebApp.InternetBanking.Controllers
         
         public async Task<ActionResult> Index()
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
             ViewBag.CreditCards = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.CreditAccount);
             return View(new SavePaymentViewModel());
@@ -39,6 +47,11 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(SavePaymentViewModel vm)
         {
+            if (currentlyUser.Roles.FirstOrDefault() == "Admin")
+            {
+                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+            }
+
             if (!ModelState.IsValid)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
