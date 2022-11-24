@@ -16,6 +16,7 @@ namespace InternetBanking.Core.Application.ViewModels.Products
         public double Discharge { get; set; }
         public bool IsPrincipal { get; set; } = false;
         public int TypeAccountId { get; set; }
+        public DateTime? Created { get; set; }
         public TypeAccount? TypeAccount { get; set; }
     }
 }
