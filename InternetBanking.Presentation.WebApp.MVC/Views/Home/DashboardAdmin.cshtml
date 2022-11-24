@@ -1,8 +1,5 @@
-﻿@{
-    
-}
-
-<div class="container-fluid">
+﻿
+@*<div class="container-fluid">
     <div class="row bg-light rounded p-3 mb-5">
         <section class="w-100 d-flex justify-content-between align-items-center">
             <h3 class="fs-4 fw-bold fw-bolder m-2 w-100">
@@ -81,4 +78,75 @@
             </div>
         </section>
     </div>
+</div>*@
+
+<section class="container">
+    <div class="row mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-bold mt-4 text-center text-primary"><i class='bx bxs-bank text-primary'></i> Internet Banking App</h1>
+            <p class="fs-3 fw-bold text-secondary mt-1 text-center">
+                Welcome to Internet Banking, here you can manager the users registered in the system. <i class="text-white">🚀</i>
+            </p>
+        </div>
+    </div>
+</section>
+
+@Html.ValidationSummary(false, "", new { @class = "text-danger text-center fw-bold fs-5 mb-3 mt-3 fs-4" })
+
+<div class="row mb-5 mx-auto">
+
+    <h2 class="text-dark fw-bold mt-5 ms-5"><i class='bx bx-grid-alt'></i> DASHBOARD</h2>
+
+    <div class="col-6">
+        <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
+            <div class="card-body">
+
+                <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4 text-primary"><i class='bx bx-grid-alt'></i> Transactions Quantity</h4>
+
+                <p class="fs-4 me-3 fw-bold">TOTAL:  <i class="ms-3 fw-normal  text-info fs-4 fw-bold">@ViewBag.transacctions.TotalTransacctions</i></p>
+                <p class="fs-4 me-3 fw-bold">TODAY:  <i class="ms-3 fw-normal  text-info fs-4 fw-bold">@ViewBag.transacctions.TransacctionsToday</i></p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
+            <div class="card-body">
+
+                <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4 text-primary"><i class='bx bx-grid-alt'></i> Payments Quantity</h4>
+
+                <p class="fs-4 me-3 fw-bold">TOTAL:  <i class="ms-3 fw-normal  text-info fs-4 fw-bold">@ViewBag.clientpayment.TotalPayments</i></p>
+                <p class="fs-4 me-3 fw-bold">TODAY:  <i class="ms-3 fw-normal  text-info fs-4 fw-bold">@ViewBag.clientpayment.PaymentsToday</i></p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
+            <div class="card-body">
+
+                <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4 text-primary"><i class='bx bx-grid-alt'></i> Client Status</h4>
+
+                <p class="fs-4 me-3 fw-bold">ACTIVE:  <i class="ms-3 fw-normal  text-success fs-4 fw-bold">@ViewBag.clientStatus.ClientsActives</i></p>
+                <p class="fs-4 me-3 fw-bold">INACTIVE:  <i class="ms-3 fw-normal  text-danger fs-4 fw-bold">@ViewBag.clientStatus.ClientsInatives</i></p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
+            <div class="card-body">
+
+                <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4 text-primary"><i class='bx bx-grid-alt'></i> TOTAL PRODUCTS ASSIGNED</h4>
+
+                <p class="fs-4 me-3 fw-bold mb-5">TOTAL:  <i class="ms-3 fw-normal  text-info fs-4 fw-bold">@ViewBag.clientProduct.TotalClientProducts</i></p>
+                
+
+            </div>
+        </div>
+    </div>
 </div>
+

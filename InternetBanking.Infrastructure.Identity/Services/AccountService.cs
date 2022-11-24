@@ -288,9 +288,9 @@ namespace InternetBanking.Infrastructure.Identity.Services
                 Subject = "Restore Your Imternet Banking Password!\r\n",
                 Body = $"<h1>Welcome back to Internet Banking App 🏦</h1>" +
                 $"<p>Hi {user.FirstName} {user.LastName},</p>" +
-                $"<p>Your restore password request has been received successfully."+
-                $"<p>Please try to don't forget your password again.</p>" +
-                $"<p>Click the following URL to restore yoient viewsur password 👉🏻 {forgotPassUri}</p>"
+                $"<p>Your restore password request has been received successfully. ✅"+
+                $"<p>Please try to don't forget your password again. 😕</p>" +
+                $"<p><strong>Click the following URL to restore your password</strong> 👉🏻 {forgotPassUri}</p>"
 
             });
 
