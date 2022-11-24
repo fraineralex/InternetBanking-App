@@ -64,6 +64,7 @@ namespace InternetBanking.Controllers
             return View();
         }
 
+        [ServiceFilter(typeof(AdminAuthorize))]
         public async Task<IActionResult> UserManagement()
         {
             ViewBag.Users = await _svc.GetAllUsers();
@@ -78,6 +79,7 @@ namespace InternetBanking.Controllers
             return View(new UserSaveViewModel());
         }
 
+        [ServiceFilter(typeof(AdminAuthorize))]
         [HttpPost]
         public async Task<IActionResult> Register(UserSaveViewModel vm)
         {
@@ -100,7 +102,7 @@ namespace InternetBanking.Controllers
 
             return RedirectToRoute(new { controller = "Home", action = "UserManagement" });
         }
-
+        [ServiceFilter(typeof(AdminAuthorize))]
         public async Task<IActionResult> UpdateUser(string id)
         {
             var user = HttpContext.Session.Get<AuthenticationResponse>("user");
@@ -112,6 +114,7 @@ namespace InternetBanking.Controllers
             UserSaveViewModel vm = await _svc.GetUserById(id);
             return View("Register", vm);
         }
+        [ServiceFilter(typeof(AdminAuthorize))]
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UserSaveViewModel vm)
         {
@@ -124,10 +127,13 @@ namespace InternetBanking.Controllers
             return RedirectToRoute(new { controller = "Home", action = "UserManagement" });
         }
 
+        [ServiceFilter(typeof(AdminAuthorize))]
         public async Task<IActionResult> ActiveUser(string id)
         {
             return View("ActiveUser", await _svc.GetUserById(id));
         }
+
+        [ServiceFilter(typeof(AdminAuthorize))]
         [HttpPost]
         public async Task<IActionResult> ActiveUser(UserSaveViewModel vm)
         {

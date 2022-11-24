@@ -10,5 +10,6 @@ namespace InternetBanking.Core.Application.Interfaces.Services
         Task Payment(SavePaymentViewModel vm);
         Task CashAdvance(SavePaymentViewModel vm);
         Task CreditCardPayment(SavePaymentViewModel vm);
+        Task<SavePaymentViewModel> TransferBetweenAccounts(SavePaymentViewModel vm);
     }
 }

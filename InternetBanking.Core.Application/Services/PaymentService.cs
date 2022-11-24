@@ -114,5 +114,29 @@ namespace InternetBanking.Core.Application.Services
             
         }
 
+        public async Task<SavePaymentViewModel> TransferBetweenAccounts (SavePaymentViewModel vm)
+        {
+            if(vm.PaymentAccount == vm.PaymentDestinationAccount)
+            {
+                vm.HasError = true;
+                vm.Error = "No puede transferirse a la misma cuenta, por favor seleccione otra cuenta";
+                return vm;
+            }
+
+            ProductViewModel originSavingAccount = await _productService.GetProductByNumberAccountForPayment(vm.PaymentAccount, vm.AmountToPay);
+
+
+            if (originSavingAccount.HasError)
+            {
+                vm.HasError = true;
+                vm.Error = originSavingAccount.Error;
+                return vm;
+            }
+
+            await Payment(vm);
+
+            return vm;
+        }
+
     }
 }
