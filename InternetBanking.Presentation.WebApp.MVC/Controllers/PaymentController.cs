@@ -13,22 +13,22 @@ namespace WebApp.InternetBanking.Controllers
 {
     public class PaymentController : Controller
     {
-        private readonly IPaymentService _paymentSvc;
-        private readonly IRecipientService _recipientService;
+        private readonly IPaymentService _paymentService;
+        private readonly IRecipientService _beneficiaryService;
         private readonly IProductService _productService;
         private readonly IUserService _userService;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         AuthenticationResponse currentlyUser;
 
-        public PaymentController(IHttpContextAccessor httPContextAccesor , IPaymentService paymentService, IProductService productService, IUserService userService, IRecipientService recipientService)
+        public PaymentController(IHttpContextAccessor httPContextAccesor , IPaymentService paymentService, IProductService productService, IUserService userService, IRecipientService beneficiaryService)
         {
             _httpContextAccessor = httPContextAccesor;
             currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            _paymentSvc = paymentService;
+            _paymentService = paymentService;
             _productService = productService;
             _userService = userService;
-            _recipientService = recipientService;
+            _beneficiaryService = beneficiaryService;
         }
         
         public ActionResult Index()
@@ -62,7 +62,7 @@ namespace WebApp.InternetBanking.Controllers
                 return View(vm);
             }
 
-            ProductViewModel accountToPay = await _productService.GetProductByNumberAccountForPayment(vm.PaymentAccount, vm.AmountToPay);
+            ProductViewModel accountToPay = await _productService.GetProductByNumberAccountForPayment(vm.OriginAccountNumber, vm.Amount);
 
             if (accountToPay.HasError)
             {
@@ -72,13 +72,13 @@ namespace WebApp.InternetBanking.Controllers
                 return View(vm);
             }
             
-            ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.PaymentDestinationAccount);
+            ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.DestinationAccountNumber);
 
             if (destinationAccount.HasError)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
                 vm.HasError = true;
-                vm.Error = "No se ha encontrado la cuenta de destino a la que desea realizar el pago";
+                vm.Error = "Account Destination couldn't be found";
                 return View(vm);
             }
 
@@ -90,7 +90,7 @@ namespace WebApp.InternetBanking.Controllers
                 return View(vm);
             }
 
-            if (vm.PaymentAccount == vm.PaymentDestinationAccount)
+            if (vm.OriginAccountNumber == vm.DestinationAccountNumber)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
                 vm.HasError = true;
@@ -133,7 +133,7 @@ namespace WebApp.InternetBanking.Controllers
 
             ProductViewModel accountToPay = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentAccount, vm.AmountToPay);
+                (vm.OriginAccountNumber, vm.Amount);
 
             if (accountToPay.HasError)
             {
@@ -146,11 +146,11 @@ namespace WebApp.InternetBanking.Controllers
 
             ProductViewModel destinationAccount = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentDestinationAccount);
+                (vm.DestinationAccountNumber);
 
-            if(vm.AmountToPay > destinationAccount.Discharge)
+            if(vm.Amount > destinationAccount.Discharge)
             {
-                vm.AmountToPay = destinationAccount.Discharge;
+                vm.Amount = destinationAccount.Discharge;
             }
 
             var owner = await _userService.GetUserById(accountToPay.ClientId);
@@ -189,7 +189,7 @@ namespace WebApp.InternetBanking.Controllers
 
             ProductViewModel accountToPay = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentAccount, vm.AmountToPay);
+                (vm.OriginAccountNumber, vm.Amount);
 
             if (accountToPay.HasError)
             {
@@ -201,11 +201,11 @@ namespace WebApp.InternetBanking.Controllers
             }
 
             
-            ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.PaymentDestinationAccount);
+            ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.DestinationAccountNumber);
 
-            if (vm.AmountToPay > destinationAccount.Charge)
+            if (vm.Amount > destinationAccount.Charge)
             {
-                vm.AmountToPay = destinationAccount.Charge;
+                vm.Amount = destinationAccount.Charge;
             }
 
             var owner = await _userService.GetUserById(accountToPay.ClientId);
@@ -222,7 +222,7 @@ namespace WebApp.InternetBanking.Controllers
 
 
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
-            var payments = await _recipientService.GetAllVm();
+            var payments = await _beneficiaryService.GetAllViewModel();
             ViewBag.Beneficiaries = payments.Where(b => b.UserId == currentlyUser.Id).ToList();
 
             return View(new SavePaymentViewModel());
@@ -241,19 +241,19 @@ namespace WebApp.InternetBanking.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
-                var payments = await _recipientService.GetAllVm();
+                var payments = await _beneficiaryService.GetAllViewModel();
                 ViewBag.Beneficiaries = payments.Where(b => b.UserId == currentlyUser.Id).ToList();
                 return View(vm);
             }
 
             ProductViewModel accountToPay = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentAccount, vm.AmountToPay);
+                (vm.OriginAccountNumber, vm.Amount);
 
             if (accountToPay.HasError)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
-                var payments = await _recipientService.GetAllVm();
+                var payments = await _beneficiaryService.GetAllViewModel();
                 ViewBag.Beneficiaries = payments.Where(b => b.UserId == currentlyUser.Id).ToList();
                 vm.HasError = accountToPay.HasError;
                 vm.Error = accountToPay.Error;
@@ -283,7 +283,7 @@ namespace WebApp.InternetBanking.Controllers
                 return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
 
             }
-            await _paymentSvc.Payment(vm);
+            await _paymentService.Payment(vm);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }
 
@@ -305,7 +305,7 @@ namespace WebApp.InternetBanking.Controllers
                 return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
             }
 
-            await _paymentSvc.CreditCardPayment(vm);
+            await _paymentService.CreditCardPayment(vm);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }
     }

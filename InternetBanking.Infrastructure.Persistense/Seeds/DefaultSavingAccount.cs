@@ -7,17 +7,17 @@ namespace InternetBanking.Infrastructure.Persistence.Seeds
 {
     public static class DefaultSavingAccount
     {
-        public static async Task SeedAsync(ITypeAccountRepository _repo)
+        public static async Task SeedAsync(ITypeAccountRepository _typeAccountRepository)
         {
 
             TypeAccount account = new();
-            account.NameAccount = "Cuenta de Ahorro";
+            account.Name = "Cuenta de Ahorro";
 
-            var accounts = await _repo.GetAllAsync();
+            var accounts = await _typeAccountRepository.GetAllAsync();
 
-            if (accounts.All(e => e.NameAccount != account.NameAccount))
+            if (accounts.All(e => e.Name != account.Name))
             {
-                var newAccount = await _repo.AddAsync(account);
+                var newAccount = await _typeAccountRepository.AddAsync(account);
             }
         }
 

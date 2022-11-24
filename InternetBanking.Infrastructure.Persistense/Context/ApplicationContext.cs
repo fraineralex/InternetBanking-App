@@ -15,12 +15,12 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Infrastructure.Persistence.Context
 {
-    public class AppDbContext : DbContext
+    public class ApplicationContext : DbContext
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private UserViewModel user = new();
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor http) : base(options) 
+        public ApplicationContext(DbContextOptions<ApplicationContext> options, IHttpContextAccessor http) : base(options) 
         {
             _httpContextAccessor = http;
         }
@@ -28,7 +28,7 @@ namespace InternetBanking.Infrastructure.Persistence.Context
         #region dbSets -->
         public DbSet<Product> Products { get; set; }
         public DbSet<TypeAccount> TypeAccounts { get; set; }
-        public DbSet<Recipient> Recipients { get; set; }
+        public DbSet<Beneficiary> Beneficiaries { get; set; }
         public DbSet<Payment> Payments { get; set; }
         #endregion
 
@@ -39,7 +39,7 @@ namespace InternetBanking.Infrastructure.Persistence.Context
                 user = _httpContextAccessor.HttpContext.Session.Get<UserViewModel>("user");
             }
 
-            foreach (var entry in ChangeTracker.Entries<AuditableBE>())
+            foreach (var entry in ChangeTracker.Entries<AuditableBaseEntity>())
             {
                 switch (entry.State)
                 {
@@ -67,8 +67,8 @@ namespace InternetBanking.Infrastructure.Persistence.Context
             mb.Entity<TypeAccount>()
                 .ToTable("TypeAccounts");
 
-            mb.Entity<Recipient>()
-                .ToTable("Recipients");
+            mb.Entity<Beneficiary>()
+                .ToTable("Beneficiaries");
 
             mb.Entity<Payment>()
                 .ToTable("Payments");
@@ -82,7 +82,7 @@ namespace InternetBanking.Infrastructure.Persistence.Context
             mb.Entity<TypeAccount>()
                 .HasKey(e => e.Id);
 
-            mb.Entity<Recipient>()
+            mb.Entity<Beneficiary>()
                 .HasKey(e => e.Id);
 
             mb.Entity<Payment>()
@@ -113,7 +113,7 @@ namespace InternetBanking.Infrastructure.Persistence.Context
             #region Typeaccount
 
             mb.Entity<TypeAccount>()
-                .Property(e => e.NameAccount)
+                .Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(150);
 
@@ -122,15 +122,15 @@ namespace InternetBanking.Infrastructure.Persistence.Context
             #region Payment
 
             mb.Entity<Payment>()
-                .Property(e => e.AmountToPay)
+                .Property(e => e.Amount)
                 .IsRequired();
             
             mb.Entity<Payment>()
-                .Property(e => e.PaymentAccount)
+                .Property(e => e.OriginAccountNumber)
                 .IsRequired();
 
             mb.Entity<Payment>()
-                .Property(e => e.PaymentDestinationAccount)
+                .Property(e => e.DestinationAccountNumber)
                 .IsRequired();
 
             #endregion

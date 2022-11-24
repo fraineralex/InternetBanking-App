@@ -61,7 +61,7 @@ namespace WebApp.InternetBanking.Controllers
 
             ProductViewModel creditCardOrigin = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentAccount, vm.AmountToPay);
+                (vm.OriginAccountNumber, vm.Amount);
 
             if (creditCardOrigin.HasError)
             {

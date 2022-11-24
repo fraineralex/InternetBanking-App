@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application.Interfaces.Services
 {
-    public interface IRecipientService : IGenericService<RecipientSaveViewModel, RecipientViewModel, Recipient>
+    public interface IRecipientService : IGenericService<RecipientSaveViewModel, RecipientViewModel, Beneficiary>
     {
         Task<RecipientSaveViewModel> GetByIdAsync(int id);
     }

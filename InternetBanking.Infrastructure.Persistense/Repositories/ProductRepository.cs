@@ -12,8 +12,8 @@ namespace InternetBanking.Infrastructure.Persistence.Repositories
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        private readonly AppDbContext _db;
-        public ProductRepository(AppDbContext db): base(db)
+        private readonly ApplicationContext _db;
+        public ProductRepository(ApplicationContext db): base(db)
         {
             _db = db;
         }

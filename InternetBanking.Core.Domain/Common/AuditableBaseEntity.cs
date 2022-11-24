@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Domain.Common
 {
-    public class AuditableBE
+    public class AuditableBaseEntity
     {
         public virtual int Id { get; set; }
         public string? CreatedBy { get; set; }

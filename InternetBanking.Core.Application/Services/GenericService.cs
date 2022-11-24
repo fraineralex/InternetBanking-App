@@ -14,37 +14,37 @@ namespace InternetBanking.Core.Application.Services
         where ViewModel : class
         where Entity : class
     {
-        private readonly IGenericRepository<Entity> _repo;
+        private readonly IGenericRepository<Entity> _repository;
         private readonly IMapper _mapper;
-        public GenericService(IGenericRepository<Entity> repo, IMapper mapper)
+        public GenericService(IGenericRepository<Entity> repository, IMapper mapper)
         {
-            _repo = repo;
+            _repository = repository;
             _mapper = mapper;
         }
 
         public virtual async Task<SaveViewModel> Add(SaveViewModel vm)
         {
             Entity entity = _mapper.Map<Entity>(vm);
-            entity = await _repo.AddAsync(entity);
+            entity = await _repository.AddAsync(entity);
             SaveViewModel viewModel = _mapper.Map<SaveViewModel>(entity);
             return viewModel;
         }
 
         public virtual async Task Delete(int id)
         {
-            Entity entity = await _repo.GetByIdAsync(id);
-            await _repo.DeleteAsync(entity);
+            Entity entity = await _repository.GetByIdAsync(id);
+            await _repository.DeleteAsync(entity);
         }
 
-        public virtual async Task<List<ViewModel>> GetAllVm()
+        public virtual async Task<List<ViewModel>> GetAllViewModel()
         {
-            var entityList = await _repo.GetAllAsync();
+            var entityList = await _repository.GetAllAsync();
             return _mapper.Map<List<ViewModel>>(entityList);
         }
 
-        public virtual async Task<SaveViewModel> GetbyIdVM(int id)
+        public virtual async Task<SaveViewModel> GetByIdSaveViewModel(int id)
         {
-            Entity entity = await _repo.GetByIdAsync(id);
+            Entity entity = await _repository.GetByIdAsync(id);
             SaveViewModel vm = _mapper.Map<SaveViewModel>(entity);
             return vm;
         }
@@ -52,7 +52,7 @@ namespace InternetBanking.Core.Application.Services
         public virtual async Task Update(SaveViewModel vm, int id)
         {
             Entity entity = _mapper.Map<Entity>(vm);
-            await _repo.UpdateAsync(entity, id);
+            await _repository.UpdateAsync(entity, id);
         }
     }
 }

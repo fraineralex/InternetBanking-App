@@ -33,7 +33,7 @@ namespace WebApp.InternetBanking.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var recipients = await _recipientSvc.GetAllVm();
+            var recipients = await _recipientSvc.GetAllViewModel();
             recipients = recipients.Where(r => r.UserId == currentlyUser.Id).ToList();
 
             ViewBag.Recipients = recipients;
@@ -57,8 +57,8 @@ namespace WebApp.InternetBanking.Controllers
         {
             vm.UserId = currentlyUser.Id;
             
-            var recipient = await _recipientSvc.GetAllVm();
-            var products = await _productSvc.GetAllVm();
+            var recipient = await _recipientSvc.GetAllViewModel();
+            var products = await _productSvc.GetAllViewModel();
 
             var savingAccount = products.Where(e => e.AccountNumber == vm.RecipientCode).FirstOrDefault();
             recipient = recipient.Where(e => e.UserId == currentlyUser.Id).ToList();

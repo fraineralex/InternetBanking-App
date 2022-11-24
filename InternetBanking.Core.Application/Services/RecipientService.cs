@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application.Services
 {
-    public class RecipientService : GenericService<RecipientSaveViewModel, RecipientViewModel, Recipient>, IRecipientService
+    public class RecipientService : GenericService<RecipientSaveViewModel, RecipientViewModel, Beneficiary>, IRecipientService
     {
 
         private readonly IRecipientRepository _repo;
@@ -29,10 +29,10 @@ namespace InternetBanking.Core.Application.Services
             _productSvc = productSvc;
             _userSvc = userSvc;
         }
-        public override async Task<List<RecipientViewModel>> GetAllVm()
+        public override async Task<List<RecipientViewModel>> GetAllViewModel()
         {
             var recipientList = _mapper.Map<List<RecipientViewModel>>(await _repo.GetAllAsync());
-            var productList = await _productSvc.GetAllVm();
+            var productList = await _productSvc.GetAllViewModel();
             var userList = await _userSvc.GetAllVm();
 
             foreach (var recipient in recipientList)
@@ -47,7 +47,7 @@ namespace InternetBanking.Core.Application.Services
 
         public async Task<RecipientSaveViewModel> GetByIdAsync(int id)
         {
-            Recipient recipient = await _repo.GetByIdAsync(id);
+            Beneficiary recipient = await _repo.GetByIdAsync(id);
             RecipientSaveViewModel recipientVm = _mapper.Map<RecipientSaveViewModel>(recipient);
             return recipientVm;
         }

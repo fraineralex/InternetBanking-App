@@ -3,7 +3,7 @@ using InternetBanking.Infrastructure.Identity.Entities;
 
 namespace InternetBanking.Core.Domain.Entities
 {
-    public class Product : AuditableBE
+    public class Product : AuditableBaseEntity
     {
         public double Charge { get; set; }
         public string? ClientId { get; set; }

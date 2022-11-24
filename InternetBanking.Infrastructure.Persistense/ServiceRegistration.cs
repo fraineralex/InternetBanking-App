@@ -16,13 +16,13 @@ namespace InternetBanking.Infrastructure.Persistence
         {
             if (config.GetValue<bool>("UseInMemoryDatabase"))
             {
-                service.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("ApplicationDb"));
+                service.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("ApplicationDb"));
             }
             else
             {
-                service.AddDbContext<AppDbContext>(options =>
+                service.AddDbContext<ApplicationContext>(options =>
                     options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
-                    m => m.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+                    m => m.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
             }
 
             #region 'repositories'

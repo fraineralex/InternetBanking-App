@@ -49,7 +49,7 @@ namespace WebApp.InternetBanking.Controllers
 
         public async Task<ActionResult> CreateAccount(string id)
         {
-            ViewBag.Types = await _typeAccountService.GetAllVm();
+            ViewBag.Types = await _typeAccountService.GetAllViewModel();
             ProductSaveViewModel vm = new();
             vm.ClientId = id;
             return View(vm);
@@ -59,7 +59,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Types = await _typeAccountService.GetAllVm();
+                ViewBag.Types = await _typeAccountService.GetAllViewModel();
                 return View(vm);
             }
 

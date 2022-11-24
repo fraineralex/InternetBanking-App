@@ -8,15 +8,15 @@ namespace InternetBanking.Infrastructure.Persistence.Repositories
 {
     public class TypeAccountRepository : GenericRepository<TypeAccount>, ITypeAccountRepository
     {
-        private readonly AppDbContext _db;
-        public TypeAccountRepository(AppDbContext db): base(db)
+        private readonly ApplicationContext _db;
+        public TypeAccountRepository(ApplicationContext db): base(db)
         {
             _db = db;
         }
 
         //public override static  async Task<List<TypeAccount>> GetAllAsync()
         //{
-        //    return await _db.Set<TypeAccount>().ToListAsync();
+        //    return await _dbContext.Set<TypeAccount>().ToListAsync();
         //}
     }
 }

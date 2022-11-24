@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternetBanking.Infrastructure.Persistence.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(ApplicationContext))]
     [Migration("20220728182501_AddedOwnerAccountInRecipient")]
     partial class AddedOwnerAccountInRecipient
     {

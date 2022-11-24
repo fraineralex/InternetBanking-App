@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternetBanking.Infrastructure.Persistence.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(ApplicationContext))]
     [Migration("20221123042550_fix discharge field")]
     partial class fixdischargefield
     {

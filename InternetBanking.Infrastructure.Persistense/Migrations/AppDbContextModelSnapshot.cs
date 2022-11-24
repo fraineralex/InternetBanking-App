@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternetBanking.Infrastructure.Persistence.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(ApplicationContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -22,6 +22,28 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("InternetBanking.Core.Domain.Entities.Beneficiary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BeneficiaryCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Beneficiaries", (string)null);
+                });
+
             modelBuilder.Entity("InternetBanking.Core.Domain.Entities.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -30,7 +52,7 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("AmountToPay")
+                    b.Property<double>("Amount")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("Created")
@@ -39,17 +61,17 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DestinationAccountNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PaymentAccount")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentDestinationAccount")
+                    b.Property<string>("OriginAccountNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -109,31 +131,6 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
-            modelBuilder.Entity("InternetBanking.Core.Domain.Entities.Recipient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("OwnerAccount")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RecipientCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Recipients", (string)null);
-                });
-
             modelBuilder.Entity("InternetBanking.Infrastructure.Identity.Entities.TypeAccount", b =>
                 {
                     b.Property<int>("Id")
@@ -154,7 +151,7 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NameAccount")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");

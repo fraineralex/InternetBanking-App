@@ -78,10 +78,10 @@ namespace InternetBanking.Core.Application.Mappings
 
             #region recipient
 
-            CreateMap<Recipient, RecipientViewModel>()
+            CreateMap<Beneficiary, RecipientViewModel>()
                 .ReverseMap();
 
-            CreateMap<Recipient, RecipientSaveViewModel>()
+            CreateMap<Beneficiary, RecipientSaveViewModel>()
                 .ReverseMap();
 
             #endregion

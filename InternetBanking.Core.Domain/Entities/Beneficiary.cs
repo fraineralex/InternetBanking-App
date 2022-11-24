@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Domain.Entities
 {
-    public class Recipient
+    public class Beneficiary
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
-        public string RecipientCode { get; set; }
-        public string OwnerAccount { get; set; }
+        public string? UserId { get; set; }
+        public string? BeneficiaryCode { get; set; }
+        public string? OwnerAccount { get; set; }
   
     }
 }
