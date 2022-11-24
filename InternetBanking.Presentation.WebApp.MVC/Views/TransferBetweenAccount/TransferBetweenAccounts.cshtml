@@ -1,0 +1,75 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Payment;
+@model SavePaymentViewModel
+@{
+    ViewData["Title"] = "Transferencia entre cuentas";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <section class="col-10 mx-auto bg-primary rounded-3 text-white text-center p-3 my-5">
+            <h3 class="display-8 fw-normal text-uppercase fw-bolder m-0">
+                Transferencia entre cuentas
+            </h3>
+        </section>
+        @if (ViewBag.SavingsAccounts.Count != 0)
+        {
+            <div class="col-6 mx-auto">
+                <div class="card shadow">
+                    <div class="card-body">
+                        @if (Model.HasError)
+                        {
+                            <div class="alert alert-danger alert-dimissible fade show" role="alert">
+                                <p>@Model.Error</p>
+                                <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                        <form asp-controller="TransferBetweenAccount" asp-action="TransferBetweenAccounts" method="post" class="row gap-3 my-3">
+                            <div class="">
+                                <h3 class="text-muted text-center">
+                                    Realizando Transferencia Entre Cuentas
+                                </h3>
+                            </div>
+                            <section class="col-5 mx-auto">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" asp-for="PaymentAccount" required>
+                                        @foreach (var account in ViewBag.SavingsAccounts)
+                                        {
+                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Charge)</option>
+                                        }
+                                    </select>
+                                    <label asp-for="PaymentAccount" class="form-label">Cuenta origen </label>
+                                    <span asp-validation-for="PaymentAccount" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" asp-for="PaymentDestinationAccount" required>
+                                        @foreach (var account in ViewBag.SavingsAccounts)
+                                        {
+                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Charge)</option>
+                                        }
+                                    </select>
+                                    <label asp-for="PaymentDestinationAccount" class="form-label">Cuenta destino </label>
+                                    <span asp-validation-for="PaymentDestinationAccount" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="AmountToPay" type="number" min="1" class="form-control" placeholder="Monto a pagar" />
+                                    <label asp-for="AmountToPay" class="form-label">Monto a pagar</label>
+                                    <span asp-validation-for="AmountToPay" class="text-danger"></span>
+                                </div>
+                                <div class="col-11 mx-auto">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 mt-2">Pagar</button>
+                                    <a asp-controller="Home" asp-action="Index" class="btn btn-light w-100 mt-2">Volver atrás</a>
+                                </div>
+                            </section>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <h1>Debes tener al menos una cuenta de ahorro para realizar transferencias.</h1>
+        }
+    </div>
+</div>
