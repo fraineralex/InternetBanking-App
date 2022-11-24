@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Dapper;
-using InternetBanking.Core.Application.Dtos.Account;
 using InternetBanking.Core.Application.Enums;
 using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Repositories;
@@ -8,25 +7,19 @@ using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Products;
 using InternetBanking.Core.Application.ViewModels.Querys;
 using InternetBanking.Core.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application.Services
 {
     public class ProductService : GenericService<ProductSaveViewModel, ProductViewModel, Product>, IProductService
     {
         private readonly AccountNumberGenerator _numberGenerator = new();
-        private readonly IProductRepository _repo;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
         public ProductService(IProductRepository repo, IMapper mapper) : base(repo, mapper)
         {
-            _repo = repo;
+            _productRepository = repo;
             _mapper = mapper;
         }
 
@@ -48,7 +41,7 @@ namespace InternetBanking.Core.Application.Services
                    saveAccount.AccountNumber = newAccountNumber;
                 }
 
-                await _repo.AddAsync(saveAccount);
+                await _productRepository.AddAsync(saveAccount);
             }
             else
             {
@@ -65,7 +58,7 @@ namespace InternetBanking.Core.Application.Services
                     saveAccount.AccountNumber = newAccountNumber;
                 }
 
-                await _repo.AddAsync(saveAccount);
+                await _productRepository.AddAsync(saveAccount);
             }
         }
         public async Task CreateAccountAsync(string idUser, double amount, int typeAccount)
@@ -84,7 +77,7 @@ namespace InternetBanking.Core.Application.Services
                     saveAccount.AccountNumber = newAccountNumber;
                 }
 
-                await _repo.AddAsync(saveAccount);
+                await _productRepository.AddAsync(saveAccount);
             }
             else if (typeAccount == (int)AccountTypes.LoanAccount)
             {
@@ -101,7 +94,7 @@ namespace InternetBanking.Core.Application.Services
                 }
                 //sumandole lo del prestamo a la cuenta principal
                 await AddAmountSavingAccount(idUser, amount);
-                await _repo.AddAsync(saveAccount);
+                await _productRepository.AddAsync(saveAccount);
             }
         }
         public async Task AddAmountSavingAccount(string idUser, double amount)
@@ -111,11 +104,11 @@ namespace InternetBanking.Core.Application.Services
 
             sAPrincipal.Charge += amount;
 
-            await _repo.UpdateAsync(sAPrincipal, sAPrincipal.Id);
+            await _productRepository.UpdateAsync(sAPrincipal, sAPrincipal.Id);
         }
         public async Task<List<ProductViewModel>> GetAllProductWithInclude(string idUser)
         {
-            List<Product> products = await _repo.GetAllWithIncludeAsync(new List<string> { "TypeAccount" });
+            List<Product> products = await _productRepository.GetAllWithIncludeAsync(new List<string> { "TypeAccount" });
             products = products.Where(p => p.ClientId == idUser).ToList();
             List<ProductViewModel> productsVm = _mapper.Map<List<ProductViewModel>>(products);
 
@@ -123,7 +116,7 @@ namespace InternetBanking.Core.Application.Services
         }
         public async Task<List<Product>> GetAllProductByUser(string idUser, int typeAccountId)
         {
-            List<Product> products = await _repo.GetAllAsync();
+            List<Product> products = await _productRepository.GetAllAsync();
             products = products.Where(p => p.ClientId == idUser && p.TypeAccountId == typeAccountId).ToList();
 
             return products;
@@ -245,7 +238,7 @@ namespace InternetBanking.Core.Application.Services
             ProductViewModel response = new();
             response.HasError = false;
 
-            List<Product> products = await _repo.GetAllAsync();
+            List<Product> products = await _productRepository.GetAllAsync();
             var product = products.Where(ac => ac.AccountNumber == numberAccount)
                     .FirstOrDefault();
 
@@ -273,7 +266,7 @@ namespace InternetBanking.Core.Application.Services
         }
         public async Task<ProductViewModel> DeleteProductAsync(int IdProduct)
         {
-            Product product = await _repo.GetByIdAsync(IdProduct);
+            Product product = await _productRepository.GetByIdAsync(IdProduct);
 
             ProductViewModel responseVm = _mapper.Map<ProductViewModel>(product);
 
@@ -301,18 +294,18 @@ namespace InternetBanking.Core.Application.Services
                 }
             }
 
-            await _repo.DeleteAsync(product);
+            await _productRepository.DeleteAsync(product);
             return responseVm;
         }
         public async Task<bool> ExistProduct(int IdProduct)
         {
-            List<Product> products = await _repo.GetAllAsync();
+            List<Product> products = await _productRepository.GetAllAsync();
             bool exist = products.Any(e => e.Id == IdProduct);
             return exist;
         }
         private async Task<bool> ExistSavingAccountByUser(string idUser)
         {
-            var productList = await _repo.GetAllAsync();
+            var productList = await _productRepository.GetAllAsync();
 
             var listViewModels = productList.Where(e => e.ClientId == idUser && e.TypeAccountId == (int)AccountTypes.SavingAccount).Select(product => new ProductViewModel
             {
@@ -337,7 +330,7 @@ namespace InternetBanking.Core.Application.Services
         }
         public async Task<bool> ExistCodeNumber(string accountNumber)
         {
-            List<Product> products = await _repo.GetAllAsync();
+            List<Product> products = await _productRepository.GetAllAsync();
             bool exist =  products.Any(e => e.AccountNumber == accountNumber);
             return exist;
         }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace WebApp.InternetBanking.Controllers
 {
-    public class RecipientController : Controller
+    public class BeneficiariesController : Controller
     {
         private readonly IRecipientService _recipientSvc;
         private readonly IProductService _productSvc;
@@ -23,7 +23,7 @@ namespace WebApp.InternetBanking.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         AuthenticationResponse currentlyUser;
 
-        public RecipientController(IHttpContextAccessor httPContextAccesor , IRecipientService recipientService, IProductService productSvc, IUserService userService)
+        public BeneficiariesController(IHttpContextAccessor httPContextAccesor , IRecipientService recipientService, IProductService productSvc, IUserService userService)
         {
             _httpContextAccessor = httPContextAccesor;
             currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
