@@ -57,9 +57,9 @@ namespace InternetBanking.Controllers
         {
             var user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
 
-            ViewBag.SavingAccount = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.SavingAccount);
-            ViewBag.CreditCard = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.CreditAccount);
-            ViewBag.Loan = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.LoanAccount);
+            ViewBag.SavingsAccounts = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.SavingAccount);
+            ViewBag.CreditCards = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.CreditAccount);
+            ViewBag.Loans = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.LoanAccount);
 
             return View();
         }

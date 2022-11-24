@@ -1,27 +1,34 @@
 ﻿@using InternetBanking.Core.Application.ViewModels.Payment;
 @model SavePaymentViewModel  
 @{
-    ViewData["Title"] = "ConfirmExpressPayment";
+    ViewData["Title"] = "Confirm Payment";
 }
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-center">
-        <div class="col-6">
-            <div class="card my-5">
-                <div class="card-header bg-danger text-light">
-                    <h3>@Model.Owner esta seguro que desea realizar este pago</h3>
-                </div>
-                <div class="card-body text-center">
-                    <form method="post" asp-controller="Payment" asp-action="ConfirmCreditCardPaymentPost">
-                        <input type="hidden" asp-for="PaymentAccount" />
-                        <input type="hidden" asp-for="PaymentDestinationAccount" />
-                        <input type="hidden" asp-for="AmountToPay" />
 
-                        <button type="submit" class="btn btn-outline-danger me-3">Si</button>
-                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">No</a>
-                    </form>
-                </div>
+<div class="col-6 offset-4 py-5 mb-5 pe-5 me-5">
+    <div class="card bg-dark mt-5 mb-5" style="border-radius: 1rem;">
+        <div class="card-body">
+            <h1 class="text-center fw-bold text-warning">Warning</h1>
+            <div class="col-6 warning-img mt-0 mx-auto">
+                <img src="/images/warning.png" alt="profile"
+                     class="ms-3">
             </div>
+            <h4 class="fs-5 fw-bold px-2 mb-3 text-white text-center">
+                Are you sure you want to make this payment?
+            </h4>
+
+            <div class="text-center mx-auto">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-lg btn-light me-2 m-auto ms-2 mt-3">Cancel</a>
+
+                <form method="post" asp-controller="Payment" asp-action="ConfirmCreditCardPaymentPost" class="d-inline">
+                    <input type="hidden" asp-for="PaymentAccount" />
+                    <input type="hidden" asp-for="PaymentDestinationAccount" />
+                    <input type="hidden" asp-for="AmountToPay" />
+
+                    <button type="submit" class="btn btn-lg btn-primary mt-3">Yes</button>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>

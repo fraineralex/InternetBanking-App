@@ -133,13 +133,16 @@ namespace InternetBanking.Infrastructure.Identity.Services
             {
                 await _userManager.AddToRoleAsync(user, Roles.Basic.ToString());
                 await _productSvc.AddSavingAccountAsync(user.Id, req.Amount);
-            } 
+            }
 
-            await _emailService.SendAsync(new EmailRequest()
-            { 
-                To = user.Email,
-                Body = $"Se ha creado su cuenta con exito, ahora solo debe esperar que el administrador active su cuenta!!",
-                Subject = "Bienevenido a BDM Banking"
+            await _emailService.SendAsync(new EmailRequest
+            {
+                To = req.Email,
+                Subject = "Your Internet Banking App account has been created!\r\n",
+                Body = $"<h1>Welcome to Internet Banking App 🏦</h1>" +
+                            $"<p>Hi {req.FirstName} {req.LastName} 😃</p>" +
+                            $"<p>Thanks for select us for manage your preducts and make your transfers. Your username is <strong>{req.UserName}</strong>.</p>"
+
             });
 
             return res;
@@ -278,17 +281,23 @@ namespace InternetBanking.Infrastructure.Identity.Services
             }
 
             var forgotPassUri = await SendForgotPasswordUri(user, origin);
-            await _emailService.SendAsync(new EmailRequest()
+
+            await _emailService.SendAsync(new EmailRequest
             {
                 To = user.Email,
-                Body = $"Please reset your password account visiting this URL {forgotPassUri}",
-                Subject = "Reset Password"
+                Subject = "Restore Your Imternet Banking Password!\r\n",
+                Body = $"<h1>Welcome back to Internet Banking App 🏦</h1>" +
+                $"<p>Hi {user.FirstName} {user.LastName},</p>" +
+                $"<p>Your restore password request has been received successfully."+
+                $"<p>Please try to don't forget your password again.</p>" +
+                $"<p>Click the following URL to restore yoient viewsur password 👉🏻 {forgotPassUri}</p>"
+
             });
 
             return res;
         }
 
-        //method to reset the user password
+
         public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest req) 
         {
             ResetPasswordResponse res = new();

@@ -49,7 +49,7 @@ namespace WebApp.InternetBanking.Controllers
         public async Task<IActionResult> DeleteRecipient(RecipientSaveViewModel vm)
         {
             await _recipientSvc.Delete(vm.Id);
-            return RedirectToRoute(new { controller = "Recipient", action = "Index" });
+            return RedirectToRoute(new { controller = "Beneficiaries", action = "Index" });
         }
 
         [HttpPost]
@@ -101,7 +101,7 @@ namespace WebApp.InternetBanking.Controllers
             vm.OwnerAccount = $"{beneficiary.FirstName} {beneficiary.LastName}";
 
             RecipientSaveViewModel recipientVm = await _recipientSvc.Add(vm);
-            return RedirectToRoute(new { controller = "Recipient", action = "Index" }) ;
+            return RedirectToRoute(new { controller = "Beneficiaries", action = "Index" }) ;
         }
     }
 }

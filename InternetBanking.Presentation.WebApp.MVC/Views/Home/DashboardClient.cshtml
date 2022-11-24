@@ -5,131 +5,92 @@
 @inject IHttpContextAccessor httpContextAccesor
 @{
     var user = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
-    var indianCulture = new System.Globalization.CultureInfo("hi-IN");
 }
 
-<div class="row">
+<section class="container">
+    <div class="row mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-bold mt-4 text-center text-primary"><i class='bx bxs-bank text-primary'></i> Internet Banking App</h1>
+            <p class="fs-3 fw-bold text-secondary mt-1 text-center">
+                Welcome to Internet Banking, here you can manager your products <i class="text-white">🚀</i>
+            </p>
+        </div>
+    </div>
+</section>
 
-    @* SIDE MENU *@
+<div class="row mb-5">
+    <h2 class="text-dark fw-bold mt-5 ms-5"><i class='bx bxs-user-account ms-5'></i> ACCOUNTS</h2>
+    @if (ViewBag.SavingsAccounts.Count != 0)
+    {
 
-    <section class="col-3 d-flex flex-column flex-shrink-0 p-3 text-white bg-primary vh-100">
-        <h3 href="/" class="text-center text-decoration-none">
-            <span class="fs-4 fw-bold text-uppercase w-100">Banco BDM</span>
-        </h3>
-        <hr>
-        <ul class="nav nav-pills flex-column">
-            <li>
-                <a asp-controller="Home" asp-action="DashboardClient" class="nav-link btn-primary fs-5">
-                    Home
-                </a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle btn-primary fs-5" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">
-                    Pagos
-                </a>
-                <div class="dropdown-menu dropdown-menu-dark shadow" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(0px, 42px, 0px);" data-popper-placement="bottom-start">
-                    <a class="dropdown-item" asp-controller="Payment" asp-action="ExpressPayment">Expreso</a>
-                    <a class="dropdown-item" asp-controller="Payment" asp-action="CreditPayment">Tarjeta de Crédito</a>
-                    <a class="dropdown-item" asp-controller="Payment" asp-action="LoamPayment">Préstamos</a>
-                    <a class="dropdown-item" asp-controller="Payment" asp-action="BeneficiaryPayment">Beneficiarios</a>
+        @foreach (Product savingAccount in ViewBag.SavingsAccounts)
+        {
+            <div class="col-6">
+                <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
+                    <div class="card-body">
+
+                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bxs-wallet'></i> Savings Account <i class="text-primary">@savingAccount.AccountNumber</i></h4>
+                        <p class="fs-5">US$ @savingAccount.Charge  <i class="text-white-50 fs-5 float-end">Available balance</i></p>
+
+                    </div>
                 </div>
-            </li>
-            <li>
-                <a asp-action="Index" asp-controller="Beneficiaries" class="nav-link btn-primary fs-5">
-                    Beneficiario
-                </a>
-            </li>
-            <li>
-                <a asp-controller="CashAdvance" asp-action="Index" class="nav-link btn-primary fs-5">
-                    Avance de Efectivo
-                </a>
-            </li>
-            <li>
-                <a asp-controller="TransferBetweenAccount" asp-action="TransferBetweenAccounts" class="nav-link btn-primary fs-5">
-                    Transferencia
-                </a>
-            </li>
-        </ul>
-        <hr>
-        <div class="dropdown">
-            <a href="#" class="d-flex px-3 align-items-center text-white text-decoration-none dropdown-toggle mt-3" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/Chocolechi.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                <strong>@user.UserName</strong>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1" style="">
-                <li>
-                    <a asp-controller="User" asp-action="Logout" class="dropdown-item w-100">Cerrar Sesión</a>
-                </li>
-            </ul>
-        </div>
-    </section>
+            </div>
+        }
+    }
+    else
+    {
 
+        <h5 class="fs-4 fw-bold text-secondary mt-1 text-center"><i class='bx bxs-wallet'></i> No savings account yet</h5>
+    }
 
-    @* Content *@
+    <br /><br />
+    <h2 class="text-dark fw-bold mt-5 ms-5"><i class='bx bxs-credit-card-front ms-5'></i> CREDIT CARDS</h2>
+    @if (ViewBag.CreditCards.Count != 0)
+    {
 
-    <section class="col-9 p-0">
-        <section class="d-flex justify-content-between align-items-center w-100 bg-light p-3">
-            <h3 class="fs-4 fw-bold fw-bolder m-2 w-100">
-                Dashboard
-                <span class="fs-5 fw-bold fw-bolder text-muted text-end m-2 w-100">
-                    / Productos
-                </span>
-            </h3>
-        </section>
-        <div class="row mt-3">
-            <section class="col-11 mx-auto rounded-3 p-2">
-                <ul class="list-group rounded p-3">
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active fs-5">
-                        Cuentas de Ahorro
-                    </li>
-                    @if (ViewBag.SavingAccount != null)
-                    {
-                        @foreach (Product item in ViewBag.SavingAccount)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center fs-6 fw-bold">
-                                @item.AccountNumber
-                                <h6 class="text-muted p-2">US$@(string.Format(indianCulture, "{0:N}", @item.Charge))</h6>
-                            </li>
-                        }
-                    }
-                </ul>
-            </section>
-            <section class="col-6 mx-auto rounded-3 p-2">
-                <ul class="list-group rounded p-3">
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active fs-5">
-                        Tarjetas de Crédito
-                    </li>
-                    @if (ViewBag.CreditCard != null)
-                    {
-                        @foreach (Product item in ViewBag.CreditCard)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center fs-6 fw-bold">
-                                @item.AccountNumber
-                                <h6 class="text-muted p-2">Credito disponible: US$@(string.Format(indianCulture, "{0:N}", @item.Charge))</h6>
-                                <h6 class="text-muted p-2">Deuda pendiente: US$@(string.Format(indianCulture, "{0:N}", @item.Discharge))</h6>
-                            </li>
-                        }
-                    }
-                </ul>
-            </section>
-            <section class="col-4 mx-auto rounded-3 p-2">
-                <ul class="list-group rounded p-3">
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active fs-5">
-                        Préstamos
-                    </li>
-                    @if (ViewBag.Loan != null)
-                    {
-                        @foreach (Product item in ViewBag.Loan)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center fs-6 fw-bold">
-                                @item.AccountNumber
-                                <h6 class="text-muted p-2">US$@(string.Format(indianCulture, "{0:N}", @item.Charge))</h6>
-                            </li>
-                        }
-                    }
-                </ul>
-            </section>
-        </div>
-    </section>
+        @foreach (Product creditCard in ViewBag.CreditCards)
+        {
+            <div class="col-6">
+                <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
+                    <div class="card-body">
 
+                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bxs-credit-card-alt'></i> MASTERCARD <i class="text-primary">@creditCard.AccountNumber</i></h4>
+                        <p class="fs-5">US$ @creditCard.Charge  <i class="text-white-50 fs-5 float-end">Available credit</i></p>
+                        <p class="fs-5">US$ @creditCard.Discharge  <i class="text-white-50 fs-5 float-end">Pending balance</i></p>
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+
+        <h5 class="fs-4 fw-bold text-secondary mt-1 text-center"><i class='bx bxs-credit-card-front'></i> No credit cards yet</h5>
+    }
+
+    <br /><br />
+    <h2 class="text-dark fw-bold mt-5 ms-5"><i class='bx bxs-book-bookmark ms-5'></i> LOANS</h2>
+    @if (ViewBag.Loans.Count != 0)
+    {
+
+        @foreach (Product loan in ViewBag.Loans)
+        {
+            <div class="col-6">
+                <div class="col-10 mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
+                    <div class="card-body">
+
+                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-4"><i class='bx bx-wallet-alt'></i>Personal <i class="text-primary">@loan.AccountNumber</i></h4>
+                        <p class="fs-5">US$ @loan.Charge  <i class="text-white-50 fs-5 float-end">Pending balance</i></p>
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+
+        <h5 class="fs-4 fw-bold text-secondary mt-1 text-center mb-5"><i class='bx bxs-book-bookmark'></i> No loans yet</h5>
+    }
 </div>
