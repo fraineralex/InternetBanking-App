@@ -184,8 +184,8 @@ namespace InternetBanking.Core.Application.Services
                         FROM [Payments]
                         WHERE [TypeOfPayment] = 1";
 
-            var payments = await con.QueryFirstAsync<PaymentsQuery>(query);
-            return payments;
+            var paymentsResult = await con.QueryFirstAsync<PaymentsQuery>(query);
+            return paymentsResult;
         }
 
         public async Task<ProductViewModel> GetProductByNumberAccountForPayment(string numberAccount, double amountToPay = -1.0)
