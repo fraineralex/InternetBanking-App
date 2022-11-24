@@ -8,5 +8,6 @@ namespace InternetBanking.Core.Domain.Entities
         public double AmountToPay { get; set; }
         public string PaymentAccount { get; set; }
         public string PaymentDestinationAccount { get; set; }
+        public int? TypeOfPayment { get; set; }
     }
 }

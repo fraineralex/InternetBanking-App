@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application.ViewModels.Querys
 {
-    public class PaymentsQuery
+    public class TransacctionsQuery
     {
-        public int TotalPayments { get; set; }
-        public int PaymentsToday { get; set; }
+        public int TotalTransacctions { get; set; }
+        public int TransacctionsToday { get; set; }
     }
 }

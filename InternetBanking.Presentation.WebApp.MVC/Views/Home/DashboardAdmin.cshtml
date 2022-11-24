@@ -23,12 +23,12 @@
                 <div class="d-flex justify-content-around align-items-center">
                     <section class="d-flex flex-column align-items-center gap-2">
                         <h6 class="text-uppercase text-muted fw-bold">Hoy</h6>
-                        <span class="badge bg-light rounded-pill fs-6 px-3">30
+                        <span class="badge bg-light rounded-pill fs-6 px-3">@ViewBag.transacctions.TransacctionsToday
                         </span>
                     </section>
                     <section class="d-flex flex-column align-items-center gap-2">
                         <h6 class="text-uppercase fw-bold">Total</h6>
-                        <span class="badge bg-primary rounded-pill fs-6 px-3">540</span>
+                        <span class="badge bg-primary rounded-pill fs-6 px-3">@ViewBag.transacctions.TotalTransacctions</span>
                     </section>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     </section>
                     <section class="d-flex flex-column align-items-center gap-2">
                         <h6 class="text-uppercase fw-bold">Total</h6>
-                        <span class="badge bg-primary rounded-pill fs-6 px-3">@ViewBag.clientpayment.TotalPaymets</span>
+                        <span class="badge bg-primary rounded-pill fs-6 px-3">@ViewBag.clientpayment.TotalPayments</span>
                     </section>
                 </div>
             </div>

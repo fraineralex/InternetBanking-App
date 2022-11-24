@@ -45,6 +45,7 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> ExpressPayment(SavePaymentViewModel vm)
         {
+            vm.TypeOfPayment = 0;
             if (!ModelState.IsValid)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
@@ -60,7 +61,7 @@ namespace WebApp.InternetBanking.Controllers
                 vm.Error = accountToPay.Error;
                 return View(vm);
             }
-
+            
             ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.PaymentDestinationAccount);
 
             if (destinationAccount.HasError)
@@ -102,6 +103,7 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> CreditPayment(SavePaymentViewModel vm)
         {
+            vm.TypeOfPayment = 0;
             if (!ModelState.IsValid)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
@@ -146,6 +148,7 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> LoamPayment(SavePaymentViewModel vm)
         {
+            vm.TypeOfPayment = 1;
             if (!ModelState.IsValid)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
@@ -166,6 +169,7 @@ namespace WebApp.InternetBanking.Controllers
                 return View(vm);
             }
 
+            
             ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.PaymentDestinationAccount);
 
             if (vm.AmountToPay > destinationAccount.Charge)
@@ -190,6 +194,7 @@ namespace WebApp.InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> BeneficiaryPayment(SavePaymentViewModel vm)
         {
+            vm.TypeOfPayment = 0;
             if (!ModelState.IsValid)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);

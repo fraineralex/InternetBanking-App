@@ -144,6 +144,22 @@ namespace InternetBanking.Core.Application.Services
             var clientStatus = await con.QueryFirstAsync<StatusClientQuery>(query);
             return clientStatus;
         }
+
+        public async Task<TransacctionsQuery> GetTransacctions()
+        {
+            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(cs);
+            con.Open();
+
+            var query = @"SELECT COUNT(*) TotalTransacctions,
+                            (SELECT COUNT(*) FROM [Payments] WHERE
+                            Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) TransacctionsToday
+                            FROM [Payments]
+                            WHERE [TypeOfPayment] = 0";
+
+            var transacctions = await con.QueryFirstAsync<TransacctionsQuery>(query);
+            return transacctions;
+        }
         public async Task<ProductsQuery> GetClientProducts()
         {
             var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
@@ -162,10 +178,11 @@ namespace InternetBanking.Core.Application.Services
             using var con = new SqlConnection(cs);
             con.Open();
 
-            var query = @"SELECT COUNT(*) TotalPaymets,
-                          (SELECT COUNT(*) FROM [Payments] WHERE 
-                          Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
-                          FROM Payments";
+            var query = @"SELECT COUNT(*) TotalPayments,
+                        (SELECT COUNT(*) FROM [Payments] WHERE
+                        Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
+                        FROM [Payments]
+                        WHERE [TypeOfPayment] = 1";
 
             var payments = await con.QueryFirstAsync<PaymentsQuery>(query);
             return payments;
