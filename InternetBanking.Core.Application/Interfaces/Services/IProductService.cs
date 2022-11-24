@@ -10,6 +10,7 @@ namespace InternetBanking.Core.Application.Interfaces.Services
     {
         Task AddSavingAccountAsync(string idUser, double amount);
         Task<PaymentsQuery> GetPaymentQuantities();
+        Task<TransacctionsQuery> GetTransacctions();
         Task<StatusClientQuery> GetClientStatus();
         Task<ProductsQuery> GetClientProducts();
         Task CreateAccountAsync(string idUser, double amount, int typeAccount);

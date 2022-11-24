@@ -22,5 +22,6 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
         public string? Owner { get; set; }
         public bool HasError { get; set; } = false;
         public string? Error { get; set; }
+        public int? TypeOfPayment { get; set; }
     }
 }

@@ -48,7 +48,7 @@ namespace InternetBanking.Controllers
              ViewBag.clientStatus = await _productSvc.GetClientStatus();
              ViewBag.clientProduct = await _productSvc.GetClientProducts();
              ViewBag.clientpayment = await _productSvc.GetPaymentQuantities();
-
+             ViewBag.transacctions = await _productSvc.GetTransacctions();
             return View();
         }
 

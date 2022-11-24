@@ -144,6 +144,21 @@ namespace InternetBanking.Core.Application.Services
             var clientStatus = await con.QueryFirstAsync<StatusClientQuery>(query);
             return clientStatus;
         }
+
+        public async Task<TransacctionsQuery> GetTransacctions()
+        {
+            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(cs);
+            con.Open();
+
+            var query = @"SELECT COUNT(*) TotalTransacctions,
+                            (SELECT COUNT(*) FROM [Payments] WHERE
+                            Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) TransacctionsToday
+                            FROM [Payments]";
+
+            var transacctions = await con.QueryFirstAsync<TransacctionsQuery>(query);
+            return transacctions;
+        }
         public async Task<ProductsQuery> GetClientProducts()
         {
             var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
@@ -162,14 +177,68 @@ namespace InternetBanking.Core.Application.Services
             using var con = new SqlConnection(cs);
             con.Open();
 
-            var query = @"SELECT COUNT(*) TotalPaymets,
-                          (SELECT COUNT(*) FROM [Payments] WHERE 
-                          Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
-                          FROM Payments";
+            var query = @"SELECT COUNT(*) TotalPayments,
+                        (SELECT COUNT(*) FROM [Payments] WHERE
+                        Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
+                        FROM [Payments]";
 
-            var payments = await con.QueryFirstAsync<PaymentsQuery>(query);
-            return payments;
+            var paymentsResult = await con.QueryAsync<PaymentsQuery>(query);
+
+            List<ProductViewModel> productViewModelsList = new();
+            int TotalPaymentsQuantity = 0;
+            int TodayPaymentsQuantity = 0;
+
+            foreach (var payment in paymentsResult)
+            {
+                ProductViewModel OriginAccount = await GetProductByNumberAccountForPayment(payment.PaymentAccount);
+                ProductViewModel DestinationAccount = await GetProductByNumberAccountForPayment(payment.PaymentDestinationAccount);
+
+                if (OriginAccount.ClientId != DestinationAccount.ClientId)
+                {
+                    TotalPaymentsQuantity += 1;
+
+                    if (OriginAccount.Created! < DateTime.Today)
+                    {
+                        TodayPaymentsQuantity += 1;
+                    }
+                }
+            }
+
+            PaymentsQuery paymentsQuery = new()
+            {
+                PaymentsToday = TodayPaymentsQuantity,
+                TotalPayments = TotalPaymentsQuantity
+            };
+
+            return paymentsQuery;
         }
+        //public async Task<ProductsQuery> GetClientProducts()
+        //{
+        //    var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+        //    using var con = new SqlConnection(cs);
+        //    con.Open();
+
+        //    var query = @"SELECT COUNT(*) TotalClientProducts
+        //                  FROM [InternetBankingApp2].[dbo].[Products]";
+
+        //    var clientProducts = await con.QueryFirstAsync<ProductsQuery>(query);
+        //    return clientProducts;
+        //}
+        //public async Task<PaymentsQuery> GetPaymentQuantities()
+        //{
+        //    var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+        //    using var con = new SqlConnection(cs);
+        //    con.Open();
+
+        //    var query = @"SELECT COUNT(*) TotalPayments,
+        //                (SELECT COUNT(*) FROM [Payments] WHERE
+        //                Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
+        //                FROM [Payments]
+        //                WHERE [TypeOfPayment] = 1";
+
+        //    var paymentsResult = await con.QueryFirstAsync<PaymentsQuery>(query);
+        //    return paymentsResult;
+        //}
 
         public async Task<ProductViewModel> GetProductByNumberAccountForPayment(string numberAccount, double amountToPay = -1.0)
         {
