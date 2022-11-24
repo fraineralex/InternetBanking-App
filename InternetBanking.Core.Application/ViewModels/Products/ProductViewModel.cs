@@ -19,7 +19,6 @@ namespace InternetBanking.Core.Application.ViewModels.Products
         public int TypeAccountId { get; set; }
         public TypeAccount? TypeAccount { get; set; }
         public string? Owner { get; set; }
-        public DateTime? Created { get; set; }
 
         public UserViewModel? Client { get; set; }
         public bool HasError { get; set; }

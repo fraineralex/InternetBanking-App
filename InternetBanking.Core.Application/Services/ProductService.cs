@@ -177,9 +177,9 @@ namespace InternetBanking.Core.Application.Services
             using var con = new SqlConnection(cs);
             con.Open();
 
-            var query = @"SELECT COUNT(*) TotalPayments,
-                        (SELECT COUNT(*) FROM [Payments] WHERE
-                        Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
+            var query = @"SELECT * ,
+	                    (SELECT COUNT(*) FROM [Payments] WHERE
+	                    Convert(varchar(10), Created,120) = Convert(varchar(10), GETDATE(),120)) PaymentsToday
                         FROM [Payments]";
 
             var paymentsResult = await con.QueryAsync<PaymentsQuery>(query);
@@ -197,7 +197,7 @@ namespace InternetBanking.Core.Application.Services
                 {
                     TotalPaymentsQuantity += 1;
 
-                    if (OriginAccount.Created! < DateTime.Today)
+                    if (payment.Created.Value.Day > DateTime.Now.AddDays(-1).Day)
                     {
                         TodayPaymentsQuantity += 1;
                     }

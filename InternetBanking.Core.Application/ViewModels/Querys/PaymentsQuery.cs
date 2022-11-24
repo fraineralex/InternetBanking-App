@@ -12,5 +12,6 @@ namespace InternetBanking.Core.Application.ViewModels.Querys
         public int PaymentsToday { get; set; }
         public string? PaymentAccount { get; set; }
         public string? PaymentDestinationAccount { get; set; }
+        public DateTime? Created { get; set; }
     }
 }
