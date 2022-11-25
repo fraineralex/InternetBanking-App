@@ -10,11 +10,11 @@
     bool editMode = Model.Id == null || Model.Id == "" ? false : true;
     int rol = Model.TypeUser;
     int count = 1;
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = editMode ? $"Update" : "Register";
 }
 
 
-<div class="row">
+@*<div class="row">
     <div class="row bg-light rounded p-3 mb-5">
         <section class="w-100 d-flex justify-content-between align-items-center px-5">
             <h3 class="fs-4 fw-bold fw-bolder m-2 w-100">
@@ -146,4 +146,210 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
+
+
+<main>
+    <section class="container">
+        <div class="row mx-auto">
+
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-bold mt-4 text-center text-primary"><i class='bx bxs-user-detail'></i> @(editMode ? $"Update" : "Register") User</h1>
+                <p class="fs-3 fw-bold text-secondary mt-1 text-center">
+                    @(editMode ? $"Here you can update the information of the user selected" : "Here you can register a new customer user or admin user in the system.") <i class="text-white">🚀</i>
+                </p>
+                <p class="text-center">
+                    <a asp-controller="Home" asp-action="UserManagement" class="btn btn-info btn-lg mx-auto">
+                        <i class='bx bxs-user-detail'></i> User Management
+                     </a>
+                </p>
+
+                <div class="col-10 mx-auto card bg-dark text-white mt-5 mb-5" style="border-radius: 1rem;">
+                    <div class="card-body">
+
+                        <h2 class="fw-bold mb-3 text-uppercase text-center mt-2">@(editMode ? $"Updating" : "Register")</h2>
+                        <p class="text-white-50 fs-5 mb-3 text-center">Please enter your username and password!</p>
+
+                        @Html.ValidationMessage("userVaidation", "",new{@class = "text-danger text-center fw-bold fs-5 mb-3"}, "h4")
+
+                        @if (Model.HasError)
+                        {
+                                <h4 class="text-danger text-center fw-bold fs-5 mb-3">@Model.Error</h4>
+                        }
+
+                        <form asp-controller="Home" asp-action=@(editMode ? "UpdateUser" : "Register") method="POST">
+
+                             <div class="p-3 pt-0">
+                                <label asp-for="FirstName" class="form-label text-white"><strong>First Name <small class="text-danger"> *</small></strong></strong></label>
+                                <input type="text" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="FirstName">
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <div class="p-3 pt-0">
+                                <label asp-for="LastName" class="form-label text-white"><strong>Last Name <small class="text-danger"> *</small></strong></strong></label>
+                                <input type="text" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="LastName">
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+
+                            <div class="p-3 pt-0">
+                                <label asp-for="IdCard" class="form-label text-white"><strong>ID Card<small class="text-danger"> *</small></strong></strong></label>
+                                <input type="text" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="IdCard" required>
+                                <span asp-validation-for="IdCard" class="text-danger"></span>
+                            </div>
+
+                            <div class="p-3 pt-0">
+                                <label asp-for="Email" class="form-label text-white"><strong>Email Adrees <small class="text-danger"> *</small></strong></strong></label>
+                                <input type="email" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="Email">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="p-3 pt-0">
+                                <label asp-for="PhoneNumber" class="form-label text-white"><strong>Phone <small class="text-danger"> *</small></strong></strong></label>
+                                <input id="phone" type="text" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="PhoneNumber" placeholder="(000)-000-0000"
+                                       autocomplete="off" min="1">
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <div class="p-3 pt-0">
+                                <label asp-for="UserName" class="form-label text-white"><strong>Username <small class="text-danger"> *</small></strong></strong></label>
+                                <input type="text" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="UserName">
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                                @Html.ValidationMessage("userVaidation", "",new{@class = "text-danger"}, "span")
+                            </div>
+
+                            <div class="p-3 pt-0">
+                                <label asp-for="Password" class="form-label text-white"><strong>Password <small class="text-danger"> *</small></strong></strong></label>
+                                <input type="password" id="password"
+                                       class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="Password">
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="p-3 pt-0 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label text-white">
+                                    <strong>
+                                        Confirm
+                                        Password <small class="text-danger"> *</small>
+                                    </strong>
+                                </label>
+                                <input type="password"
+                                       class="form-control bg-dark text-white border-white form-control-lg"
+                                       id="confirmPassword" asp-for="ConfirmPassword">
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+
+                            <input type="hidden" asp-for="Id" name="Id" value="@Model.Id" />
+
+                            @if((!editMode))
+                            {
+                                <div class="p-3 pt-0">
+                                    <select 
+                                        asp-for="TypeUser" 
+                                        value="@Model.TypeUser" 
+                                        class="form-control bg-dark text-white border-white form-control-lg"
+                                        id="rol-select" 
+                                        aria-label="User type">
+
+                                        <option selected>Select a user type</option>
+
+                                        @foreach (var item in ViewBag.Roles)
+                                        {
+                                            if (@item.Name == "Admin")
+                                            {
+                                                <option value="1">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="2">@item.Name</option>
+                                            }
+                                            count++;
+                                        }
+                                    </select>
+                                </div>
+                            }
+
+                            @if (Model.TypeUser != 1)
+                            {
+                                <div class="p-3 pt-0">
+                                    <label asp-for="Amount" id="montoLabel" class="form-label text-white"><strong>@(
+                                        editMode ? "Add" : "Initial"
+                                        ) amount <small class="text-danger">@(
+                                            editMode ? "" : "*"
+                                            )</small></strong></label>
+                                    <input type="number" min="0" id="monto"
+                                    class="form-control bg-dark text-white border-white form-control-lg"
+                                    asp-for="Amount">
+                                    <span asp-validation-for="Amount" class="text-danger"></span>
+                                </div>
+                            }
+
+                            <button class="btn btn-primary btn-lg float-end" type="submit">
+                                <i class='bx bxs-check-shield'></i>
+                                Register
+                            </button>
+                            <a class="btn btn-light btn-lg float-end me-2" asp-controller="Home" asp-action="UserManagement">
+                                <i class='bx bxs-left-arrow-circle'></i> Back
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+</main>
+
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        /***phone number format***/
+        $("#phone").keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+            var curchr = this.value.length;
+            var curval = $(this).val();
+            if (curchr == 3 && curval.indexOf("(") <= -1) {
+                $(this).val("(" + curval + ")" + "-");
+            } else if (curchr == 4 && curval.indexOf("(") > -1) {
+                $(this).val(curval + ")-");
+            } else if (curchr == 5 && curval.indexOf(")") > -1) {
+                $(this).val(curval + "-");
+            } else if (curchr == 9) {
+                $(this).val(curval + "-");
+                $(this).attr("maxlength", "14");
+            }
+        });
+
+        const montoInput = document.querySelector("#monto");
+        const montoLabel = document.querySelector("#montoLabel");
+        const rolSelect = document.querySelector("#rol-select");
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            montoLabel.classList.add("d-none");
+            montoInput.setAttribute("type", "hidden");
+
+            rolSelect.onchange = (e) => {
+
+                if (e.target.value === "1") {
+                    montoLabel.classList.add("d-none");
+                    montoInput.setAttribute("type", "hidden");
+                } else {
+                    montoLabel.classList.remove("d-none");
+                    montoInput.setAttribute("type", "text");
+                }
+            }
+        });
+    });
+</script>

@@ -116,13 +116,14 @@ namespace InternetBanking.Controllers
         }
         [ServiceFilter(typeof(AdminAuthorize))]
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(UserSaveViewModel vm)
+        public async Task<IActionResult> UpdateUser(UserSaveViewModel vm, double AditionalAmout = 0.0)
         {
             ViewBag.Roles = await _roleManager.Roles.ToListAsync();
             if (!ModelState.IsValid)
             {
                 return View("Register", vm);
             }
+
             await _svc.UpdateUserAsync(vm, vm.Id);
             return RedirectToRoute(new { controller = "Home", action = "UserManagement" });
         }

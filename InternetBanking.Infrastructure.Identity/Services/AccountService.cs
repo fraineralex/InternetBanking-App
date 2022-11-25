@@ -193,6 +193,7 @@ namespace InternetBanking.Infrastructure.Identity.Services
                         res.Error = "Error when trying update the user";
                         return res;
                     }
+
                     await _productSvc.AddAmountSavingAccount(user.Id, req.Amount);
                     return res;
                 }
