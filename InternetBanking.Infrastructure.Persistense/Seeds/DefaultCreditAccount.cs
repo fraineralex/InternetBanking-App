@@ -11,7 +11,7 @@ namespace InternetBanking.Infrastructure.Persistence.Seeds
         {
 
             TypeAccount account = new();
-            account.Name = "Tarjeta de Credito";
+            account.Name = "Credit Card";
 
 
             var accounts = await _typeAccountRepository.GetAllAsync();

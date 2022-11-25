@@ -11,7 +11,7 @@ namespace InternetBanking.Infrastructure.Persistence.Seeds
         {
 
             TypeAccount account = new();
-            account.Name = "Cuenta de Ahorro";
+            account.Name = "Saving Account";
 
             var accounts = await _typeAccountRepository.GetAllAsync();
 

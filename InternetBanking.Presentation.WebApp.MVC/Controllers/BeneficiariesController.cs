@@ -72,19 +72,19 @@ namespace WebApp.InternetBanking.Controllers
 
             if (!await _productSvc.ExistCodeNumber(vm.RecipientCode))
             {
-                ModelState.AddModelError("AccountValidation", "El numero de cuenta ingresado es invalido");
+                ModelState.AddModelError("AccountValidation", "The account number entered is not correct");
                 return View("Index", vm);
             }
 
             if (savingAccount.TypeAccountId != (int)AccountTypes.SavingAccount)
             {
-                ModelState.AddModelError("AccountValidation", "El numero de cuenta ingresado no es de una cuenta de ahorro.");
+                ModelState.AddModelError("AccountValidation", "The account number entered is not a Saving Account");
                 return View("Index", vm);
             }
 
             if (savingAccount.ClientId == currentlyUser.Id)
             {
-                ModelState.AddModelError("AccountValidation", "No puedes agregarte a ti mismo como beneficiario");
+                ModelState.AddModelError("AccountValidation", "You cannot add yourself as a beneficiary");
                 return View("Index", vm);
             }
 
@@ -93,7 +93,7 @@ namespace WebApp.InternetBanking.Controllers
 
             if (anyRecipient)
             {
-                ModelState.AddModelError("AccountValidation", "Ya existe un beneficiario con este numero de cuenta.");
+                ModelState.AddModelError("AccountValidation", "It exists a beneficiary with this number account");
                 return View("Index", vm);
             }
 

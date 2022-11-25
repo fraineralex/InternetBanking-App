@@ -115,7 +115,7 @@ namespace InternetBanking.Core.Application.Services
             if(vm.OriginAccountNumber == vm.DestinationAccountNumber)
             {
                 vm.HasError = true;
-                vm.Error = "You can not transfer to your own account, pls select another account";
+                vm.Error = "You can not transfer to your own account, please select another account";
                 return vm;
             }
 

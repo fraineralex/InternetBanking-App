@@ -15,7 +15,7 @@ namespace InternetBanking.Infrastructure.Persistence.Seeds
         {
 
             TypeAccount account = new();
-            account.Name = "Préstamo";
+            account.Name = "Loan";
 
             var accounts = await _typeAccountRepository.GetAllAsync();
 

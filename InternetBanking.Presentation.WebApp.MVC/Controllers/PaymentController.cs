@@ -86,7 +86,7 @@ namespace WebApp.InternetBanking.Controllers
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
                 vm.HasError = true;
-                vm.Error = "Debe digitar el numero de una cuenta de ahorros";
+                vm.Error = "You must type the number of a saving account";
                 return View(vm);
             }
 
@@ -94,7 +94,7 @@ namespace WebApp.InternetBanking.Controllers
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
                 vm.HasError = true;
-                vm.Error = "No puedes hacerte autotrasferencias en este apartado, ve a la sección de transferencias";
+                vm.Error = "You can not transfer to your own account, please go to the transfer's section another account";
                 return View(vm);
             }
 

@@ -66,7 +66,7 @@ namespace WebApp.InternetBanking.Controllers
             if (creditCardOrigin.HasError)
             {
                 vm.HasError = true;
-                vm.Error = "Debe retirar una cantidad que no supere el monto del límite de crédito de la tarjeta";
+                vm.Error = "You just can withdraw an amount of money that you have, you cannot withdraw an amount of money that you don't have in the credit card";
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
                 ViewBag.CreditCards = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.CreditAccount);
                 return View(vm);

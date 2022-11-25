@@ -1,21 +1,41 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace InternetBanking.Infrastructure.Persistence.Migrations
 {
-    public partial class InitialMigrationEntities : Migration
+    /// <inheritdoc />
+    public partial class RealMigration : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Beneficiaries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BeneficiaryCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OwnerAccount = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Beneficiaries", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AmountToPay = table.Column<double>(type: "float", nullable: false),
-                    PaymentAccount = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PaymentDestinationAccount = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<double>(type: "float", nullable: false),
+                    OriginAccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DestinationAccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeOfPayment = table.Column<int>(type: "int", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -27,26 +47,12 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Recipients",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RecipientCode = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Recipients", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TypeAccounts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameAccount = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -66,7 +72,7 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     Charge = table.Column<double>(type: "float", nullable: false),
                     ClientId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Discharge = table.Column<double>(type: "float", nullable: false),
+                    Discharge = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
                     IsPrincipal = table.Column<bool>(type: "bit", nullable: false),
                     TypeAccountId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -91,16 +97,17 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                 column: "TypeAccountId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Beneficiaries");
+
             migrationBuilder.DropTable(
                 name: "Payments");
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "Recipients");
 
             migrationBuilder.DropTable(
                 name: "TypeAccounts");
