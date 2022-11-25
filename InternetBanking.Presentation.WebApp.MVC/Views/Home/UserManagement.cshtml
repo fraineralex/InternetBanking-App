@@ -73,7 +73,7 @@
                             </td>
 
                             <td>
-                                @if (@item.Roles[0] == Roles.Basic.ToString())
+                                @if (@item.Roles[0] == Roles.Client.ToString())
                                 {
                                     <a asp-controller="Product" asp-action="Index" asp-route-id="@item.Id" class="btn btn-sm btn-outline-dark w-100">Ver</a>
                                 }

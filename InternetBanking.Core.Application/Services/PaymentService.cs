@@ -68,18 +68,18 @@ namespace InternetBanking.Core.Application.Services
         public async Task Payment(SavePaymentViewModel vm)
         {
             
-            ProductViewModel accountToPay = await _productService.GetProductByNumberAccountForPayment(vm.OriginAccountNumber, vm.Amount);
+            ProductViewModel originAccount = await _productService.GetProductByNumberAccountForPayment(vm.OriginAccountNumber, vm.Amount);
 
             ProductViewModel accountDestination = await _productService.GetProductByNumberAccountForPayment(vm.DestinationAccountNumber);
 
-            if (accountToPay != null && accountDestination != null)
+            if (originAccount != null && accountDestination != null)
             {
                 if (accountDestination.TypeAccountId == (int)AccountTypes.SavingAccount)
                 {
-                    var disCharge = accountToPay.Charge - vm.Amount;
-                    accountToPay.Charge = disCharge;
-                    accountToPay.Discharge += vm.Amount;
-                    ProductSaveViewModel acToPayUpdated = _mapper.Map<ProductSaveViewModel>(accountToPay);
+                    var disCharge = originAccount.Charge - vm.Amount;
+                    originAccount.Charge = disCharge;
+                    originAccount.Discharge += vm.Amount;
+                    ProductSaveViewModel acToPayUpdated = _mapper.Map<ProductSaveViewModel>(originAccount);
                     await _productService.Update(acToPayUpdated, acToPayUpdated.Id);
 
                     accountDestination.Charge += vm.Amount;
@@ -90,10 +90,10 @@ namespace InternetBanking.Core.Application.Services
                     (accountDestination.TypeAccountId == (int)AccountTypes.CreditAccount ||
                     accountDestination.TypeAccountId == (int)AccountTypes.LoanAccount)
                 {
-                    var disCharge = accountToPay.Charge - vm.Amount;
-                    accountToPay.Charge = disCharge;
-                    accountToPay.Discharge += vm.Amount;
-                    ProductSaveViewModel acToPayUpdated = _mapper.Map<ProductSaveViewModel>(accountToPay);
+                    var disCharge = originAccount.Charge - vm.Amount;
+                    originAccount.Charge = disCharge;
+                    originAccount.Discharge += vm.Amount;
+                    ProductSaveViewModel acToPayUpdated = _mapper.Map<ProductSaveViewModel>(originAccount);
                     await _productService.Update(acToPayUpdated, acToPayUpdated.Id);
 
                     accountDestination.Charge -= vm.Amount;

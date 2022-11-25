@@ -12,11 +12,11 @@ namespace InternetBanking.Core.Application.Services
 {
     public class TypeAccountService : GenericService<TypeAccountSaveViewModel, TypeAccountViewModel, TypeAccount>, ITypeAccountService
     {
-        private readonly ITypeAccountRepository _repo;
+        private readonly ITypeAccountRepository _typeAccountService;
         private readonly IMapper _mapper;
-        public TypeAccountService(ITypeAccountRepository repo, IMapper mapper): base(repo, mapper)
+        public TypeAccountService(ITypeAccountRepository typeAccountService, IMapper mapper): base(typeAccountService, mapper)
         {
-            _repo = repo;
+            _typeAccountService = typeAccountService;
             _mapper = mapper;
         }
 

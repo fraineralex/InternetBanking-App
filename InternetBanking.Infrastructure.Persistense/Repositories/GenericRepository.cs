@@ -12,9 +12,9 @@ namespace InternetBanking.Infrastructure.Persistence.Repositories
     public class GenericRepository<Entity> : IGenericRepository<Entity> where Entity : class
     {
         private readonly ApplicationContext _dbContext;
-        public GenericRepository(ApplicationContext db)
+        public GenericRepository(ApplicationContext dbContext)
         {
-            _dbContext = db;
+            _dbContext = dbContext;
         }
         public virtual async Task<Entity> AddAsync(Entity entity)
         {
@@ -35,11 +35,11 @@ namespace InternetBanking.Infrastructure.Persistence.Repositories
             return await _dbContext.Set<Entity>().ToListAsync();
         }
 
-        public virtual async Task<List<Entity>> GetAllWithIncludeAsync(List<string> props)
+        public virtual async Task<List<Entity>> GetAllWithIncludeAsync(List<string> properties)
         {
             var query = _dbContext.Set<Entity>().AsQueryable();
 
-            foreach (string prop in props)
+            foreach (string prop in properties)
             {
                 query = query.Include(prop);
             }

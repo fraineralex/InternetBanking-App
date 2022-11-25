@@ -10,6 +10,6 @@ namespace InternetBanking.Core.Application.Interfaces.Services
 {
     public interface IEmailService
     {
-        Task SendAsync(EmailRequest req);
+        Task SendAsync(EmailRequest request);
     }
 }

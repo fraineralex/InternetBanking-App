@@ -8,10 +8,10 @@ namespace InternetBanking.Infrastructure.Persistence.Repositories
 {
     public class TypeAccountRepository : GenericRepository<TypeAccount>, ITypeAccountRepository
     {
-        private readonly ApplicationContext _db;
-        public TypeAccountRepository(ApplicationContext db): base(db)
+        private readonly ApplicationContext _dbContext;
+        public TypeAccountRepository(ApplicationContext dbContext): base(dbContext)
         {
-            _db = db;
+            _dbContext = dbContext;
         }
 
         //public override static  async Task<List<TypeAccount>> GetAllAsync()

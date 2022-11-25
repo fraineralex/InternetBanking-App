@@ -12,10 +12,10 @@ namespace InternetBanking.Infrastructure.Persistence.Repositories
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        private readonly ApplicationContext _db;
-        public ProductRepository(ApplicationContext db): base(db)
+        private readonly ApplicationContext _dbContext;
+        public ProductRepository(ApplicationContext dbContext): base(dbContext)
         {
-            _db = db;
+            _dbContext = dbContext;
         }
 
     }

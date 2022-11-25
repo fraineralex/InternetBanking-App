@@ -5,12 +5,12 @@ using InternetBanking.Infrastructure.Persistence.Context;
 
 namespace InternetBanking.Infrastructure.Persistence.Repositories
 {
-    public class RecipientRepository : GenericRepository<Beneficiary>, IBeneficiaryRepository
+    public class BeneficiaryRepository : GenericRepository<Beneficiary>, IBeneficiaryRepository
     {
-        private readonly ApplicationContext _db;
-        public RecipientRepository(ApplicationContext db): base(db)
+        private readonly ApplicationContext _dbContext;
+        public BeneficiaryRepository(ApplicationContext dbContext): base(dbContext)
         {
-            _db = db;
+            _dbContext = dbContext;
         }
 
 

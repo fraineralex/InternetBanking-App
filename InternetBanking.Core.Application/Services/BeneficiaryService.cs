@@ -34,7 +34,7 @@ namespace InternetBanking.Core.Application.Services
         {
             var beneficiaryList = _mapper.Map<List<BeneficiaryViewModel>>(await _beneficiaryRepository.GetAllAsync());
             var productList = await _productService.GetAllViewModel();
-            var userList = await _userService.GetAllVm();
+            var userList = await _userService.GetAllViewModel();
 
             foreach (var beneficiary in beneficiaryList)
             {
