@@ -2,7 +2,7 @@
 
 namespace InternetBanking.Core.Application.Interfaces.Repositories
 {
-    public interface IRecipientRepository :  IGenericRepository<Beneficiary>
+    public interface IBeneficiaryRepository :  IGenericRepository<Beneficiary>
     {
 
     }

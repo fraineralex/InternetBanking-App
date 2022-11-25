@@ -1,5 +1,5 @@
 ﻿@using InternetBanking.Core.Application.ViewModels.Payment;
-@using InternetBanking.Core.Application.ViewModels.Recipient;
+@using InternetBanking.Core.Application.ViewModels.BeneficiaryViewModel;
 @model SavePaymentViewModel
 @{
     ViewData["Title"] = "Beneficiaries Payment";
@@ -52,9 +52,9 @@
 
                                     </label>
                                     <select class="form-select" asp-for="DestinationAccountNumber" required>
-                                        @foreach (RecipientViewModel beneficiary in ViewBag.Beneficiaries)
+                                        @foreach (BeneficiaryViewModel beneficiary in ViewBag.Beneficiaries)
                                         {
-                                            <option value="@beneficiary.RecipientCode">@beneficiary.OwnerAccount  (@beneficiary.RecipientCode)</option>
+                                            <option value="@beneficiary.">@beneficiary.BeneficiaryName  (@beneficiary.)</option>
                                         }
                                     </select>
                                     <span asp-validation-for="DestinationAccountNumber" class="text-danger"></span>

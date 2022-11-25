@@ -14,14 +14,14 @@ namespace WebApp.InternetBanking.Controllers
     public class TransferBetweenAccountController : Controller
     {
         private readonly IPaymentService _paymentSvc;
-        private readonly IRecipientService _recipientService;
+        private readonly IBeneficiaryService _recipientService;
         private readonly IProductService _productService;
         private readonly IUserService _userService;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         AuthenticationResponse currentlyUser;
 
-        public TransferBetweenAccountController(IHttpContextAccessor httPContextAccesor, IPaymentService paymentService, IProductService productService, IUserService userService, IRecipientService recipientService)
+        public TransferBetweenAccountController(IHttpContextAccessor httPContextAccesor, IPaymentService paymentService, IProductService productService, IUserService userService, IBeneficiaryService recipientService)
         {
             _httpContextAccessor = httPContextAccesor;
             currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");

@@ -14,14 +14,14 @@ namespace WebApp.InternetBanking.Controllers
     public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;
-        private readonly IRecipientService _beneficiaryService;
+        private readonly IBeneficiaryService _beneficiaryService;
         private readonly IProductService _productService;
         private readonly IUserService _userService;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         AuthenticationResponse currentlyUser;
 
-        public PaymentController(IHttpContextAccessor httPContextAccesor , IPaymentService paymentService, IProductService productService, IUserService userService, IRecipientService beneficiaryService)
+        public PaymentController(IHttpContextAccessor httPContextAccesor , IPaymentService paymentService, IProductService productService, IUserService userService, IBeneficiaryService beneficiaryService)
         {
             _httpContextAccessor = httPContextAccesor;
             currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");

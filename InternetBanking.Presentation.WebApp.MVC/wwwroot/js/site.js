@@ -19,7 +19,7 @@ restorePassBtn.addEventListener("click", async () => {
     const { value: accountNumber } = await Swal.fire({
         title: "Input the account number to register a new beneficiary",
         html: `<form method="post" action="Beneficiaries/Index" id="frm-add-beneficiary"> 
-          <input id="content" type="text" class="form-control border-secondary border border-2" placeholder="Enter the account number" name="RecipientCode" required>
+          <input id="content" type="text" class="form-control border-secondary border border-2" placeholder="Enter the account number" name="BeneficiaryAccountNumber" required>
           </form>`,
         showCancelButton: true,
         focusConfirm: false,
