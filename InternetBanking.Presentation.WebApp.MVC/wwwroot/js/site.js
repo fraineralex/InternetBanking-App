@@ -19,7 +19,7 @@ restorePassBtn.addEventListener("click", async () => {
     const { value: accountNumber } = await Swal.fire({
         title: "Input the account number to register a new beneficiary",
         html: `<form method="post" action="Beneficiaries/Index" id="frm-add-beneficiary"> 
-          <input id="content" type="text" class="form-control border-secondary border border-2" placeholder="Enter the account number" name="RecipientCode" required>
+          <input id="content" type="text" class="form-control border-secondary border border-2" placeholder="Enter the account number" name="BeneficiaryAccountNumber" required>
           </form>`,
         showCancelButton: true,
         focusConfirm: false,
@@ -39,3 +39,23 @@ restorePassBtn.addEventListener("click", async () => {
 });
 
 
+const montoInput = document.querySelector("#monto");
+const montoLabel = document.querySelector("#montoLabel");
+const rolSelect = document.querySelector("#rol-select");
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    montoLabel.classList.add("d-none");
+    montoInput.setAttribute("type", "hidden");
+
+    rolSelect.onchange = (e) => {
+
+        if (e.target.value === "1") {
+            montoLabel.classList.add("d-none");
+            montoInput.setAttribute("type", "hidden");
+        } else {
+            montoLabel.classList.remove("d-none");
+            montoInput.setAttribute("type", "text");
+        }
+    }
+});

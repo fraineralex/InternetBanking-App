@@ -84,7 +84,7 @@ namespace InternetBanking.Core.Application.Services
             return await _accountService.ResetPasswordAsync(request);
         }
 
-        public async Task<List<UserViewModel>> GetAllVm()
+        public async Task<List<UserViewModel>> GetAllViewModel()
         {
             var users = await this.GetAllUsers();
             var usersVm = _mapper.Map<List<UserViewModel>>(users);

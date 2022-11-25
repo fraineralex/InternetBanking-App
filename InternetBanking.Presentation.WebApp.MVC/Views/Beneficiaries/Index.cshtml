@@ -1,15 +1,12 @@
 ﻿@using InternetBanking.Core.Application.Dtos.Account
 @using InternetBanking.Core.Application.Helpers
 @using Microsoft.AspNetCore.Http
-@using InternetBanking.Core.Application.ViewModels.Recipient;
-@model RecipientSaveViewModel
+@using InternetBanking.Core.Application.ViewModels.BeneficiarySaveViewModel;
+@using InternetBanking.Core.Application.ViewModels.BeneficiaryViewModel;
+@model BeneficiarySaveViewModel
 @inject IHttpContextAccessor httpContextAccesor
 @{
     var user = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
-}
-
-@{
-    ViewData["Title"] = "Beneficiaries";
 }
 
 
@@ -32,14 +29,14 @@
     @if (ViewBag.Recipients.Count != 0)
     {
 
-        @foreach (RecipientViewModel beneficiary in ViewBag.Recipients)
+        @foreach (BeneficiaryViewModel beneficiary in ViewBag.Recipients)
         {
             <div class="col-4 ">
                 <div class="mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
                     <div class="card-body">
 
-                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-5"><i class='bx bxs-contact'></i> <i class="text-white"> @beneficiary.OwnerAccount</i></h4>
-                        <p class="fs-5 text-primary fw-bold">@beneficiary.RecipientCode  <i class="text-white-50 fs-5 float-end">Account number</i></p>
+                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-5"><i class='bx bxs-contact'></i> <i class="text-white"> @beneficiary.BeneficiaryName</i></h4>
+                        <p class="fs-5 text-primary fw-bold">@beneficiary.BeneficiaryAccountNumber  <i class="text-white-50 fs-5 float-end">Account number</i></p>
                         <a asp-controller="Beneficiaries" asp-action="Delete" asp-route-id="@beneficiary.Id" class="btn btn-sm btn-danger float-end"><i class='bx bxs-trash'></i></a>
 
                     </div>

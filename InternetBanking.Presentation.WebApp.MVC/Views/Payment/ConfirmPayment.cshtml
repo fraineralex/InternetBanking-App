@@ -21,9 +21,9 @@
                 <a asp-controller="Home" asp-action="Index" class="btn btn-lg btn-light me-2 m-auto ms-2 mt-3">Cancel</a>
 
                 <form method="post" asp-controller="Payment" asp-action="ConfirmPaymentPost" class="d-inline">
-                    <input type="hidden" asp-for="PaymentAccount" />
-                    <input type="hidden" asp-for="PaymentDestinationAccount" />
-                    <input type="hidden" asp-for="AmountToPay" />
+                    <input type="hidden" asp-for="OriginAccountNumber" />
+                    <input type="hidden" asp-for="DestinationAccountNumber" />
+                    <input type="hidden" asp-for="Amount" />
 
                     <button type="submit" class="btn btn-lg btn-primary mt-3">Yes</button>
                 </form>

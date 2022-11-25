@@ -2,7 +2,7 @@
 @model LoginViewModel
 
 @{
-    ViewData["Title"] = "Sing in";
+    ViewData["Title"] = "Sign in";
 }
 
 <main>
@@ -15,7 +15,6 @@
                     Welcome to Internet Banking App, log in and start
                     interacting
                     with the system. <i class="text-white">🚀</i>
-
                 </p>
 
                 @Html.ValidationMessage("ActiveSuccess", "",new{@class = "text-success text-center fw-bold mt-4 mb-3"}, "h4")
@@ -50,7 +49,7 @@
                                     <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                             <button class="btn btn-primary  btn-lg float-end" type="submit"><i class='bx bx-log-in'></i>
-                                Sing in</button>
+                                Sign in</button>
                             <a class="btn btn-light  btn-lg float-end me-2" id="restore-password" asp-controller="User" asp-action="ForgotPassword"><i class='bx bx-user'></i> Restore Password</a>
                         </form>
                     </div>

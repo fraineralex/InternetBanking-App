@@ -35,21 +35,21 @@ namespace WebApp.InternetBanking.Controllers
         
         public async Task<ActionResult> Index(string id)
         {
-            List<ProductViewModel> vm = await _productService.GetAllProductWithInclude(id);
+            List<ProductViewModel> productViewModelList = await _productService.GetAllProductWithInclude(id);
             var owner = await _userService.GetUserById(id);
             ViewBag.ClientId = owner.Id;
-            foreach (var item in vm)
+            foreach (var item in productViewModelList)
             {
                 item.Owner = $"{owner.FirstName} {owner.LastName}";
             }
 
-            ViewBag.ProductList = vm;
+            ViewBag.ProductList = productViewModelList;
             return View(new ProductViewModel());
         }
 
         public async Task<ActionResult> CreateAccount(string id)
         {
-            ViewBag.Types = await _typeAccountService.GetAllVm();
+            ViewBag.Types = await _typeAccountService.GetAllViewModel();
             ProductSaveViewModel vm = new();
             vm.ClientId = id;
             return View(vm);
@@ -59,21 +59,21 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Types = await _typeAccountService.GetAllVm();
+                ViewBag.Types = await _typeAccountService.GetAllViewModel();
                 return View(vm);
             }
 
             if (vm.TypeAccountId == (int)AccountTypes.SavingAccount)
             {
-                await _productService.AddSavingAccountAsync(vm.ClientId, vm.Charge);
+                await _productService.AddSavingAccountAsync(vm.ClientId, vm.Amount);
             }
             else if (vm.TypeAccountId == (int)AccountTypes.CreditAccount)
             {
-                await _productService.CreateAccountAsync(vm.ClientId, vm.Charge, vm.TypeAccountId);
+                await _productService.CreateAccountAsync(vm.ClientId, vm.Amount, vm.TypeAccountId);
             }
             else
             {
-                await _productService.CreateAccountAsync(vm.ClientId, vm.Charge, vm.TypeAccountId);
+                await _productService.CreateAccountAsync(vm.ClientId, vm.Amount, vm.TypeAccountId);
             }
             return RedirectToAction("Index", new { id = vm.ClientId });
         }

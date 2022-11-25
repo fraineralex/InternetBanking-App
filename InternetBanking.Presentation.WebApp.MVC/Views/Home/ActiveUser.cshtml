@@ -17,18 +17,18 @@
             </h4>
 
             <div class="text-center mx-auto">
-                <a asp-controller="Home" asp-action="UserManagement" class="btn btn-lg btn-light me-2 m-auto ms-2 mt-3">Cancel</a>
+                <a asp-controller="Home" asp-action="UserManagement" class="btn btn-lg btn-light me-2 mx-auto ms-2 mt-3">Cancel</a>
 
                 <form method="post" asp-controller="Home" asp-action="ActiveUser">
                     <input type="hidden" asp-for="Id" />
 
                     @if (mode)
                     {
-                        <button type="submit" class="btn btn-danger me-3">Desactivar</button>
+                        <button type="submit" class="btn btn-danger me-3">Inactive</button>
                     }
                     else
                     {
-                        <button type="submit" class="btn btn-success me-3">Activar</button>
+                        <button type="submit" class="btn btn-lg btn-info me-2 mx-auto ms-2 mt-3">Active</button>
                     }
                 </form>
             </div>
@@ -36,5 +36,3 @@
         </div>
     </div>
 </div>
-
-

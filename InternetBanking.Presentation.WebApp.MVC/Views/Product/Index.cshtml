@@ -16,8 +16,8 @@
                 </p>
                 <p class="text-center">
                     <a asp-controller="Home" asp-action="UserManagement" class="btn btn-info btn-lg mx-auto">
-                       <i class='bx bxs-user-detail'></i> User Management
-                     </a>
+                        <i class='bx bxs-user-detail'></i> User Management
+                    </a>
                 </p>
             </div>
         </div>
@@ -31,7 +31,7 @@
 
                         <div class="d-flex justify-content-between mb-3 text-dark">
                             <h2 class="text-white">PRODUCTS</h2>
-                            <a asp-controller="Product" asp-action="CreateAccount" class="btn btn-lg btn-info mt-2 text-light mt-2 mb-2"><i class='bx bx-plus-circle' ></i> Add Prodcut</a>
+                            <a asp-controller="Product" asp-action="CreateAccount" asp-route-id="@ViewBag.ClientId" class="btn btn-lg btn-info mt-2 text-light mt-2 mb-2"><i class='bx bx-plus-circle'></i> Add Prodcut</a>
                         </div>
 
                         <thead>
@@ -51,19 +51,19 @@
                             {
                                 <tr class="table-light">
                                     <td>@product.AccountNumber</td>
-                                    <td>$ @product.Charge</td>
+                                    <td>$ @product.Amount</td>
                                     <td>@product.Owner</td>
                                     <td>@product.IsPrincipal</td>
-                                    <td>$ @product.Discharge</td>
-                                    <td>@product.TypeAccount.NameAccount</td>
+                                    <td>$ @product.Discount</td>
+                                    <td>@product.TypeAccount.Name</td>
                                     <td>
                                         <div class="d-flex justify-content-start w-100">
                                             @if (product.IsPrincipal != true)
                                             {
                                                 <a asp-controller="Product"
-                                                   asp-action="DeleteProduct"
-                                                   asp-route-id="@product.Id"
-                                                   class="btn btn-sm btn-danger me-2 w-100">
+                                           asp-action="DeleteProduct"
+                                           asp-route-id="@product.Id"
+                                           class="btn btn-sm btn-danger me-2 w-100">
                                                     <i class='bx bxs-trash'></i>
                                                 </a>
                                             }
@@ -78,5 +78,3 @@
         </div>
     </div>
 </main>
-
-

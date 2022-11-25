@@ -40,7 +40,7 @@ using (var scope = app.Services.CreateScope())
 
         await DefaultRoles.SeedAsync(userManager, roleManager);
         await DefaultAdminUser.SeedAsync(userManager, roleManager);
-        await DefaultBasicUser.SeedAsync(userManager, roleManager);
+        await DefaultClientUser.SeedAsync(userManager, roleManager);
 
         await DefaultSavingAccount.SeedAsync(productRepo);
         await DefaultCreditAccount.SeedAsync(productRepo);

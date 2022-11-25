@@ -9,19 +9,19 @@ using WebApp.InternetBanking.Middlewares;
 
 namespace WebApp.InternetBanking.Controllers
 {
-    [Authorize(Roles = "Basic")]
+    [Authorize(Roles = "Client")]
 
     public class TransferBetweenAccountController : Controller
     {
         private readonly IPaymentService _paymentSvc;
-        private readonly IRecipientService _recipientService;
+        private readonly IBeneficiaryService _recipientService;
         private readonly IProductService _productService;
         private readonly IUserService _userService;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         AuthenticationResponse currentlyUser;
 
-        public TransferBetweenAccountController(IHttpContextAccessor httPContextAccesor, IPaymentService paymentService, IProductService productService, IUserService userService, IRecipientService recipientService)
+        public TransferBetweenAccountController(IHttpContextAccessor httPContextAccesor, IPaymentService paymentService, IProductService productService, IUserService userService, IBeneficiaryService recipientService)
         {
             _httpContextAccessor = httPContextAccesor;
             currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
@@ -34,7 +34,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if(currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
@@ -46,7 +46,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             if (!ModelState.IsValid)

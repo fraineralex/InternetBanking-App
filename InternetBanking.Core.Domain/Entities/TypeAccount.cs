@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace InternetBanking.Infrastructure.Identity.Entities
 {
-    public class TypeAccount : AuditableBE
+    public class TypeAccount : AuditableBaseEntity
     {
-        public string? NameAccount { get; set; }
+        public string? Name { get; set; }
         public ICollection<Product>? Products { get; set; }
     }
 }

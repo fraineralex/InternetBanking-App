@@ -2,15 +2,15 @@
     ViewData["Title"] = "Access Denied";
 }
 
-<div class="row mt-5">
-    <div class="col-6 offset-3">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <div class="alert alert-danger alert-dimissible fade show" role="alert">
-                    <h2>You don't have acces to this seccion - <a asp-controller="Home" asp-action="Index" class="btn btn-warning">Home</a></h2>
-                    <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
+<section class="container">
+    <div class="row mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-bold mt-4 text-center text-primary"><i class='bx bxs-bank text-primary'></i> Internet Banking App</h1>
+            <p class="fs-3 fw-bold text-secondary mt-1 text-center">
+                You don't have acces to this section, press the button below to go to the home.
+
+                <a asp-controller="Home" asp-action="Index" class="btn btn-info btn-lg mt-4"><i class='bx bxs-bank'></i> Go to Home</a>
+            </p>
         </div>
     </div>
-</div>
+</section>

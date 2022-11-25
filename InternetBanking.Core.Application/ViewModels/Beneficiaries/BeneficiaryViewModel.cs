@@ -6,18 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InternetBanking.Core.Application.ViewModels.Recipient
+namespace InternetBanking.Core.Application.ViewModels.BeneficiaryViewModel
 {
-    public class RecipientViewModel
+    public class BeneficiaryViewModel
     {
         public string? Id { get; set; }
 
         public string? UserId { get; set; }
         public UserViewModel? User { get; set; }
 
-        public string? RecipientCode { get; set; }
-        public  ProductViewModel? Recipient { get; set; }
-        public string? OwnerAccount { get; set; }
+        public string? BeneficiaryAccountNumber { get; set; }
+        public  ProductViewModel? Beneficiary { get; set; }
+        public string? BeneficiaryName { get; set; }
 
     }
 }

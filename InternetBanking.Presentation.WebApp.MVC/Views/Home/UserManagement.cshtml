@@ -49,43 +49,43 @@
                         </thead>
 
                         <tbody>
-                            @foreach (AuthenticationResponse item in ViewBag.Users)
+                            @foreach (AuthenticationResponse user in ViewBag.Users)
                             {
                                 <tr class="table-light">
-                                    <td>@item.FirstName</td>
-                                    <td>@item.LastName</td>
-                                    <td>@item.UserName</td>
+                                    <td>@user.FirstName</td>
+                                    <td>@user.LastName</td>
+                                    <td>@user.UserName</td>
                                     <td>
-                                        @item.Roles[0]
+                                        @user.Roles[0]
                                     </td>
-                                    <td>@(item.IsVerified ? "Active" : "Inactive")</td>
+                                    <td>@(user.IsVerified ? "Active" : "Inactive")</td>
                                     <td>
-                                        @if (item.Id != currentlyUser.Id)
+                                        @if (user.Id != currentlyUser.Id)
                                         {
-                                            <a asp-controller="Home" asp-action="UpdateUser" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class='bx bx-edit'></i></a>
+                                            <a asp-controller="Home" asp-action="UpdateUser" asp-route-id="@user.Id" class="btn btn-sm btn-warning"><i class='bx bx-edit'></i></a>
 
                                         }
 
                                     </td>
                                     <td>
-                                        @if (item.Id != currentlyUser.Id)
+                                        @if (user.Id != currentlyUser.Id)
                                         {
 
-                                            @if (item.IsVerified)
+                                            @if (user.IsVerified)
                                             {
-                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary px-4"><i class='bx bx-toggle-right'></i></a>
+                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@user.Id" class="btn btn-sm btn-primary px-4"><i class='bx bx-toggle-right'></i></a>
                                             }
                                             else
                                             {
-                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-danger px-4"><i class='bx bx-toggle-left'></i></a>
+                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@user.Id" class="btn btn-sm btn-danger px-4"><i class='bx bx-toggle-left'></i></a>
                                             }
                                         }
                                     </td>
 
                                     <td>
-                                        @if (@item.Roles[0] == Roles.Basic.ToString())
+                                        @if (user.Roles[0] == Roles.Client.ToString())
                                         {
-                                            <a asp-controller="Product" asp-action="Index" asp-route-id="@item.Id" class="btn btn-sm btn-outline-dark w-100"><i class='bx bx-cog'></i>Manager</a>
+                                            <a asp-controller="Product" asp-action="Index" asp-route-id="@user.Id" class="btn btn-sm btn-outline-dark w-100"><i class='bx bx-cog'></i>Manager</a>
                                         }
                                     </td>
                                 </tr>

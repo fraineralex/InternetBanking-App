@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using InternetBanking.Core.Application.Dtos.Account;
 using InternetBanking.Core.Application.ViewModels.Account;
+using InternetBanking.Core.Application.ViewModels.BeneficiarySaveViewModel;
+using InternetBanking.Core.Application.ViewModels.BeneficiaryViewModel;
 using InternetBanking.Core.Application.ViewModels.Payment;
 using InternetBanking.Core.Application.ViewModels.Products;
-using InternetBanking.Core.Application.ViewModels.Recipient;
 using InternetBanking.Core.Application.ViewModels.User;
 using InternetBanking.Core.Domain.Entities;
 using InternetBanking.Infrastructure.Identity.Entities;
@@ -78,10 +79,10 @@ namespace InternetBanking.Core.Application.Mappings
 
             #region recipient
 
-            CreateMap<Recipient, RecipientViewModel>()
+            CreateMap<Beneficiary, BeneficiaryViewModel>()
                 .ReverseMap();
 
-            CreateMap<Recipient, RecipientSaveViewModel>()
+            CreateMap<Beneficiary, BeneficiarySaveViewModel>()
                 .ReverseMap();
 
             #endregion

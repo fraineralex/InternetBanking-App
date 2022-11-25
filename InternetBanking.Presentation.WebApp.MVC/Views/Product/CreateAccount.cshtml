@@ -40,24 +40,24 @@
 
                                     @foreach (TypeAccountViewModel account in ViewBag.Types)
                                     {
-                                        <option value="@account.Id">@account.NameAccount</option>
+                                        <option value="@account.Id">@account.Name</option>
                                     }
                                 </select>
                                 <span asp-validation-for="TypeAccountId" class="text-danger"></span>
                             </div>
 
                             <div class="p-3">
-                                <label asp-for="Charge" class="form-label text-white"><strong>Amount / Credit card limit <small class="text-danger"> *</small></strong></label>
+                                <label asp-for="Amount" class="form-label text-white"><strong>Amount / Credit card limit <small class="text-danger"> *</small></strong></label>
                                 <input type="number" min="1" class="form-control bg-dark text-white border-white form-control-lg"
-                                       asp-for="Charge" required>
-                                <span asp-validation-for="Charge" class="text-danger"></span>
+                                       asp-for="Amount" required>
+                                <span asp-validation-for="Amount" class="text-danger"></span>
                             </div>
 
                             <input hidden asp-for="ClientId" value="@Model.ClientId" />
 
                             <button class="btn btn-primary  btn-lg float-end" type="submit">
-                                <i class='bx bx-log-in'></i>
-                                Sing in
+                                ✅
+                                Done
                             </button>
                             <a asp-controller="Product" asp-action="Index" asp-route-id="@Model.ClientId"class="btn btn-light  btn-lg float-end me-2"> Back</a>
                         </form>

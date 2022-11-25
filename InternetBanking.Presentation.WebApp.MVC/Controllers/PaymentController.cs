@@ -13,22 +13,22 @@ namespace WebApp.InternetBanking.Controllers
 {
     public class PaymentController : Controller
     {
-        private readonly IPaymentService _paymentSvc;
-        private readonly IRecipientService _recipientService;
+        private readonly IPaymentService _paymentService;
+        private readonly IBeneficiaryService _beneficiaryService;
         private readonly IProductService _productService;
         private readonly IUserService _userService;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         AuthenticationResponse currentlyUser;
 
-        public PaymentController(IHttpContextAccessor httPContextAccesor , IPaymentService paymentService, IProductService productService, IUserService userService, IRecipientService recipientService)
+        public PaymentController(IHttpContextAccessor httPContextAccesor , IPaymentService paymentService, IProductService productService, IUserService userService, IBeneficiaryService beneficiaryService)
         {
             _httpContextAccessor = httPContextAccesor;
             currentlyUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            _paymentSvc = paymentService;
+            _paymentService = paymentService;
             _productService = productService;
             _userService = userService;
-            _recipientService = recipientService;
+            _beneficiaryService = beneficiaryService;
         }
         
         public ActionResult Index()
@@ -40,7 +40,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
@@ -52,7 +52,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             vm.TypeOfPayment = 0;
@@ -62,7 +62,7 @@ namespace WebApp.InternetBanking.Controllers
                 return View(vm);
             }
 
-            ProductViewModel accountToPay = await _productService.GetProductByNumberAccountForPayment(vm.PaymentAccount, vm.AmountToPay);
+            ProductViewModel accountToPay = await _productService.GetProductByNumberAccountForPayment(vm.OriginAccountNumber, vm.Amount);
 
             if (accountToPay.HasError)
             {
@@ -72,13 +72,13 @@ namespace WebApp.InternetBanking.Controllers
                 return View(vm);
             }
             
-            ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.PaymentDestinationAccount);
+            ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.DestinationAccountNumber);
 
             if (destinationAccount.HasError)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
                 vm.HasError = true;
-                vm.Error = "No se ha encontrado la cuenta de destino a la que desea realizar el pago";
+                vm.Error = "Account Destination couldn't be found";
                 return View(vm);
             }
 
@@ -86,15 +86,15 @@ namespace WebApp.InternetBanking.Controllers
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
                 vm.HasError = true;
-                vm.Error = "Debe digitar el numero de una cuenta de ahorros";
+                vm.Error = "You must type the number of a saving account";
                 return View(vm);
             }
 
-            if (vm.PaymentAccount == vm.PaymentDestinationAccount)
+            if (vm.OriginAccountNumber == vm.DestinationAccountNumber)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
                 vm.HasError = true;
-                vm.Error = "No puedes hacerte autotrasferencias en este apartado, ve a la sección de transferencias";
+                vm.Error = "You can not transfer to your own account, please go to the transfer's section another account";
                 return View(vm);
             }
 
@@ -107,7 +107,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
@@ -120,7 +120,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             vm.TypeOfPayment = 0;
@@ -133,7 +133,7 @@ namespace WebApp.InternetBanking.Controllers
 
             ProductViewModel accountToPay = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentAccount, vm.AmountToPay);
+                (vm.OriginAccountNumber, vm.Amount);
 
             if (accountToPay.HasError)
             {
@@ -146,11 +146,11 @@ namespace WebApp.InternetBanking.Controllers
 
             ProductViewModel destinationAccount = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentDestinationAccount);
+                (vm.DestinationAccountNumber);
 
-            if(vm.AmountToPay > destinationAccount.Discharge)
+            if(vm.Amount > destinationAccount.Discount)
             {
-                vm.AmountToPay = destinationAccount.Discharge;
+                vm.Amount = destinationAccount.Discount;
             }
 
             var owner = await _userService.GetUserById(accountToPay.ClientId);
@@ -162,7 +162,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
@@ -175,7 +175,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
 
@@ -189,7 +189,7 @@ namespace WebApp.InternetBanking.Controllers
 
             ProductViewModel accountToPay = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentAccount, vm.AmountToPay);
+                (vm.OriginAccountNumber, vm.Amount);
 
             if (accountToPay.HasError)
             {
@@ -201,11 +201,11 @@ namespace WebApp.InternetBanking.Controllers
             }
 
             
-            ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.PaymentDestinationAccount);
+            ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.DestinationAccountNumber);
 
-            if (vm.AmountToPay > destinationAccount.Charge)
+            if (vm.Amount > destinationAccount.Amount)
             {
-                vm.AmountToPay = destinationAccount.Charge;
+                vm.Amount = destinationAccount.Amount;
             }
 
             var owner = await _userService.GetUserById(accountToPay.ClientId);
@@ -217,12 +217,12 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
 
             ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
-            var payments = await _recipientService.GetAllVm();
+            var payments = await _beneficiaryService.GetAllViewModel();
             ViewBag.Beneficiaries = payments.Where(b => b.UserId == currentlyUser.Id).ToList();
 
             return View(new SavePaymentViewModel());
@@ -233,7 +233,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
 
@@ -241,19 +241,19 @@ namespace WebApp.InternetBanking.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
-                var payments = await _recipientService.GetAllVm();
+                var payments = await _beneficiaryService.GetAllViewModel();
                 ViewBag.Beneficiaries = payments.Where(b => b.UserId == currentlyUser.Id).ToList();
                 return View(vm);
             }
 
             ProductViewModel accountToPay = await
                 _productService.GetProductByNumberAccountForPayment
-                (vm.PaymentAccount, vm.AmountToPay);
+                (vm.OriginAccountNumber, vm.Amount);
 
             if (accountToPay.HasError)
             {
                 ViewBag.SavingsAccounts = await _productService.GetAllProductByUser(currentlyUser.Id, (int)AccountTypes.SavingAccount);
-                var payments = await _recipientService.GetAllVm();
+                var payments = await _beneficiaryService.GetAllViewModel();
                 ViewBag.Beneficiaries = payments.Where(b => b.UserId == currentlyUser.Id).ToList();
                 vm.HasError = accountToPay.HasError;
                 vm.Error = accountToPay.Error;
@@ -269,7 +269,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             return View(vm);
@@ -280,10 +280,10 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
 
             }
-            await _paymentSvc.Payment(vm);
+            await _paymentService.Payment(vm);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }
 
@@ -291,7 +291,7 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
             return View(vm);
@@ -302,10 +302,10 @@ namespace WebApp.InternetBanking.Controllers
         {
             if (currentlyUser.Roles.FirstOrDefault() == "Admin")
             {
-                return RedirectToRoute(new { controller = "Home", action = "DashboardAdmin" });
+                return RedirectToRoute(new { controller = "Home", action = "HomeAdmin" });
             }
 
-            await _paymentSvc.CreditCardPayment(vm);
+            await _paymentService.CreditCardPayment(vm);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }
     }

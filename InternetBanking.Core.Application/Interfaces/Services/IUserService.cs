@@ -18,6 +18,6 @@ namespace InternetBanking.Core.Application.Interfaces.Services
         Task SignOutAsync();
         Task<AuthenticationResponse> LoginAsync(LoginViewModel vm);
 
-        Task<List<UserViewModel>> GetAllVm();
+        Task<List<UserViewModel>> GetAllViewModel();
     }
 }

@@ -10,8 +10,8 @@ namespace InternetBanking.Core.Application.ViewModels.Querys
     {
         public int TotalPayments { get; set; }
         public int PaymentsToday { get; set; }
-        public string? PaymentAccount { get; set; }
-        public string? PaymentDestinationAccount { get; set; }
+        public string? OriginAccountNumber { get; set; }
+        public string? DestinationAccountNumber { get; set; }
         public DateTime? Created { get; set; }
     }
 }

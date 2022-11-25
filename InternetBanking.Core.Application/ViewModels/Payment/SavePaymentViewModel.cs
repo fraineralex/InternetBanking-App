@@ -9,15 +9,15 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
 {
     public class SavePaymentViewModel
     {
-        public double AmountToPay { get; set; }
+        public double Amount { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
         [DataType(DataType.Text)]
-        public string? PaymentAccount { get; set; }
+        public string? OriginAccountNumber { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
         [DataType(DataType.Text)]
-        public string? PaymentDestinationAccount { get; set; }
+        public string? DestinationAccountNumber { get; set; }
 
         public string? Owner { get; set; }
         public bool HasError { get; set; } = false;

@@ -14,7 +14,7 @@ namespace InternetBanking.Core.Application.Interfaces.Services
         Task<SaveViewModel> Add(SaveViewModel viewModel);
         Task Update(SaveViewModel vm, int id);
         Task Delete(int id);
-        Task<SaveViewModel> GetbyIdVM(int id);
-        Task<List<ViewModel>> GetAllVm();
+        Task<SaveViewModel> GetByIdSaveViewModel(int id);
+        Task<List<ViewModel>> GetAllViewModel();
     }
 }

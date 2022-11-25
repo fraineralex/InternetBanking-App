@@ -17,57 +17,60 @@ namespace InternetBanking.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly IUserService _svc;
-        private readonly IProductService _productSvc;
+        private readonly IUserService _userService;
+        private readonly IProductService _producService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-        public HomeController(IUserService svc, RoleManager<IdentityRole> roleManager, IProductService productSvc, IHttpContextAccessor http)
+        public HomeController(IUserService userService, RoleManager<IdentityRole> roleManager, IProductService productService, IHttpContextAccessor httpContextAccesor)
         {
-            _svc = svc;
+            _userService = userService;
             _roleManager = roleManager;
-            _productSvc = productSvc;
-            _httpContextAccessor = http;
-        }
-
-        public IActionResult Index()
-        {
-            var user = HttpContext.Session.Get<AuthenticationResponse>("user");
-            var isAdmin = user.Roles.Contains(Roles.Admin.ToString());
-            if (isAdmin)
-            {
-                return RedirectToAction("DashboardAdmin");
-            }
-            return RedirectToAction("DashboardClient");
+            _producService = productService;
+            _httpContextAccessor = httpContextAccesor;
         }
 
         [ServiceFilter(typeof(AdminAuthorize))]
-        public async Task<IActionResult> DashboardAdmin()
+        public async Task<IActionResult> HomeAdmin()
         {
-             ViewBag.clientStatus = await _productSvc.GetClientStatus();
-             ViewBag.clientProduct = await _productSvc.GetClientProducts();
-             ViewBag.clientpayment = await _productSvc.GetPaymentQuantities();
-             ViewBag.transacctions = await _productSvc.GetTransacctions();
+            //LEONARDO, si esto le da error vaya al ProductService y ponga el nombre de su servidor en el connectionString
+            ViewBag.clientStatus = await _producService.GetClientStatus();
+            ViewBag.clientProduct = await _producService.GetClientProducts();
+            ViewBag.clientpayment = await _producService.GetPaymentQuantities();
+            ViewBag.transacctions = await _producService.GetTransacctions();
             return View();
         }
 
         [ServiceFilter(typeof(ClientAuthorize))]
-        public async Task<IActionResult> DashboardClient()
+        public async Task<IActionResult> HomeClient()
         {
             var user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
 
-            ViewBag.SavingsAccounts = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.SavingAccount);
-            ViewBag.CreditCards = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.CreditAccount);
-            ViewBag.Loans = await _productSvc.GetAllProductByUser(user.Id, (int)AccountTypes.LoanAccount);
+            ViewBag.SavingsAccounts = await _producService.GetAllProductByUser(user.Id, (int)AccountTypes.SavingAccount);
+            ViewBag.CreditCards = await _producService.GetAllProductByUser(user.Id, (int)AccountTypes.CreditAccount);
+            ViewBag.Loans = await _producService.GetAllProductByUser(user.Id, (int)AccountTypes.LoanAccount);
 
             return View();
+        }
+
+        public IActionResult Index()
+        {
+            var currentlyUser = HttpContext.Session.Get<AuthenticationResponse>("user");
+            var isAdmin = currentlyUser.Roles.Contains(Roles.Admin.ToString());
+
+            if (isAdmin)
+            {
+                return RedirectToAction("HomeAdmin");
+            }
+
+            return RedirectToAction("HomeClient");
         }
 
         [ServiceFilter(typeof(AdminAuthorize))]
         public async Task<IActionResult> UserManagement()
         {
-            ViewBag.Users = await _svc.GetAllUsers();
+            ViewBag.Users = await _userService.GetAllUsers();
             return View();
         }
 
@@ -91,7 +94,7 @@ namespace InternetBanking.Controllers
             }
 
             var origin = Request.Headers["origin"];
-            RegisterResponse response = await _svc.RegisterAsync(vm, origin);
+            RegisterResponse response = await _userService.RegisterAsync(vm, origin);
             if (response.HasError)
             {
                 vm.HasError = response.HasError;
@@ -111,34 +114,33 @@ namespace InternetBanking.Controllers
             {
                 return RedirectToRoute(new {controller ="Home", action = "UserManagement" });
             }
-            UserSaveViewModel vm = await _svc.GetUserById(id);
+            UserSaveViewModel vm = await _userService.GetUserById(id);
             return View("Register", vm);
         }
         [ServiceFilter(typeof(AdminAuthorize))]
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(UserSaveViewModel vm, double AditionalAmout = 0.0)
+        public async Task<IActionResult> UpdateUser(UserSaveViewModel vm)
         {
             ViewBag.Roles = await _roleManager.Roles.ToListAsync();
             if (!ModelState.IsValid)
             {
                 return View("Register", vm);
             }
-
-            await _svc.UpdateUserAsync(vm, vm.Id);
+            await _userService.UpdateUserAsync(vm, vm.Id);
             return RedirectToRoute(new { controller = "Home", action = "UserManagement" });
         }
 
         [ServiceFilter(typeof(AdminAuthorize))]
         public async Task<IActionResult> ActiveUser(string id)
         {
-            return View("ActiveUser", await _svc.GetUserById(id));
+            return View("ActiveUser", await _userService.GetUserById(id));
         }
 
         [ServiceFilter(typeof(AdminAuthorize))]
         [HttpPost]
         public async Task<IActionResult> ActiveUser(UserSaveViewModel vm)
         {
-            await _svc.ActivedUserAsync(vm.Id);
+            await _userService.ActivedUserAsync(vm.Id);
             return RedirectToRoute(new { controller = "Home", action = "UserManagement" });
         }
     }

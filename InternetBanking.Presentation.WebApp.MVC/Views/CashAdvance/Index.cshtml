@@ -32,38 +32,38 @@
                             <form asp-controller="CashAdvance" asp-action="Index" method="post">
 
                                 <div class="p-3  pt-0">
-                                    <label asp-for="PaymentAccount" class="form-label text-white">
+                                    <label asp-for="OriginAccountNumber" class="form-label text-white">
                                         <strong>Credit card origin <small class="text-danger"> *</small></strong>
 
                                     </label>
-                                    <select class="form-select" asp-for="PaymentAccount" required>
+                                    <select class="form-select" asp-for="OriginAccountNumber" required>
                                         @foreach (var card in ViewBag.CreditCards)
                                         {
-                                            <option value="@card.AccountNumber">@card.AccountNumber  (US$ @card.Charge)</option>
+                                            <option value="@card.AccountNumber">@card.AccountNumber  (US$ @card.Amount)</option>
                                         }
                                     </select>
-                                    <span asp-validation-for="PaymentAccount" class="text-danger"></span>
+                                    <span asp-validation-for="OriginAccountNumber" class="text-danger"></span>
                                 </div>
 
                                 <div class="p-3">
-                                    <label asp-for="PaymentDestinationAccount" class="form-label text-white">
+                                    <label asp-for="DestinationAccountNumber" class="form-label text-white">
                                         <strong>Target savings account <small class="text-danger"> *</small></strong>
 
                                     </label>
-                                    <select class="form-select" asp-for="PaymentDestinationAccount" required>
+                                    <select class="form-select" asp-for="DestinationAccountNumber" required>
                                         @foreach (var account in ViewBag.SavingsAccounts)
                                         {
-                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Charge)</option>
+                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Amount)</option>
                                         }
                                     </select>
-                                    <span asp-validation-for="PaymentDestinationAccount" class="text-danger"></span>
+                                    <span asp-validation-for="DestinationAccountNumber" class="text-danger"></span>
                                 </div>
 
                                 <div class="p-3">
-                                    <label asp-for="AmountToPay" class="form-label text-white"><strong>Cash advance amount <small class="text-danger"> *</small></strong></label>
+                                    <label asp-for="Amount" class="form-label text-white"><strong>Cash advance amount <small class="text-danger"> *</small></strong></label>
                                     <input type="number" min="1" class="form-control bg-dark text-white border-white form-control-lg"
-                                       asp-for="AmountToPay" required>
-                                    <span asp-validation-for="AmountToPay" class="text-danger"></span>
+                                       asp-for="Amount" required>
+                                    <span asp-validation-for="Amount" class="text-danger"></span>
                                 </div>
 
                                 <button class="btn btn-primary btn-lg float-end" type="submit">

@@ -17,121 +17,23 @@ namespace InternetBanking.Core.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository repo, IMapper mapper) : base(repo, mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper) : base(productRepository, mapper)
         {
-            _productRepository = repo;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
-        public async Task AddSavingAccountAsync(string idUser, double amount)
-        {
-            var products = await ExistSavingAccountByUser(idUser);
-
-            if (products != false)
-            {
-                Product saveAccount = new();
-                saveAccount.ClientId = idUser;
-                saveAccount.Charge = amount;
-                saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
-                saveAccount.TypeAccountId = (int)AccountTypes.SavingAccount;
-
-                if (await ExistCodeNumber(saveAccount.AccountNumber))
-                {
-                   var newAccountNumber =  _numberGenerator.NumberGenerator();
-                   saveAccount.AccountNumber = newAccountNumber;
-                }
-
-                await _productRepository.AddAsync(saveAccount);
-            }
-            else
-            {
-                Product saveAccount = new();
-                saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
-                saveAccount.ClientId = idUser;
-                saveAccount.Charge = amount;
-                saveAccount.TypeAccountId = (int)AccountTypes.SavingAccount;
-                saveAccount.IsPrincipal = true;
-
-                if (await ExistCodeNumber(saveAccount.AccountNumber))
-                {
-                    var newAccountNumber = _numberGenerator.NumberGenerator();
-                    saveAccount.AccountNumber = newAccountNumber;
-                }
-
-                await _productRepository.AddAsync(saveAccount);
-            }
-        }
-        public async Task CreateAccountAsync(string idUser, double amount, int typeAccount)
-        {
-            if (typeAccount == (int)AccountTypes.CreditAccount)
-            {
-                Product saveAccount = new();
-                saveAccount.ClientId = idUser;
-                saveAccount.Charge = amount;
-                saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
-                saveAccount.TypeAccountId = (int)AccountTypes.CreditAccount;
-
-                if (await ExistCodeNumber(saveAccount.AccountNumber))
-                {
-                    var newAccountNumber = _numberGenerator.NumberGenerator();
-                    saveAccount.AccountNumber = newAccountNumber;
-                }
-
-                await _productRepository.AddAsync(saveAccount);
-            }
-            else if (typeAccount == (int)AccountTypes.LoanAccount)
-            {
-                Product saveAccount = new();
-                saveAccount.ClientId = idUser;
-                saveAccount.Charge = amount;
-                saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
-                saveAccount.TypeAccountId = (int)AccountTypes.LoanAccount;
-
-                if (await ExistCodeNumber(saveAccount.AccountNumber))
-                {
-                    var newAccountNumber = _numberGenerator.NumberGenerator();
-                    saveAccount.AccountNumber = newAccountNumber;
-                }
-                //sumandole lo del prestamo a la cuenta principal
-                await AddAmountSavingAccount(idUser, amount);
-                await _productRepository.AddAsync(saveAccount);
-            }
-        }
-        public async Task AddAmountSavingAccount(string idUser, double amount)
-        {
-            List<Product> savingAccounts = await GetAllProductByUser(idUser, (int)AccountTypes.SavingAccount);
-            Product sAPrincipal = savingAccounts.Where(sav => sav.IsPrincipal == true).SingleOrDefault();
-
-            sAPrincipal.Charge += amount;
-
-            await _productRepository.UpdateAsync(sAPrincipal, sAPrincipal.Id);
-        }
-        public async Task<List<ProductViewModel>> GetAllProductWithInclude(string idUser)
-        {
-            List<Product> products = await _productRepository.GetAllWithIncludeAsync(new List<string> { "TypeAccount" });
-            products = products.Where(p => p.ClientId == idUser).ToList();
-            List<ProductViewModel> productsVm = _mapper.Map<List<ProductViewModel>>(products);
-
-            return productsVm;
-        }
-        public async Task<List<Product>> GetAllProductByUser(string idUser, int typeAccountId)
-        {
-            List<Product> products = await _productRepository.GetAllAsync();
-            products = products.Where(p => p.ClientId == idUser && p.TypeAccountId == typeAccountId).ToList();
-
-            return products;
-        }
         public async Task<StatusClientQuery> GetClientStatus()
         {
-            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
-            using var con = new SqlConnection(cs);
+            var ConnectionString = "Server=.;Database=InternetBankingApp;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(ConnectionString);
             con.Open();
 
             var query = @"SELECT COUNT(*) ClientsActives,
                           (SELECT COUNT(*)
-                          FROM [InternetBankingApp2].[Identity].[Users]
+                          FROM [InternetBankingApp].[Identity].[Users]
                           WHERE IsVerified = 0) ClientsInatives
-                          FROM [InternetBankingApp2].[Identity].[Users] 
+                          FROM [InternetBankingApp].[Identity].[Users] 
                           WHERE IsVerified = 1";
 
             var clientStatus = await con.QueryFirstAsync<StatusClientQuery>(query);
@@ -140,8 +42,8 @@ namespace InternetBanking.Core.Application.Services
 
         public async Task<TransacctionsQuery> GetTransacctions()
         {
-            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
-            using var con = new SqlConnection(cs);
+            var ConnectionString = "Server=.;Database=InternetBankingApp;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(ConnectionString);
             con.Open();
 
             var query = @"SELECT COUNT(*) TotalTransacctions,
@@ -154,20 +56,20 @@ namespace InternetBanking.Core.Application.Services
         }
         public async Task<ProductsQuery> GetClientProducts()
         {
-            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
-            using var con = new SqlConnection(cs);
+            var ConnectionString = "Server=.;Database=InternetBankingApp;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(ConnectionString);
             con.Open();
 
             var query = @"SELECT COUNT(*) TotalClientProducts
-                          FROM [InternetBankingApp2].[dbo].[Products]";
+                          FROM [InternetBankingApp].[dbo].[Products]";
 
             var clientProducts = await con.QueryFirstAsync<ProductsQuery>(query);
             return clientProducts;
         }
         public async Task<PaymentsQuery> GetPaymentQuantities()
         {
-            var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
-            using var con = new SqlConnection(cs);
+            var ConnectionString = "Server=.;Database=InternetBankingApp;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+            using var con = new SqlConnection(ConnectionString);
             con.Open();
 
             var query = @"SELECT * ,
@@ -183,8 +85,8 @@ namespace InternetBanking.Core.Application.Services
 
             foreach (var payment in paymentsResult)
             {
-                ProductViewModel OriginAccount = await GetProductByNumberAccountForPayment(payment.PaymentAccount);
-                ProductViewModel DestinationAccount = await GetProductByNumberAccountForPayment(payment.PaymentDestinationAccount);
+                ProductViewModel OriginAccount = await GetProductByNumberAccountForPayment(payment.OriginAccountNumber);
+                ProductViewModel DestinationAccount = await GetProductByNumberAccountForPayment(payment.DestinationAccountNumber);
 
                 if (OriginAccount.ClientId != DestinationAccount.ClientId)
                 {
@@ -207,19 +109,19 @@ namespace InternetBanking.Core.Application.Services
         }
         //public async Task<ProductsQuery> GetClientProducts()
         //{
-        //    var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+        //    var cs = "Server=.;Database=InternetBankingApp;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
         //    using var con = new SqlConnection(cs);
         //    con.Open();
 
         //    var query = @"SELECT COUNT(*) TotalClientProducts
-        //                  FROM [InternetBankingApp2].[dbo].[Products]";
+        //                  FROM [InternetBankingApp].[dbo].[Products]";
 
         //    var clientProducts = await con.QueryFirstAsync<ProductsQuery>(query);
         //    return clientProducts;
         //}
         //public async Task<PaymentsQuery> GetPaymentQuantities()
         //{
-        //    var cs = "Server=.;Database=InternetBankingApp2;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+        //    var cs = "Server=.;Database=InternetBankingApp;MultipleActiveResultSets=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
         //    using var con = new SqlConnection(cs);
         //    con.Open();
 
@@ -232,6 +134,105 @@ namespace InternetBanking.Core.Application.Services
         //    var paymentsResult = await con.QueryFirstAsync<PaymentsQuery>(query);
         //    return paymentsResult;
         //}
+
+        public async Task AddSavingAccountAsync(string idUser, double amount)
+        {
+            var products = await ExistSavingAccountByUser(idUser);
+
+            if (products != false)
+            {
+                Product saveAccount = new();
+                saveAccount.ClientId = idUser;
+                saveAccount.Amount = amount;
+                saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
+                saveAccount.TypeAccountId = (int)AccountTypes.SavingAccount;
+
+                if (await ExistCodeNumber(saveAccount.AccountNumber))
+                {
+                   var newAccountNumber =  _numberGenerator.NumberGenerator();
+                   saveAccount.AccountNumber = newAccountNumber;
+                }
+
+                await _productRepository.AddAsync(saveAccount);
+            }
+            else
+            {
+                Product saveAccount = new();
+                saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
+                saveAccount.ClientId = idUser;
+                saveAccount.Amount = amount;
+                saveAccount.TypeAccountId = (int)AccountTypes.SavingAccount;
+                saveAccount.IsPrincipal = true;
+
+                if (await ExistCodeNumber(saveAccount.AccountNumber))
+                {
+                    var newAccountNumber = _numberGenerator.NumberGenerator();
+                    saveAccount.AccountNumber = newAccountNumber;
+                }
+
+                await _productRepository.AddAsync(saveAccount);
+            }
+        }
+        public async Task CreateAccountAsync(string idUser, double amount, int typeAccount)
+        {
+            if (typeAccount == (int)AccountTypes.CreditAccount)
+            {
+                Product saveAccount = new();
+                saveAccount.ClientId = idUser;
+                saveAccount.Amount = amount;
+                saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
+                saveAccount.TypeAccountId = (int)AccountTypes.CreditAccount;
+
+                if (await ExistCodeNumber(saveAccount.AccountNumber))
+                {
+                    var newAccountNumber = _numberGenerator.NumberGenerator();
+                    saveAccount.AccountNumber = newAccountNumber;
+                }
+
+                await _productRepository.AddAsync(saveAccount);
+            }
+            else if (typeAccount == (int)AccountTypes.LoanAccount)
+            {
+                Product saveAccount = new();
+                saveAccount.ClientId = idUser;
+                saveAccount.Amount = amount;
+                saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
+                saveAccount.TypeAccountId = (int)AccountTypes.LoanAccount;
+
+                if (await ExistCodeNumber(saveAccount.AccountNumber))
+                {
+                    var newAccountNumber = _numberGenerator.NumberGenerator();
+                    saveAccount.AccountNumber = newAccountNumber;
+                }
+                //sumandole lo del prestamo a la cuenta principal
+                await AddAmountSavingAccount(idUser, amount);
+                await _productRepository.AddAsync(saveAccount);
+            }
+        }
+        public async Task AddAmountSavingAccount(string idUser, double amount)
+        {
+            List<Product> savingAccounts = await GetAllProductByUser(idUser, (int)AccountTypes.SavingAccount);
+            Product sAPrincipal = savingAccounts.Where(sav => sav.IsPrincipal == true).SingleOrDefault();
+
+            sAPrincipal.Amount += amount;
+
+            await _productRepository.UpdateAsync(sAPrincipal, sAPrincipal.Id);
+        }
+        public async Task<List<ProductViewModel>> GetAllProductWithInclude(string idUser)
+        {
+            List<Product> products = await _productRepository.GetAllWithIncludeAsync(new List<string> { "TypeAccount" });
+            products = products.Where(p => p.ClientId == idUser).ToList();
+            List<ProductViewModel> productsVm = _mapper.Map<List<ProductViewModel>>(products);
+
+            return productsVm;
+        }
+        public async Task<List<Product>> GetAllProductByUser(string idUser, int typeAccountId)
+        {
+            List<Product> products = await _productRepository.GetAllAsync();
+            products = products.Where(p => p.ClientId == idUser && p.TypeAccountId == typeAccountId).ToList();
+
+            return products;
+        }
 
         public async Task<ProductViewModel> GetProductByNumberAccountForPayment(string numberAccount, double amountToPay = -1.0)
         {
@@ -246,7 +247,7 @@ namespace InternetBanking.Core.Application.Services
             {
                 response = _mapper.Map<ProductViewModel>(product);
                 
-                if (response.Charge >= amountToPay)
+                if (response.Amount >= amountToPay)
                 {
                     return response;
                 }
@@ -273,11 +274,11 @@ namespace InternetBanking.Core.Application.Services
 
             if (product.TypeAccountId == (int)AccountTypes.SavingAccount)
             {
-                await AddAmountSavingAccount(product.ClientId, product.Charge);
+                await AddAmountSavingAccount(product.ClientId, product.Amount);
             }
             if (product.TypeAccountId == (int)AccountTypes.CreditAccount)
             {
-                if (product.Charge != 0)
+                if (product.Amount != 0)
                 {
                     responseVm.HasError = true;
                     responseVm.Error = "No se puede eliminar esta cuenta de credito hasta que salde lo que debe.!";
@@ -286,7 +287,7 @@ namespace InternetBanking.Core.Application.Services
             }
             if (product.TypeAccountId == (int)AccountTypes.LoanAccount)
             {
-                if (product.Charge != 0)
+                if (product.Amount != 0)
                 {
                     responseVm.HasError = true;
                     responseVm.Error = "No se puede eliminar este prestamo hasta que salde lo que debe.!";
@@ -313,7 +314,7 @@ namespace InternetBanking.Core.Application.Services
 
                 ClientId = product.ClientId,
                 TypeAccountId = product.TypeAccountId,
-                Charge = product.Charge,
+                Amount = product.Amount,
 
             }).ToList();
 

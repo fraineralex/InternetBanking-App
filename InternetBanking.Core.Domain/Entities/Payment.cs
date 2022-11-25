@@ -3,11 +3,13 @@ using InternetBanking.Infrastructure.Identity.Entities;
 
 namespace InternetBanking.Core.Domain.Entities
 {
-    public class Payment : AuditableBE
+    public class Payment : AuditableBaseEntity
     {
-        public double AmountToPay { get; set; }
-        public string PaymentAccount { get; set; }
-        public string PaymentDestinationAccount { get; set; }
+        public double Amount { get; set; }
+        public string? OriginAccountNumber { get; set; }
+        public string? DestinationAccountNumber { get; set; }
+
+        // Foreign Key
         public int? TypeOfPayment { get; set; }
     }
 }

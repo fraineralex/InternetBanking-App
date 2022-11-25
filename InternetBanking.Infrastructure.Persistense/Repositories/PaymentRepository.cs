@@ -12,10 +12,10 @@ namespace InternetBanking.Infrastructure.Persistence.Repositories
 {
     public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     {
-        private readonly AppDbContext _db;
-        public PaymentRepository(AppDbContext db): base(db)
+        private readonly ApplicationContext _dbContext;
+        public PaymentRepository(ApplicationContext dbContext): base(dbContext)
         {
-            _db = db;
+            _dbContext = dbContext;
         }
 
     }

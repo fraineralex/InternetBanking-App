@@ -3,12 +3,12 @@ using InternetBanking.Infrastructure.Identity.Entities;
 
 namespace InternetBanking.Core.Domain.Entities
 {
-    public class Product : AuditableBE
+    public class Product : AuditableBaseEntity
     {
-        public double Charge { get; set; }
+        public double Amount { get; set; }
         public string? ClientId { get; set; }
         public string? AccountNumber { get; set; }
-        public double? Discharge { get; set; }
+        public double? Discount { get; set; }
         public bool IsPrincipal { get; set; } = false;
         public int TypeAccountId { get; set; }
         public TypeAccount? TypeAccount { get; set; }

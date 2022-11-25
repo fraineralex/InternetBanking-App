@@ -8,8 +8,8 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
 {
     public class PaymentViewModel
     {
-        public double AmountToPay { get; set; }
-        public string? PaymentAccount { get; set; }
-        public string? PaymentDestinationAccount { get; set; }
+        public double Amount { get; set; }
+        public string? OriginAccountNumber { get; set; }
+        public string? DestinationAccountNumber { get; set; }
     }
 }

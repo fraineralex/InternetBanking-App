@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Infrastructure.Identity.Seeds
 {
-    public static class DefaultBasicUser
+    public static class DefaultClientUser
     {
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             ApplicationUser defaultUser = new();
-            defaultUser.UserName = "DefaultBasicUser";
-            defaultUser.Email = "DefaultBasicUser@gmail.com";
-            defaultUser.FirstName = "Chocolechi";
-            defaultUser.LastName = "Negrito";
+            defaultUser.UserName = "DefaultClientUser";
+            defaultUser.Email = "defaultclientuser@gmail.com";
+            defaultUser.FirstName = "Joe";
+            defaultUser.LastName = "Goldberg";
             defaultUser.IsVerified = true;
-            defaultUser.IdCard = "012-2296632-2";
+            defaultUser.IdCard = "402-3123629-6";
             defaultUser.EmailConfirmed = true;
             defaultUser.PhoneNumberConfirmed = true;
-            defaultUser.TypeUser = 2;
+            defaultUser.TypeUser = (int)Roles.Client;
 
             if (userManager.Users.All(u => u.Id != defaultUser.Id))
             {
@@ -30,7 +30,7 @@ namespace InternetBanking.Infrastructure.Identity.Seeds
                 if (user == null)
                 {
                     await userManager.CreateAsync(defaultUser, "123Pa$$word!");
-                    await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, Roles.Client.ToString());
                 }
             }
         }

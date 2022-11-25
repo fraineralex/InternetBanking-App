@@ -3,17 +3,16 @@ using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.User;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using WebApp.InternetBanking.Middlewares;
 
 namespace WebApp.InternetBanking.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IUserService _svc;
-        public UserController(IUserService svc)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            _svc = svc;
+            _userService = userService;
         }
 
         [ServiceFilter(typeof(LoginAuthorize))]
@@ -31,7 +30,7 @@ namespace WebApp.InternetBanking.Controllers
                 return View(vm);
             }
 
-            AuthenticationResponse response = await _svc.LoginAsync(vm);
+            AuthenticationResponse response = await _userService.LoginAsync(vm);
             if (response != null && !response.HasError)
             {
                 HttpContext.Session.Set<AuthenticationResponse>("user", response);
@@ -47,7 +46,7 @@ namespace WebApp.InternetBanking.Controllers
         
         public async Task<IActionResult> LogOut()
         {
-            await _svc.SignOutAsync();
+            await _userService.SignOutAsync();
             HttpContext.Session.Remove("user");
             return RedirectToRoute(new { controller = "User" , action = "Index" });   
         }
@@ -55,7 +54,7 @@ namespace WebApp.InternetBanking.Controllers
         [ServiceFilter(typeof(LoginAuthorize))]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            string response = await _svc.ConfirmEmailAsync(userId, token);
+            string response = await _userService.ConfirmEmailAsync(userId, token);
             return View("ConfirmEmail", response);
         }
 
@@ -74,7 +73,7 @@ namespace WebApp.InternetBanking.Controllers
             }
 
             var origin = Request.Headers["origin"];
-            ForgotPasswordResponse response = await _svc.ForgotPasswordAsync(vm, origin);
+            ForgotPasswordResponse response = await _userService.ForgotPasswordAsync(vm, origin);
             if (response.HasError)
             {
                 vm.HasError = response.HasError;
@@ -99,7 +98,7 @@ namespace WebApp.InternetBanking.Controllers
                 return View(vm);
             }
 
-            ResetPasswordResponse response = await _svc.ResetPasswordAsync(vm);
+            ResetPasswordResponse response = await _userService.ResetPasswordAsync(vm);
             if (response.HasError)
             {
                 vm.HasError = response.HasError;

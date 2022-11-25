@@ -19,61 +19,57 @@ namespace InternetBanking.Infrastructure.Identity.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailService _emailService;
-        private readonly IProductService _productSvc;
+        private readonly IProductService _productService;
 
 
-        public AccountService(
-            UserManager<ApplicationUser> userManager, 
-            SignInManager<ApplicationUser> signInManager, 
-            IEmailService emailService,
-            IProductService productSvc)
+        public AccountService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailService emailService, IProductService productService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
-            _productSvc = productSvc;
+            _productService = productService;
         }
 
         //Methods
 
         //Method for login
-        public async Task<AuthenticationResponse> AuthenticationAsync(AuthenticationRequest req)
+        public async Task<AuthenticationResponse> AuthenticationAsync(AuthenticationRequest request)
         {
-            AuthenticationResponse res = new();
+            AuthenticationResponse response = new();
 
-            var user = await _userManager.FindByEmailAsync(req.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                res.HasError = true;
-                res.Error = $"No Accounts registered with {req.Email}.";
-                return res;
+                response.HasError = true;
+                response.Error = $"No Accounts registered with {request.Email}.";
+                return response;
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, req.Password, false, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
             if (!result.Succeeded)
             {
-                res.HasError = true;
-                res.Error = $"Invalid Credentials for {req.Email}.";
-                return res;
+                response.HasError = true;
+                response.Error = $"Invalid Credentials for {request.Email}.";
+                return response;
             }
             if (!user.IsVerified)
             {
-                res.HasError = true;
-                res.Error = $"Cuenta inactiva comuniquese con el administrador.";
-                return res;
+                response.HasError = true;
+                response.Error = $"Cuenta inactiva comuniquese con el administrador.";
+                return response;
             }
 
-            res.Id = user.Id;
-            res.IdCard = user.IdCard;
-            res.FirstName = user.FirstName;
-            res.LastName = user.LastName;
-            res.Email = user.Email;
-            res.UserName = user.UserName;
+            response.Id = user.Id;
+            response.IdCard = user.IdCard;
+            response.FirstName = user.FirstName;
+            response.LastName = user.LastName;
+            response.Email = user.Email;
+            response.UserName = user.UserName;
             var listRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
-            res.Roles = listRoles.ToList();
-            res.IsVerified = user.IsVerified;
+            response.Roles = listRoles.ToList();
+            response.IsVerified = user.IsVerified;
 
-            return res;
+            return response;
         }
 
         //method for signout
@@ -83,135 +79,134 @@ namespace InternetBanking.Infrastructure.Identity.Services
         }
 
         //method for create a new basic user
-        public async Task<RegisterResponse> RegisterBasicUserAsync(RegisterRequest req, string origin)
+        public async Task<RegisterResponse> RegisterBasicUserAsync(RegisterRequest request, string origin)
         {
-            RegisterResponse res = new();
-            res.HasError = false;
+            RegisterResponse response = new();
+            response.HasError = false;
 
-            var userNameExist = await _userManager.FindByNameAsync(req.UserName);
+            var userNameExist = await _userManager.FindByNameAsync(request.UserName);
             if (userNameExist != null)
             {
-                res.HasError = true;
-                res.Error = $"User '{req.UserName}' already exist.";
-                return res;
+                response.HasError = true;
+                response.Error = $"User '{request.UserName}' already exist.";
+                return response;
             }
 
-            var emailExist = await _userManager.FindByEmailAsync(req.Email);
+            var emailExist = await _userManager.FindByEmailAsync(request.Email);
             if (emailExist != null)
             {
-                res.HasError = true;
-                res.Error = $"Email '{req.Email}' already registered.";
-                return res;
+                response.HasError = true;
+                response.Error = $"Email '{request.Email}' already registered.";
+                return response;
             }
 
             var user = new ApplicationUser
             {
-                IdCard = req.IdCard,
-                Email = req.Email,
-                FirstName = req.FirstName,
-                LastName = req.LastName,
-                UserName = req.UserName,
-                PhoneNumber = req.PhoneNumber,
-                IsVerified = req.IsVerified,
-                TypeUser = req.TypeUser
+                IdCard = request.IdCard,
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                UserName = request.UserName,
+                PhoneNumber = request.PhoneNumber,
+                IsVerified = request.IsVerified,
+                TypeUser = request.TypeUser
                 
             };
 
-            var result = await _userManager.CreateAsync(user, req.Password);
+            var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
-                res.HasError = true;
-                res.Error = $"An error occurred when trying to register the user.";
-                return res;
+                response.HasError = true;
+                response.Error = $"An error occurred when trying to register the user.";
+                return response;
             }
 
-            if (user.TypeUser == 1)
+            if (user.TypeUser == (int)Roles.Admin)
             {
                 await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
                 
             } else
             {
-                await _userManager.AddToRoleAsync(user, Roles.Basic.ToString());
-                await _productSvc.AddSavingAccountAsync(user.Id, req.Amount);
+                await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
+                await _productService.AddSavingAccountAsync(user.Id, request.Amount);
             }
 
             await _emailService.SendAsync(new EmailRequest
             {
-                To = req.Email,
+                To = request.Email,
                 Subject = "Your Internet Banking App account has been created!\r\n",
                 Body = $"<h1>Welcome to Internet Banking App 🏦</h1>" +
-                            $"<p>Hi {req.FirstName} {req.LastName} 😃</p>" +
-                            $"<p>Thanks for select us for manage your preducts and make your transfers. Your username is <strong>{req.UserName}</strong>.</p>"
+                            $"<p>Hi {request.FirstName} {request.LastName} 😃</p>" +
+                            $"<p>Thanks for select us for manage your preducts and make your transfers. Your username is <strong>{request.UserName}</strong>.</p>"
 
             });
 
-            return res;
+            return response;
         }
 
         //method for update an user
-        public async Task<UpdateResponse> UpdateUserAsync(UpdateRequest req, string id)
+        public async Task<UpdateResponse> UpdateUserAsync(UpdateRequest request, string id)
         {
-            UpdateResponse res = new();
-            res.HasError = false;
+            UpdateResponse response = new();
+            response.HasError = false;
             ApplicationUser user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 if (user.TypeUser == (int)Roles.Admin)
                 {
-                    user.IdCard = req.IdCard;
-                    user.FirstName = req.FirstName;
-                    user.LastName = req.LastName;
-                    user.UserName = req.UserName;
-                    user.Email = req.Email;
-                    user.PhoneNumber = req.PhoneNumber;
-                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, req.Password);
+                    user.IdCard = request.IdCard;
+                    user.FirstName = request.FirstName;
+                    user.LastName = request.LastName;
+                    user.UserName = request.UserName;
+                    user.Email = request.Email;
+                    user.PhoneNumber = request.PhoneNumber;
+                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, request.Password);
 
                     var userUpdated = await _userManager.UpdateAsync(user);
                     if (!userUpdated.Succeeded)
                     {
-                        res.HasError = true;
-                        res.Error = "Error when trying update the user";
-                        return res;
+                        response.HasError = true;
+                        response.Error = "Error when trying update the user";
+                        return response;
 
                     }
-                    return res;
+                    return response;
                 }
                 else
                 {
-                    user.IdCard = req.IdCard;
-                    user.FirstName = req.FirstName;
-                    user.LastName = req.LastName;
-                    user.UserName = req.UserName;
-                    user.Email = req.Email;
-                    user.PhoneNumber = req.PhoneNumber;
-                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, req.Password);
+                    user.IdCard = request.IdCard;
+                    user.FirstName = request.FirstName;
+                    user.LastName = request.LastName;
+                    user.UserName = request.UserName;
+                    user.Email = request.Email;
+                    user.PhoneNumber = request.PhoneNumber;
+                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, request.Password);
 
                     var userUpdated = await _userManager.UpdateAsync(user);
                     if (!userUpdated.Succeeded)
                     {
-                        res.HasError = true;
-                        res.Error = "Error when trying update the user";
-                        return res;
+                        response.HasError = true;
+                        response.Error = "Error when trying update the user";
+                        return response;
                     }
-
-                    await _productSvc.AddAmountSavingAccount(user.Id, req.Amount);
-                    return res;
+                    await _productService.AddAmountSavingAccount(user.Id, request.Amount);
+                    return response;
                 }
                 
             }
             else
             {
-                res.HasError = true;
-                res.Error = $"No accounts exists with this id: {id}";
-                return res;
+                response.HasError = true;
+                response.Error = $"No accounts exists with this id: {id}";
+                return response;
             }
         }
 
         //method to activate an user
         public async Task<UpdateResponse> ActivedUserAsync(string id)
         {
-            UpdateResponse res = new();
-            res.HasError = false;
+            UpdateResponse response = new();
+            response.HasError = false;
             ApplicationUser user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
@@ -221,12 +216,12 @@ namespace InternetBanking.Infrastructure.Identity.Services
                     var userUpdated = await _userManager.UpdateAsync(user);
                     if (!userUpdated.Succeeded)
                     {
-                        res.HasError = true;
-                        res.Error = "Error when trying desactive the user";
-                        return res;
+                        response.HasError = true;
+                        response.Error = "Error when trying desactive the user";
+                        return response;
 
                     }
-                    return res;
+                    return response;
                 }
                 else
                 {
@@ -234,19 +229,19 @@ namespace InternetBanking.Infrastructure.Identity.Services
                     var userUpdated = await _userManager.UpdateAsync(user);
                     if (!userUpdated.Succeeded)
                     {
-                        res.HasError = true;
-                        res.Error = "Error when trying desactive the user";
-                        return res;
+                        response.HasError = true;
+                        response.Error = "Error when trying desactive the user";
+                        return response;
 
                     }
-                    return res;
+                    return response;
                 }
             }
             else
             {
-                res.HasError = true;
-                res.Error = $"No accounts exists with this id: {id}";
-                return res;
+                response.HasError = true;
+                response.Error = $"No accounts exists with this id: {id}";
+                return response;
             }
         }
         //method to confirm the account of the user
@@ -268,20 +263,20 @@ namespace InternetBanking.Infrastructure.Identity.Services
         }
 
         //method to send an email to the user for reset their password
-        public async Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest req, string origin)
+        public async Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request, string origin)
         {
-            ForgotPasswordResponse res = new(); 
-            res.HasError = false;
+            ForgotPasswordResponse response = new(); 
+            response.HasError = false;
 
-            var user = await _userManager.FindByEmailAsync(req.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                res.HasError = true;
-                res.Error = $"No user registered with {req.Email}.";
-                return res;
+                response.HasError = true;
+                response.Error = $"No user registered with {request.Email}.";
+                return response;
             }
 
-            var forgotPassUri = await SendForgotPasswordUri(user, origin);
+            var forgotPasswordUri = await SendForgotPasswordUri(user, origin);
 
             await _emailService.SendAsync(new EmailRequest
             {
@@ -291,37 +286,37 @@ namespace InternetBanking.Infrastructure.Identity.Services
                 $"<p>Hi {user.FirstName} {user.LastName},</p>" +
                 $"<p>Your restore password request has been received successfully. ✅"+
                 $"<p>Please try to don't forget your password again. 😕</p>" +
-                $"<p><strong>Click the following URL to restore your password</strong> 👉🏻 {forgotPassUri}</p>"
+                $"<p><strong>Click the following URL to restore your password</strong> 👉🏻 {forgotPasswordUri}</p>"
 
             });
 
-            return res;
+            return response;
         }
 
 
-        public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest req) 
+        public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request) 
         {
-            ResetPasswordResponse res = new();
-            res.HasError = false;
+            ResetPasswordResponse response = new();
+            response.HasError = false;
 
-            var user = await _userManager.FindByEmailAsync(req.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                res.HasError = true;
-                res.Error = $"No user registered with {req.Email}.";
-                return res;
+                response.HasError = true;
+                response.Error = $"No user registered with {request.Email}.";
+                return response;
             }
 
-            req.Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(req.Token));
-            var result = await _userManager.ResetPasswordAsync(user, req.Token, req.Password);
+            request.Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Token));
+            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
             if (!result.Succeeded)
             {
-                res.HasError = true;
-                res.Error = $"An error occurred while reset the password.";
-                return res;
+                response.HasError = true;
+                response.Error = $"An error occurred while reset the password.";
+                return response;
             }
 
-            return res;
+            return response;
         }
 
 
@@ -330,7 +325,7 @@ namespace InternetBanking.Infrastructure.Identity.Services
         {
             var users = await _userManager.Users.ToListAsync();
 
-            List<AuthenticationResponse> res = new();
+            List<AuthenticationResponse> response = new();
 
             foreach (var user in users)
             {
@@ -349,37 +344,37 @@ namespace InternetBanking.Infrastructure.Identity.Services
                     IsVerified = user.IsVerified
                 };
 
-                res.Add(user_res);
+                response.Add(user_res);
             };
 
-            return res;
+            return response;
         }
 
         //Method to get all users
         public async Task<AuthenticationResponse> GetUserById(string id)
         {
-            AuthenticationResponse res = new();
+            AuthenticationResponse response = new();
             ApplicationUser user = new();
             user = await _userManager.FindByIdAsync(id);
 
             if (user != null)
             {
-                res.Id = user.Id;
-                res.IdCard = user.IdCard;
-                res.Email = user.Email;
-                res.FirstName = user.FirstName;
-                res.LastName = user.LastName;
-                res.UserName = user.UserName;
-                res.PhoneNumber = user.PhoneNumber;
-                res.IsVerified = user.IsVerified;
-                res.TypeUser = user.TypeUser;
+                response.Id = user.Id;
+                response.IdCard = user.IdCard;
+                response.Email = user.Email;
+                response.FirstName = user.FirstName;
+                response.LastName = user.LastName;
+                response.UserName = user.UserName;
+                response.PhoneNumber = user.PhoneNumber;
+                response.IsVerified = user.IsVerified;
+                response.TypeUser = user.TypeUser;
 
-                return res;
+                return response;
             }
 
-            res.HasError = true;
-            res.Error = $"Not user exists with this id: {id}";
-            return res;
+            response.HasError = true;
+            response.Error = $"Not user exists with this id: {id}";
+            return response;
         }
 
         //Method private to form the url for the emailVerificationUser page
@@ -404,9 +399,9 @@ namespace InternetBanking.Infrastructure.Identity.Services
 
             var route = "User/ResetPassword";
             var uri = new Uri(string.Concat($"{origin}/", route));
-            var forgotPassUri = QueryHelpers.AddQueryString(uri.ToString(), "token", token);
+            var forgotPasswordUri = QueryHelpers.AddQueryString(uri.ToString(), "token", token);
             
-            return forgotPassUri;
+            return forgotPasswordUri;
         }
 
         //private async Task<int[]> 
