@@ -73,11 +73,11 @@
 
                                             @if (item.IsVerified)
                                             {
-                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary px-2"><i class='bx bx-toggle-right'></i></a>
+                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary px-4"><i class='bx bx-toggle-right'></i></a>
                                             }
                                             else
                                             {
-                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-danger px-2"><i class='bx bx-toggle-left'></i></a>
+                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-danger px-4"><i class='bx bx-toggle-left'></i></a>
                                             }
                                         }
                                     </td>

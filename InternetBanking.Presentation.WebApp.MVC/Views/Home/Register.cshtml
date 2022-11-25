@@ -282,9 +282,9 @@
                                         ) amount <small class="text-danger">@(
                                             editMode ? "" : "*"
                                             )</small></strong></label>
-                                    <input type="number" min="0" id="monto"
+                                    <input min="0" id="monto"
                                     class="form-control bg-dark text-white border-white form-control-lg"
-                                    asp-for="Amount">
+                                    asp-for="Amount" >
                                     <span asp-validation-for="Amount" class="text-danger"></span>
                                 </div>
                             }
@@ -330,26 +330,23 @@
                 $(this).attr("maxlength", "14");
             }
         });
+    });
 
-        const montoInput = document.querySelector("#monto");
-        const montoLabel = document.querySelector("#montoLabel");
-        const rolSelect = document.querySelector("#rol-select");
+    const montoInput = document.querySelector("#monto");
+    const montoLabel = document.querySelector("#montoLabel");
+    const rolSelect = document.querySelector("#rol-select");
 
-        document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
 
-            montoLabel.classList.add("d-none");
-            montoInput.setAttribute("type", "hidden");
+        rolSelect.onchange = (e) => {
 
-            rolSelect.onchange = (e) => {
-
-                if (e.target.value === "1") {
-                    montoLabel.classList.add("d-none");
-                    montoInput.setAttribute("type", "hidden");
-                } else {
-                    montoLabel.classList.remove("d-none");
-                    montoInput.setAttribute("type", "text");
-                }
+            if (e.target.value === "1") {
+                montoLabel.classList.add("d-none");
+                montoInput.setAttribute("type", "hidden");
+            } else {
+                montoLabel.classList.remove("d-none");
+                montoInput.setAttribute("type", "text");
             }
-        });
+        }
     });
 </script>
