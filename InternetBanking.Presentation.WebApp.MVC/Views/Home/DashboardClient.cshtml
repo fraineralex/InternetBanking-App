@@ -7,6 +7,10 @@
     var user = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
 }
 
+@{
+    ViewData["Title"] = "Home";
+}
+
 <section class="container">
     <div class="row mx-auto">
         <div class="col-lg-6 col-md-8 mx-auto">

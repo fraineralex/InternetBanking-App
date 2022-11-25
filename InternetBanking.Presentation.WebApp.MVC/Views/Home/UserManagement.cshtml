@@ -4,85 +4,96 @@
 @using InternetBanking.Core.Application.Enums
 @inject IHttpContextAccessor httpContextAccesor
 @{
-    var user = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var currentlyUser = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
 }
 
-<div class="row">
+@{
+    ViewData["Title"] = "User Managment";
+}
 
-    <div class="row bg-light rounded p-3 mb-5">
-        <section class="w-100 d-flex justify-content-between align-items-center px-5">
-            <h3 class="fs-4 fw-bold fw-bolder m-2 w-100">
-                Dashboard
-                <span class="fs-5 fw-bold fw-bolder text-muted m-2 text-end w-100">
-                    / Administración de usuarios
-                </span>
-            </h3>
-            <a asp-controller="Home" asp-action="Register" class="btn btn-outline-dark">
-                Agregar Nuevo Usuario
-            </a>
-        </section>
-    </div>
+<main>
 
-    <div class="col-8 mx-auto">
+    <section class="container">
+        <div class="row mx-auto">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-bold mt-4 text-center text-primary"><i class='bx bxs-user-detail'></i> Users Managment</h1>
+                <p class="fs-3 fw-bold text-secondary mt-1 text-center">
+                    Here you can manager the users registered in the system and register a new one. <i class="text-white">🚀</i>
+                </p>
+            </div>
+        </div>
+    </section>
 
-        @if (ViewBag.Users == null)
-        {
-            <h2>No existen registros de usuarios</h2>
-        }
-        else
-        {
-            <table class="table table-hover">
-                <thead>
-                    <tr class="table-primary">
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Apellido</th>
-                        <th scope="col">Usuario</th>
-                        <th scope="col">Rol</th>
-                        <th scope="col">Estado</th>
-                        <th class="text-center" scope="col">Acciones</th>
-                        <th class="text-center" scope="col">Productos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (AuthenticationResponse item in ViewBag.Users)
-                    {
-                        <tr class="table-light">
-                            <td>@item.FirstName</td>
-                            <td>@item.LastName</td>
-                            <td>@item.UserName</td>
-                            <td>
-                                @item.Roles[0]
-                            </td>
-                            <td>@(item.IsVerified ? "Activo" : "Inactivo")</td>
-                            <td>
-                                <div class="d-flex justify-content-start w-100">
-                                    @if (item.Id != user.Id)
-                                    {
-                                        <a asp-controller="Home" asp-action="UpdateUser" asp-route-id="@item.Id" class="btn btn-sm btn-info me-2 w-100">Editar</a>
+    <div class="container container-content text-center p-5">
+        <div class="row">
+            <div class=" col-md-10 mx-auto">
+                <div class="container pt-5 p-5 bg-dark rounded-3">
+                    <table id="table-invited" class=" table table-dark table-hover">
 
-                                        @if (item.IsVerified)
+                        <div class="d-flex justify-content-between mb-3 text-dark">
+                            <h2 class="text-white">CUSTOMERS</h2>
+                            <a asp-controller="Home" asp-action="Register" class="btn btn-lg btn-info mt-2 text-light mt-2 mb-2"><i class='bx bxs-user-plus'></i> Register user</a>
+                        </div>
+
+                        <thead>
+                            <tr>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Rol</th>
+                                <th scope="col">State</th>
+                                <th class="text-center" scope="col">Update</th>
+                                <th class="text-center" scope="col">Chage state</th>
+                                <th class="text-center" scope="col">Products</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (AuthenticationResponse item in ViewBag.Users)
+                            {
+                                <tr class="table-light">
+                                    <td>@item.FirstName</td>
+                                    <td>@item.LastName</td>
+                                    <td>@item.UserName</td>
+                                    <td>
+                                        @item.Roles[0]
+                                    </td>
+                                    <td>@(item.IsVerified ? "Active" : "Inactive")</td>
+                                    <td>
+                                        @if (item.Id != currentlyUser.Id)
                                         {
-                                            <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger w-100">Desactivar</a>
+                                            <a asp-controller="Home" asp-action="UpdateUser" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class='bx bx-edit'></i></a>
+
                                         }
-                                        else
+
+                                    </td>
+                                    <td>
+                                        @if (item.Id != currentlyUser.Id)
                                         {
-                                            <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-outline-success w-100">Activar</a>
+
+                                            @if (item.IsVerified)
+                                            {
+                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary px-2"><i class='bx bx-toggle-right'></i></a>
+                                            }
+                                            else
+                                            {
+                                                <a asp-controller="Home" asp-action="ActiveUser" asp-route-id="@item.Id" class="btn btn-sm btn-danger px-2"><i class='bx bx-toggle-left'></i></a>
+                                            }
                                         }
-                                    }
-                                </div>
-                            </td>
+                                    </td>
 
-                            <td>
-                                @if (@item.Roles[0] == Roles.Basic.ToString())
-                                {
-                                    <a asp-controller="Product" asp-action="Index" asp-route-id="@item.Id" class="btn btn-sm btn-outline-dark w-100">Ver</a>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-
+                                    <td>
+                                        @if (@item.Roles[0] == Roles.Basic.ToString())
+                                        {
+                                            <a asp-controller="Product" asp-action="Index" asp-route-id="@item.Id" class="btn btn-sm btn-outline-dark w-100"><i class='bx bx-cog'></i>Manager</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</main>
