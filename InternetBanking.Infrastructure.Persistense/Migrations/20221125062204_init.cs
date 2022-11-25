@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InternetBanking.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class RealMigration : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,8 +18,8 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BeneficiaryCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OwnerAccount = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    BeneficiaryAccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BeneficiaryName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,10 +69,10 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Charge = table.Column<double>(type: "float", nullable: false),
+                    Amount = table.Column<double>(type: "float", nullable: false),
                     ClientId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Discharge = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
+                    Discount = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
                     IsPrincipal = table.Column<bool>(type: "bit", nullable: false),
                     TypeAccountId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),

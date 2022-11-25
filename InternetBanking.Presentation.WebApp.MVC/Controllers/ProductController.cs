@@ -65,15 +65,15 @@ namespace WebApp.InternetBanking.Controllers
 
             if (vm.TypeAccountId == (int)AccountTypes.SavingAccount)
             {
-                await _productService.AddSavingAccountAsync(vm.ClientId, vm.Charge);
+                await _productService.AddSavingAccountAsync(vm.ClientId, vm.Amount);
             }
             else if (vm.TypeAccountId == (int)AccountTypes.CreditAccount)
             {
-                await _productService.CreateAccountAsync(vm.ClientId, vm.Charge, vm.TypeAccountId);
+                await _productService.CreateAccountAsync(vm.ClientId, vm.Amount, vm.TypeAccountId);
             }
             else
             {
-                await _productService.CreateAccountAsync(vm.ClientId, vm.Charge, vm.TypeAccountId);
+                await _productService.CreateAccountAsync(vm.ClientId, vm.Amount, vm.TypeAccountId);
             }
             return RedirectToAction("Index", new { id = vm.ClientId });
         }

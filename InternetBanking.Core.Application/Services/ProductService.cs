@@ -17,9 +17,9 @@ namespace InternetBanking.Core.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository repo, IMapper mapper) : base(repo, mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper) : base(productRepository, mapper)
         {
-            _productRepository = repo;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
@@ -31,7 +31,7 @@ namespace InternetBanking.Core.Application.Services
             {
                 Product saveAccount = new();
                 saveAccount.ClientId = idUser;
-                saveAccount.Charge = amount;
+                saveAccount.Amount = amount;
                 saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
                 saveAccount.TypeAccountId = (int)AccountTypes.SavingAccount;
 
@@ -48,7 +48,7 @@ namespace InternetBanking.Core.Application.Services
                 Product saveAccount = new();
                 saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
                 saveAccount.ClientId = idUser;
-                saveAccount.Charge = amount;
+                saveAccount.Amount = amount;
                 saveAccount.TypeAccountId = (int)AccountTypes.SavingAccount;
                 saveAccount.IsPrincipal = true;
 
@@ -67,7 +67,7 @@ namespace InternetBanking.Core.Application.Services
             {
                 Product saveAccount = new();
                 saveAccount.ClientId = idUser;
-                saveAccount.Charge = amount;
+                saveAccount.Amount = amount;
                 saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
                 saveAccount.TypeAccountId = (int)AccountTypes.CreditAccount;
 
@@ -83,7 +83,7 @@ namespace InternetBanking.Core.Application.Services
             {
                 Product saveAccount = new();
                 saveAccount.ClientId = idUser;
-                saveAccount.Charge = amount;
+                saveAccount.Amount = amount;
                 saveAccount.AccountNumber = _numberGenerator.NumberGenerator();
                 saveAccount.TypeAccountId = (int)AccountTypes.LoanAccount;
 
@@ -102,7 +102,7 @@ namespace InternetBanking.Core.Application.Services
             List<Product> savingAccounts = await GetAllProductByUser(idUser, (int)AccountTypes.SavingAccount);
             Product sAPrincipal = savingAccounts.Where(sav => sav.IsPrincipal == true).SingleOrDefault();
 
-            sAPrincipal.Charge += amount;
+            sAPrincipal.Amount += amount;
 
             await _productRepository.UpdateAsync(sAPrincipal, sAPrincipal.Id);
         }
@@ -246,7 +246,7 @@ namespace InternetBanking.Core.Application.Services
             {
                 response = _mapper.Map<ProductViewModel>(product);
                 
-                if (response.Charge >= amountToPay)
+                if (response.Amount >= amountToPay)
                 {
                     return response;
                 }
@@ -273,11 +273,11 @@ namespace InternetBanking.Core.Application.Services
 
             if (product.TypeAccountId == (int)AccountTypes.SavingAccount)
             {
-                await AddAmountSavingAccount(product.ClientId, product.Charge);
+                await AddAmountSavingAccount(product.ClientId, product.Amount);
             }
             if (product.TypeAccountId == (int)AccountTypes.CreditAccount)
             {
-                if (product.Charge != 0)
+                if (product.Amount != 0)
                 {
                     responseVm.HasError = true;
                     responseVm.Error = "No se puede eliminar esta cuenta de credito hasta que salde lo que debe.!";
@@ -286,7 +286,7 @@ namespace InternetBanking.Core.Application.Services
             }
             if (product.TypeAccountId == (int)AccountTypes.LoanAccount)
             {
-                if (product.Charge != 0)
+                if (product.Amount != 0)
                 {
                     responseVm.HasError = true;
                     responseVm.Error = "No se puede eliminar este prestamo hasta que salde lo que debe.!";
@@ -313,7 +313,7 @@ namespace InternetBanking.Core.Application.Services
 
                 ClientId = product.ClientId,
                 TypeAccountId = product.TypeAccountId,
-                Charge = product.Charge,
+                Amount = product.Amount,
 
             }).ToList();
 

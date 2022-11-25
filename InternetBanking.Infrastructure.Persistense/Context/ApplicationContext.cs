@@ -105,7 +105,7 @@ namespace InternetBanking.Infrastructure.Persistence.Context
 
             #region Products
             mb.Entity<Product>()
-                .Property(p => p.Discharge)
+                .Property(p => p.Discount)
                 .HasDefaultValue(0.00)
                 .IsRequired();
             #endregion

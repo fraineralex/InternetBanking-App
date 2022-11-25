@@ -45,9 +45,9 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input asp-for="Charge" class="form-control" placeholder="Monto" />
-                                <label asp-for="Charge" class="form-label" id="montoCreateLabel">Monto / Limite de tarjeta</label>
-                                <span asp-validation-for="Charge" class="text-danger"></span>
+                                <input asp-for="Amount" class="form-control" placeholder="Monto" />
+                                <label asp-for="Amount" class="form-label" id="montoCreateLabel">Monto / Limite de tarjeta</label>
+                                <span asp-validation-for="Amount" class="text-danger"></span>
                             </div>
 
                             <input hidden asp-for="ClientId" value="@Model.ClientId" />

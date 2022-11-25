@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InternetBanking.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20221125042231_BeneficiariesUpdate")]
-    partial class BeneficiariesUpdate
+    [Migration("20221125062204_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,7 +97,7 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     b.Property<string>("AccountNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Charge")
+                    b.Property<double>("Amount")
                         .HasColumnType("float");
 
                     b.Property<string>("ClientId")
@@ -109,7 +109,7 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Discharge")
+                    b.Property<double?>("Discount")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("float")

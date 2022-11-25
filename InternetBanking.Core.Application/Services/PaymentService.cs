@@ -32,12 +32,12 @@ namespace InternetBanking.Core.Application.Services
             if (originCreditCard != null && accountDestination != null)
             {
                 double amountWithInterest = vm.Amount + (vm.Amount * InterestRates.CreditCardRate);
-                originCreditCard.Charge = (originCreditCard.Charge - vm.Amount);
-                originCreditCard.Discharge += amountWithInterest;
+                originCreditCard.Amount = (originCreditCard.Amount - vm.Amount);
+                originCreditCard.Discount += amountWithInterest;
                 ProductSaveViewModel originCreditCardUpdated = _mapper.Map<ProductSaveViewModel>(originCreditCard);
                 await _productService.Update(originCreditCardUpdated, originCreditCardUpdated.Id);
 
-                accountDestination.Charge += vm.Amount;
+                accountDestination.Amount += vm.Amount;
                 ProductSaveViewModel accountDestinationUpdated = _mapper.Map<ProductSaveViewModel>(accountDestination);
                 await _productService.Update(accountDestinationUpdated, accountDestinationUpdated.Id);
             }
@@ -51,14 +51,14 @@ namespace InternetBanking.Core.Application.Services
 
             if (originSavingsAccount != null && creditCardDestination != null)
             {
-                originSavingsAccount.Charge -= vm.Amount;
-                originSavingsAccount.Discharge += vm.Amount;
+                originSavingsAccount.Amount -= vm.Amount;
+                originSavingsAccount.Discount += vm.Amount;
                 ProductSaveViewModel originSavingsAccountUpdated = _mapper.Map<ProductSaveViewModel>(originSavingsAccount);
                 await _productService.Update(originSavingsAccountUpdated, originSavingsAccountUpdated.Id);
 
                 double amountWithInterest = vm.Amount - (vm.Amount * InterestRates.CreditCardRate);
-                creditCardDestination.Charge += amountWithInterest;
-                creditCardDestination.Discharge -= vm.Amount;
+                creditCardDestination.Amount += amountWithInterest;
+                creditCardDestination.Discount -= vm.Amount;
                 ProductSaveViewModel creditCardDestinationUpdated = _mapper.Map<ProductSaveViewModel>(creditCardDestination);
                 await _productService.Update(creditCardDestinationUpdated, creditCardDestinationUpdated.Id);
             }
@@ -76,13 +76,13 @@ namespace InternetBanking.Core.Application.Services
             {
                 if (accountDestination.TypeAccountId == (int)AccountTypes.SavingAccount)
                 {
-                    var disCharge = originAccount.Charge - vm.Amount;
-                    originAccount.Charge = disCharge;
-                    originAccount.Discharge += vm.Amount;
+                    var Discount = originAccount.Amount - vm.Amount;
+                    originAccount.Amount = Discount;
+                    originAccount.Discount += vm.Amount;
                     ProductSaveViewModel acToPayUpdated = _mapper.Map<ProductSaveViewModel>(originAccount);
                     await _productService.Update(acToPayUpdated, acToPayUpdated.Id);
 
-                    accountDestination.Charge += vm.Amount;
+                    accountDestination.Amount += vm.Amount;
                     ProductSaveViewModel acDsUpdated = _mapper.Map<ProductSaveViewModel>(accountDestination);
                     await _productService.Update(acDsUpdated, acDsUpdated.Id);
                 }
@@ -90,14 +90,14 @@ namespace InternetBanking.Core.Application.Services
                     (accountDestination.TypeAccountId == (int)AccountTypes.CreditAccount ||
                     accountDestination.TypeAccountId == (int)AccountTypes.LoanAccount)
                 {
-                    var disCharge = originAccount.Charge - vm.Amount;
-                    originAccount.Charge = disCharge;
-                    originAccount.Discharge += vm.Amount;
+                    var Discount = originAccount.Amount - vm.Amount;
+                    originAccount.Amount = Discount;
+                    originAccount.Discount += vm.Amount;
                     ProductSaveViewModel acToPayUpdated = _mapper.Map<ProductSaveViewModel>(originAccount);
                     await _productService.Update(acToPayUpdated, acToPayUpdated.Id);
 
-                    accountDestination.Charge -= vm.Amount;
-                    accountDestination.Discharge = vm.Amount;
+                    accountDestination.Amount -= vm.Amount;
+                    accountDestination.Discount = vm.Amount;
                     ProductSaveViewModel acDsUpdated = _mapper.Map<ProductSaveViewModel>(accountDestination);
                     await _productService.Update(acDsUpdated, acDsUpdated.Id);
                 }

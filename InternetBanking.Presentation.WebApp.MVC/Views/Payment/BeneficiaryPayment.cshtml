@@ -40,7 +40,7 @@
                                     <select class="form-select" asp-for="OriginAccountNumber" required>
                                         @foreach (var account in ViewBag.SavingsAccounts)
                                         {
-                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Charge)</option>
+                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Amount)</option>
                                         }
                                     </select>
                                     <span asp-validation-for="OriginAccountNumber" class="text-danger"></span>

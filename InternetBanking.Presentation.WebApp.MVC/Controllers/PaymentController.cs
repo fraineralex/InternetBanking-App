@@ -148,9 +148,9 @@ namespace WebApp.InternetBanking.Controllers
                 _productService.GetProductByNumberAccountForPayment
                 (vm.DestinationAccountNumber);
 
-            if(vm.Amount > destinationAccount.Discharge)
+            if(vm.Amount > destinationAccount.Discount)
             {
-                vm.Amount = destinationAccount.Discharge;
+                vm.Amount = destinationAccount.Discount;
             }
 
             var owner = await _userService.GetUserById(accountToPay.ClientId);
@@ -203,9 +203,9 @@ namespace WebApp.InternetBanking.Controllers
             
             ProductViewModel destinationAccount = await _productService.GetProductByNumberAccountForPayment(vm.DestinationAccountNumber);
 
-            if (vm.Amount > destinationAccount.Charge)
+            if (vm.Amount > destinationAccount.Amount)
             {
-                vm.Amount = destinationAccount.Charge;
+                vm.Amount = destinationAccount.Amount;
             }
 
             var owner = await _userService.GetUserById(accountToPay.ClientId);

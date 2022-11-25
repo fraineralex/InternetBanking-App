@@ -94,7 +94,7 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     b.Property<string>("AccountNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Charge")
+                    b.Property<double>("Amount")
                         .HasColumnType("float");
 
                     b.Property<string>("ClientId")
@@ -106,7 +106,7 @@ namespace InternetBanking.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Discharge")
+                    b.Property<double?>("Discount")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("float")
