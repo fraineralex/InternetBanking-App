@@ -1,0 +1,80 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Payment;
+@model SavePaymentViewModel
+@{
+    ViewData["Title"] = "Express Payment";
+}
+
+<main>
+    <section class="container">
+        <div class="row mx-auto">
+
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-bold mt-4 text-center text-primary"><i class="text-dark">💸</i> Express Payment</h1>
+                <p class="fs-3 fw-bold text-dark mt-1 text-center">
+                    Here you can make express payments from any savings account. <i class="text-white">🚀</i>
+
+                </p>
+
+                @if (ViewBag.SavingsAccounts.Count != 0)
+                {
+
+                    <div class="col-10 mx-auto card bg-dark text-white mt-5 mb-5" style="border-radius: 1rem;">
+                        <div class="card-body">
+
+                            <h2 class="fw-bold mb-3 text-uppercase text-center mt-2">Making express payment</h2>
+                            <p class="text-white-50 fs-5 mb-3 text-center">Please complete all the fields below!</p>
+                            @if (Model.HasError)
+                            {
+                                <h4 class="text-danger text-center fw-bold fs-5 mb-3">@Model.Error</h4>
+                            }
+
+                            <form asp-controller="Payment" asp-action="ExpressPayment" method="POST">
+
+                                <div class="p-3 pt-0">
+                                    <label asp-for="OriginAccountNumber" class="form-label text-white">
+                                        <strong>Savings account origin <small class="text-danger"> *</small></strong>
+
+                                    </label>
+                                    <select class="form-select" asp-for="OriginAccountNumber" required>
+                                        @foreach (var account in ViewBag.SavingsAccounts)
+                                        {
+                                            <option value="@account.AccountNumber">@account.AccountNumber  (US$ @account.Amount)</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="OriginAccountNumber" class="text-danger"></span>
+                                </div>
+
+                                <div class="p-3">
+                                    <label asp-for="DestinationAccountNumber" class="form-label text-white"><strong>Target savings account <small class="text-danger"> *</small></strong></label>
+                                    <input type="number" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="DestinationAccountNumber" required>
+                                    <span asp-validation-for="DestinationAccountNumber" class="text-danger"></span>
+                                </div>
+
+                                <div class="p-3">
+                                    <label asp-for="Amount" class="form-label text-white"><strong>Amount payable <small class="text-danger"> *</small></strong></label>
+                                    <input type="number" min="1" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="Amount" required>
+                                    <span asp-validation-for="Amount" class="text-danger"></span>
+                                </div>
+
+                                <button class="btn btn-primary  btn-lg float-end" type="submit">
+                                    ✅ Done
+                                </button>
+                                <a class="btn btn-light  btn-lg float-end me-2" asp-controller="Home" asp-action="Index">
+                                    <i class='bx bx-grid-alt'></i>
+                                    Back 
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <h5 class="fs-4 fw-bold text-secondary mt-1 text-center"><i class='bx bxs-wallet'></i> No savings account yet</h5>
+                }
+            </div>
+
+        </div>
+    </section>
+</main>

@@ -1,0 +1,70 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Products;
+@using InternetBanking.Core.Application.ViewModels.Account;
+@model ProductSaveViewModel  
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<main>
+    <section class="container">
+        <div class="row mx-auto">
+
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-bold mt-4 text-center text-primary"><i class='bx bxs-bank'></i> Create Account</h1>
+                <p class="fs-3 fw-bold text-dark mt-1 text-center">
+                    Here you can create a new account <i class="text-white">🚀</i>
+
+                </p>
+
+
+                <div class="col-10 mx-auto card bg-dark text-white mt-5 mb-5" style="border-radius: 1rem;">
+                    <div class="card-body">
+
+                        <h2 class="fw-bold mb-3 text-uppercase text-center mt-2">Creating account</h2>
+                        <p class="text-white-50 fs-5 mb-3 text-center">Please fill in the fields below!</p>
+                        @Html.ValidationMessage("userVaidation", "",new{@class = "text-danger text-center fw-bold fs-5 mb-3"}, "h4")
+
+                        <form asp-controller="Product" asp-action="CreateAccount" method="post">
+
+                            <div class="p-3 pt-0">
+                                <label asp-for="TypeAccountId" class="form-label text-white">
+                                    <strong>Account type <small class="text-danger"> *</small></strong>
+
+                                </label>
+                                <select asp-for="TypeAccountId"
+                                        value="@Model.TypeAccountId"
+                                        class="form-select"
+                                         id="type-account"
+                                        aria-label="Default select example">
+                                    <option selected>Seleccionar tipo de cuenta</option>
+
+                                    @foreach (TypeAccountViewModel account in ViewBag.Types)
+                                    {
+                                        <option value="@account.Id">@account.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="TypeAccountId" class="text-danger"></span>
+                            </div>
+
+                            <div class="p-3">
+                                <label asp-for="Amount" class="form-label text-white"><strong>Amount / Credit card limit <small class="text-danger"> *</small></strong></label>
+                                <input type="number" min="1" class="form-control bg-dark text-white border-white form-control-lg"
+                                       asp-for="Amount" required>
+                                <span asp-validation-for="Amount" class="text-danger"></span>
+                            </div>
+
+                            <input hidden asp-for="ClientId" value="@Model.ClientId" />
+
+                            <button class="btn btn-primary  btn-lg float-end" type="submit">
+                                ✅
+                                Done
+                            </button>
+                            <a asp-controller="Product" asp-action="Index" asp-route-id="@Model.ClientId"class="btn btn-light  btn-lg float-end me-2"> Back</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>

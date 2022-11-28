@@ -1,0 +1,53 @@
+﻿@using InternetBanking.Core.Application.Dtos.Account
+@using InternetBanking.Core.Application.Helpers
+@using Microsoft.AspNetCore.Http
+@using InternetBanking.Core.Application.ViewModels.BeneficiarySaveViewModel;
+@using InternetBanking.Core.Application.ViewModels.BeneficiaryViewModel;
+@model BeneficiarySaveViewModel
+@inject IHttpContextAccessor httpContextAccesor
+@{
+    var user = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
+}
+
+
+<section class="container">
+    <div class="row mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-bold mt-4 text-center text-primary"><i class='bx bxs-contact'></i> Beneficiaries</h1>
+            <p class="fs-3 fw-bold text-secondary mt-1 text-center">
+                Here you can manager your currently beneficiaries and add a new one <i class="text-white">🚀</i>
+
+                <a id="add-beneficiary" class="btn btn-info btn-lg mt-4"><i class='bx bxs-contact'></i> Add Beneficiary</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+@Html.ValidationSummary(false, "", new { @class = "text-danger text-center fw-bold fs-5 mb-3 mt-3 fs-4" })
+
+<div class="row mb-5 mx-auto">
+    @if (ViewBag.Recipients.Count != 0)
+    {
+
+        @foreach (BeneficiaryViewModel beneficiary in ViewBag.Recipients)
+        {
+            <div class="col-4 ">
+                <div class="mx-auto card bg-dark text-white mt-3" style="border-radius: 1rem;">
+                    <div class="card-body">
+
+                        <h4 class="fw-bold mb-3 text-uppercase mt-2 fs-5"><i class='bx bxs-contact'></i> <i class="text-white"> @beneficiary.BeneficiaryName</i></h4>
+                        <p class="fs-5 text-primary fw-bold">@beneficiary.BeneficiaryAccountNumber  <i class="text-white-50 fs-5 float-end">Account number</i></p>
+                        <a asp-controller="Beneficiaries" asp-action="Delete" asp-route-id="@beneficiary.Id" class="btn btn-sm btn-danger float-end"><i class='bx bxs-trash'></i></a>
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+
+        <h5 class="fs-4 fw-bold text-secondary mt-1 text-center mb-5"><i class='bx bxs-contact'></i> No beneficiaries yet</h5>
+    }
+</div>
+

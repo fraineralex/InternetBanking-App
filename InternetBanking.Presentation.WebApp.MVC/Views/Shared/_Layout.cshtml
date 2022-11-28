@@ -1,49 +1,171 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using InternetBanking.Core.Application.Enums
+@using Microsoft.AspNetCore.Http
+@using InternetBanking.Core.Application.Dtos.Account
+@using InternetBanking.Core.Application.Helpers
+@using InternetBanking.Core.Application.ViewModels.User
+@inject IHttpContextAccessor httpContextAccesor
+@{
+    var user = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    bool isAdmin = false;
+    if (user != null)
+    {
+        isAdmin = user.Roles.Contains(Roles.Admin.ToString());
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - InternetBanking.Presentation.WebApp.MVC</title>
+    <title>@ViewData["Title"] - InternetBanking</title>
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/InternetBanking.Presentation.WebApp.MVC.styles.css" asp-append-version="true" />
+    @if(user != null){<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />}
+    @*else{<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />}*@
+    @*<link rel="stylesheet" href="~/WebApp.InternetBanking.styles.css" asp-append-version="true" />*@
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">InternetBanking.Presentation.WebApp.MVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    @if(user != null)
+    {
+        <div class="sidebar close">
+            <div class="logo-details">
+                <i class='bx bxs-bank'></i>
+                <span class="logo_name">Internet Banking</span>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - InternetBanking.Presentation.WebApp.MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <ul class="nav-links">
+                @if (!isAdmin)
+                {
+                    <li>
+                        <a asp-controller="Home" asp-action="HomeClient">
+                            <i class='bx bx-grid-alt'></i>
+                            <span class="link_name">Products</span>
+                        </a>
+                        <ul class="sub-menu blank">
+                            <li><a class="link_name" href="#">Products</a></li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a asp-controller="Home" asp-action="Index">
+                            <i class='bx bx-grid-alt'></i>
+                            <span class="link_name">Dashboard</span>
+                        </a>
+                        <ul class="sub-menu blank">
+                            <li><a class="link_name" href="#">Dashboard</a></li>
+                        </ul>
+                    </li>
+                }
+                @if (!isAdmin)
+                {
+                    <li>
+                        <div class="iocn-link">
+                            <a href="#">
+                                <i class='bx bxs-report'></i>
+                                <span class="link_name">Payments</span>
+                            </a>
+                            <i class='bx bxs-chevron-down arrow'></i>
+                        </div>
+                        <ul class="sub-menu">
+                            <li><a class="link_name" href="#">Payments</a></li>
+                            <li><a asp-controller="Payment" asp-action="ExpressPayment">💸 Express</a></li>
+                            <li><a asp-controller="Payment" asp-action="CreditPayment">🪪 Credit card</a></li>
+                            <li><a asp-controller="Payment" asp-action="LoamPayment">🏦 Loan</a></li>
+                            <li><a asp-controller="Payment" asp-action="BeneficiaryPayment">🚀 Beneficiaries</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Beneficiaries">
+                            <i class='bx bxs-contact'></i>
+                            <span class="link_name">Beneficiary</span>
+                        </a>
+                        <ul class="sub-menu blank">
+                            <li><a class="link_name" href="#">Beneficiary</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a asp-controller="CashAdvance" asp-action="Index">
+                            <i class='bx bxs-dollar-circle'></i>
+                            <span class="link_name">Cash advance</span>
+                        </a>
+                        <ul class="sub-menu blank">
+                            <li><a class="link_name" href="#">Cash advance</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a asp-controller="TransferBetweenAccount" asp-action="TransferBetweenAccounts">
+                            <i class='bx bx-transfer'></i>
+                            <span class="link_name">Internal Transfers</span>
+                        </a>
+                        <ul class="sub-menu blank">
+                            <li><a class="link_name" href="#">Internal Transfers</a></li>
+                        </ul>
+                    </li>
+                }
+                @if (isAdmin)
+                {
+                    <li>
+                        <a asp-controller="Home" asp-action="UserManagement">
+                        <i class='bx bxs-user-detail'></i>
+                        <span class="link_name">Users Managment</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                            <li><a class="link_name" href="#">Users Managment</a></li>
+                    </ul>
+                </li>
+                }
+                <li>
+                    <a asp-controller="User" asp-action="Logout">
+                        <i class='bx bx-log-out'></i>
+                        <span class="link_name">Sign out</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Sign out</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="profile-details">
+                        <div class="profile-content">
+                            @if(!isAdmin){<img src="/images/profile.jpeg" alt="profileImg">}
+                            else{<img src="/images/admin2.jpg" alt="profileImg">}
+                        </div>
+                        <div class="name-job">
+                            <div class="job fw-bold">@user.FirstName @user.LastName</div>
+                            <div class="job">👨🏻‍🚀 @user.UserName</div>
+                        </div>
+                        <i class='bx bx-signal-1'></i>
+                    </div>
+                </li>
+            </ul>
         </div>
-    </footer>
+    }
+
+    <section class="home-section">
+        <div class="home-content" role="main">
+            <div class="container">
+                <main class="pb-3 mx-auto mb-5">
+
+                    @RenderBody()
+
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!--<footer class="border-top footer text-light mt-5" style="background: #11101d;">
+        <div class="container text-center">
+            &copy; 2022 Internet Banking - Designed with 💙 by ITLA students
+        </div>
+    </footer>-->
+
+    @*<script src="script.js"></script>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,4 +1,4 @@
-namespace InternetBanking.Presentation.WebApp.MVC.Models
+namespace InternetBanking.Models
 {
     public class ErrorViewModel
     {

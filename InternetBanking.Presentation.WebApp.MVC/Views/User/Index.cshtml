@@ -1,0 +1,63 @@
+﻿@using InternetBanking.Core.Application.ViewModels.User
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<main>
+    <section class="container">
+        <div class="row mx-auto">
+
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-bold mt-4 text-center text-primary"><i class='bx bxs-bank'></i> Internet Banking App</h1>
+                <p class="fs-3 fw-bold text-dark mt-1 text-center">
+                    Welcome to Internet Banking App, log in and start
+                    interacting
+                    with the system. <i class="text-white">🚀</i>
+                </p>
+
+                @Html.ValidationMessage("ActiveSuccess", "",new{@class = "text-success text-center fw-bold mt-4 mb-3"}, "h4")
+                @Html.ValidationMessage("ActiveError", "",new{@class = "text-danger text-center fw-bold mt-4 mb-3"}, "h4")
+
+
+                <div class="col-10 mx-auto card bg-dark text-white mt-5 mb-5" style="border-radius: 1rem;">
+                    <div class="card-body">
+
+                        <h2 class="fw-bold mb-3 text-uppercase text-center mt-2">Login</h2>
+                        <p class="text-white-50 fs-5 mb-3 text-center">Please enter your username and password!</p>
+                        @Html.ValidationMessage("userVaidation", "",new{@class = "text-danger text-center fw-bold fs-5 mb-3"}, "h4")
+                        @if (Model.HasError)
+                        {
+                            <h4 class="text-danger text-center fw-bold fs-5 mb-3">@Model.Error</h4>
+                        }
+
+                        <form asp-action="Index" asp-controller="User" method="POST">
+
+                            <div class="p-3">
+                                <label asp-for="Email" class="form-label text-white"><strong>Email <small class="text-danger"> *</small></strong></label>
+                                <input type="text" class="form-control bg-dark text-white border-white form-control-lg"
+                                       id="username" asp-for="Email">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="p-3 pt-0 mb-3">
+                                <label asp-for="Password" class="form-label text-white"><strong>Password <small class="text-danger"> *</small></strong></label>
+                                <input type="password"
+                                    class="form-control bg-dark text-white border-white form-control-lg" id="password"
+                                    asp-for="Password">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <button class="btn btn-primary  btn-lg float-end" type="submit"><i class='bx bx-log-in'></i>
+                                Sign in</button>
+                            <a class="btn btn-light  btn-lg float-end me-2" id="restore-password" asp-controller="User" asp-action="ForgotPassword"><i class='bx bx-user'></i> Restore Password</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+
